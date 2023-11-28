@@ -16,9 +16,9 @@ type AnyElement = HTMLElement | SVGElement
  * This method must be exposed as the "createElement" method
  * to be passively called on each html element defined in jsx files.
  */
-export default function createElement(tag: string,
-                                      attributes: Record<string, any> | null,
-                                      ...children: ReadonlyArray<string | AnyElement>): AnyElement {
+export const createElement = (tag: string,
+                              attributes: Record<string, any> | null,
+                              ...children: ReadonlyArray<string | AnyElement>): AnyElement => {
     const isCustomElement = tag.includes("-")
     const element: AnyElement = (() => {
         if (isCustomElement) {

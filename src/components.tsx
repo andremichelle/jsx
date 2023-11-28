@@ -1,5 +1,5 @@
 /** @jsx createElement */
-import createElement, { Ref } from "./jsx/create-element.ts"
+import { createElement, Ref } from "./jsx/create-element.ts"
 
 export class FooElement extends HTMLElement {
     #content: ReadonlyArray<string | Element> = []
@@ -42,14 +42,14 @@ export class BarElement extends HTMLElement {
     }
 }
 
-export const createFooElement = () => {
+export const test = () => {
     const ref = Ref.create<BarElement>()
-    const result =
+    const element =
         <c-foo index={42} name="abc">
             <c-bar class="someclass" nested={{ deep: { value: 303 } }}>
                 <span style={{ color: "red" }} ref={ref}>Hello, world!</span>
             </c-bar>
         </c-foo>
     ref.get().addEventListener("click", () => console.log("click"))
-    return result
+    return { element, ref }
 }
