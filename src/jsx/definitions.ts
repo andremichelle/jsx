@@ -23,13 +23,14 @@ type StringTypes =
     | SVGAnimatedRect
     | SVGAnimatedString
 
-type ExtractAttributes<T extends Element & GlobalEventHandlers> = Partial<{
+type ExtractAttributes<T extends Element> = Partial<{
     [K in keyof T]: T[K] extends Function ? never : T[K] extends StringTypes ? string : Partial<T[K]>
 }> & { ref?: Ref<T> } & Record<string, unknown>
 
-type Elements =
+type NativeElements =
     & { [K in keyof Omit<SVGElementTagNameMap, "a">]: Omit<ExtractAttributes<SVGElementTagNameMap[K]>, "a"> }
     & { [K in keyof Omit<HTMLElementTagNameMap, "a">]: Omit<ExtractAttributes<HTMLElementTagNameMap[K]>, "a"> }
+
     // There is something fuzzy about the anchor tag
     // ExtractAttributes fails on href, because there is a strange relation to the declared toString method?
     // And it is in html and svg namespace.
@@ -37,8 +38,16 @@ type Elements =
     "a": { href: string, target: string }
 }
 
-type CustomJSXElements = {
-    [K in keyof typeof CustomElements.Definitions]: ConstructorParameters<typeof CustomElements.Definitions[K]>[0]
+type CustomElementMap = typeof CustomElements.Definitions
+type CustomElementAttributes<T> =
+    T extends new (...args: any[]) => infer R
+        ? R extends Element
+            ? ExtractAttributes<R> & ConstructorParameters<T>[0]
+            : never
+        : never
+
+type DynamicIntrinsicElements = {
+    [K in keyof CustomElementMap]: CustomElementAttributes<CustomElementMap[K]>
 }
 
 declare global {
@@ -46,7 +55,7 @@ declare global {
 
     namespace JSX {
         // noinspection JSUnusedGlobalSymbols
-        interface IntrinsicElements extends Elements, CustomJSXElements {}
+        interface IntrinsicElements extends NativeElements, DynamicIntrinsicElements {}
     }
 }
 
