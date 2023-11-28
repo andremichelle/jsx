@@ -6,5 +6,6 @@ import { CustomElements } from "./jsx/definitions.ts"
 
     const result = test()
     document.body.appendChild(result.element)
-    result.ref.get().textContent = "Foo"
+    result.refBar.get().foo()
+    result.refSpan.get().textContent = "Foo"
 })()

@@ -1,16 +1,16 @@
 import { SupportedSvgTags } from "./supported-svg-tags.ts"
 
-class _Ref<E extends Element> implements Ref<E> {
+type AnyElement = HTMLElement | SVGElement
+
+class _Ref<E extends AnyElement> implements Ref<E> {
     element: E | null = null
     get(): E {
-        if (this.element === null) {throw new Error("Could not resolve reference.")}
+        if (this.element === null) {throw new Error("Could not resolve element")}
         return this.element
     }
 }
 
-export const Ref = { create: <E extends Element>(): Ref<E> => new _Ref<E>() } as const
-
-type AnyElement = HTMLElement | SVGElement
+export const Ref = { create: <E extends AnyElement>(): Ref<E> => new _Ref<E>() } as const
 
 /**
  * This method must be exposed as the "createElement" method
@@ -31,7 +31,6 @@ export const createElement = (tag: string,
                 : document.createElement(tag)
         }
     })()
-
     if (attributes !== null) {
         Object.entries(attributes).forEach(([key, value]: [string, unknown]) => {
             if (key === "class") {

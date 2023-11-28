@@ -40,16 +40,21 @@ export class BarElement extends HTMLElement {
 
         console.log("BarElement", construct.nested.deep.value)
     }
+
+    foo(): void {
+        console.log(this, "foo(0)")
+    }
 }
 
 export const test = () => {
-    const ref = Ref.create<BarElement>()
+    const refBar = Ref.create<BarElement>()
+    const refSpan = Ref.create<HTMLSpanElement>()
     const element =
         <c-foo index={42} name="abc">
-            <c-bar class="someclass" nested={{ deep: { value: 303 } }}>
-                <span style={{ color: "red" }} ref={ref}>Hello, world!</span>
+            <c-bar ref={refBar} class="someclass" nested={{ deep: { value: 303 } }}>
+                <span style={{ color: "red" }} ref={refSpan}>Hello, world!</span>
             </c-bar>
         </c-foo>
-    ref.get().addEventListener("click", () => console.log("click"))
-    return { element, ref }
+    refSpan.get().addEventListener("click", () => console.log("click"))
+    return { element, refBar, refSpan }
 }
