@@ -1,4 +1,5 @@
 /** @jsx createElement */
+import createElement from "./jsx/create-element.ts"
 
 export class FooElement extends HTMLElement {
     constructor(construct: {

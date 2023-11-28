@@ -1,4 +1,4 @@
-import { BarElement, FooElement } from "./components.tsx"
+import { BarElement, FooElement } from "../components.tsx"
 
 export namespace CustomElements {
     export const Definitions = {
@@ -10,7 +10,7 @@ export namespace CustomElements {
         .entries(CustomElements.Definitions)
         .map(([name, clazz]) => {
             customElements.define(name, clazz)
-            return customElements.whenDefined("c-foo")
+            return customElements.whenDefined(name)
         }))
 }
 
