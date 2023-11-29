@@ -19,14 +19,14 @@ export const Ref = { create: <E extends DomElement>(): Ref<E> => new _Ref<E>() }
  * This is secured by injection defined in vite.config.ts
  */
 export default function(tag: string,
-                        attributes: Record<string, any> | null,
+                        attributes: Readonly<Record<string, any>> | null,
                         ...children: ReadonlyArray<string | DomElement>): DomElement {
     const isCustomElement = tag.includes("-")
     const element: DomElement = (() => {
         if (isCustomElement) {
             const constructor = customElements.get(tag)
             if (constructor === undefined) {throw new Error(`Undefined custom-element '${tag}'`)}
-            return new constructor(attributes, ...children)
+            return new constructor(attributes)
         } else {
             return SupportedSvgTags.has(tag)
                 ? document.createElementNS("http://www.w3.org/2000/svg", tag)

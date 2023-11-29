@@ -1,13 +1,13 @@
 export class FooElement extends HTMLElement {
     #children: ReadonlyArray<string | Element> = []
 
-    constructor(construct: {
+    constructor({ index, name }: {
         index: number,
         name?: string
     }) {
         super()
 
-        console.log("FooElement", construct.index, construct.name)
+        console.log("FooElement", index, name)
     }
 
     append(...elements: ReadonlyArray<string | Element>) {
