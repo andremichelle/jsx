@@ -1,8 +1,8 @@
 import { SupportedSvgTags } from "./supported-svg-tags.ts"
 
-type AnyElement = HTMLElement | SVGElement
+type DomElement = HTMLElement | SVGElement
 
-class _Ref<E extends AnyElement> implements Ref<E> {
+class _Ref<E extends DomElement> implements Ref<E> {
     element: E | null = null
     get(): E {
         if (this.element === null) {throw new Error("Could not resolve element")}
@@ -10,17 +10,19 @@ class _Ref<E extends AnyElement> implements Ref<E> {
     }
 }
 
-export const Ref = { create: <E extends AnyElement>(): Ref<E> => new _Ref<E>() } as const
+export const Ref = { create: <E extends DomElement>(): Ref<E> => new _Ref<E>() } as const
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * This method must be exposed as the "createElement" method
  * to be passively called on each html element defined in jsx files.
+ * This is secured by injection defined in vite.config.ts
  */
-export const createElement = (tag: string,
-                              attributes: Record<string, any> | null,
-                              ...children: ReadonlyArray<string | AnyElement>): AnyElement => {
+export default function(tag: string,
+                        attributes: Record<string, any> | null,
+                        ...children: ReadonlyArray<string | DomElement>): DomElement {
     const isCustomElement = tag.includes("-")
-    const element: AnyElement = (() => {
+    const element: DomElement = (() => {
         if (isCustomElement) {
             const constructor = customElements.get(tag)
             if (constructor === undefined) {throw new Error(`Undefined custom-element '${tag}'`)}

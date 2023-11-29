@@ -1,8 +1,8 @@
-import { test } from "./components"
-import { CustomElements } from "./jsx/definitions.ts"
+import { CustomElementRegistry } from "./jsx/definitions.ts"
+import { test } from "./test.tsx"
 
 (async () => {
-    await CustomElements.load()
+    await CustomElementRegistry.load()
 
     const result = test()
     document.body.appendChild(result.element)

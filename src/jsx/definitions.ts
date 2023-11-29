@@ -1,13 +1,16 @@
-import { BarElement, FooElement } from "../components.tsx"
+// noinspection JSUnusedGlobalSymbols
 
-export namespace CustomElements {
+import { BarElement } from "../bar-element.tsx"
+import { FooElement } from "../foo-element.tsx"
+
+export namespace CustomElementRegistry {
     export const Definitions = {
         "c-foo": FooElement,
         "c-bar": BarElement
     } as const
 
     export const load = async () => Promise.all(Object
-        .entries(CustomElements.Definitions)
+        .entries(CustomElementRegistry.Definitions)
         .map(([name, clazz]) => {
             customElements.define(name, clazz)
             return customElements.whenDefined(name)
@@ -35,10 +38,10 @@ type NativeElements =
     // ExtractAttributes fails on href, because there is a strange relation to the declared toString method?
     // And it is in html and svg namespace.
     & {
-    "a": { href: string, target: string }
+    "a": { href: string, target: string } // TODO You need to extend it with missing attributes, if needed
 }
 
-type CustomElementMap = typeof CustomElements.Definitions
+type CustomElementMap = typeof CustomElementRegistry.Definitions
 type CustomElementAttributes<T> =
     T extends new (...args: any[]) => infer R
         ? R extends Element
@@ -46,17 +49,12 @@ type CustomElementAttributes<T> =
             : never
         : never
 
-type DynamicIntrinsicElements = {
-    [K in keyof CustomElementMap]: CustomElementAttributes<CustomElementMap[K]>
-}
+type CustomElements = { [K in keyof CustomElementMap]: CustomElementAttributes<CustomElementMap[K]> }
 
 declare global {
     interface Ref<E extends Element> {get(): E}
 
-    namespace JSX {
-        // noinspection JSUnusedGlobalSymbols
-        interface IntrinsicElements extends NativeElements, DynamicIntrinsicElements {}
-    }
+    namespace JSX {interface IntrinsicElements extends NativeElements, CustomElements {}}
 }
 
 export {}
