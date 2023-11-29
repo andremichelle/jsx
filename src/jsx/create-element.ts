@@ -26,7 +26,7 @@ export default function(tag: string,
         if (isCustomElement) {
             const constructor = customElements.get(tag)
             if (constructor === undefined) {throw new Error(`Undefined custom-element '${tag}'`)}
-            return new constructor(attributes)
+            return new constructor(attributes, ...children)
         } else {
             return SupportedSvgTags.has(tag)
                 ? document.createElementNS("http://www.w3.org/2000/svg", tag)
@@ -54,10 +54,6 @@ export default function(tag: string,
             }
         })
     }
-    if (isCustomElement && "content" in element) {
-        element.content = children
-    } else {
-        children.flat().forEach((value) => element.append(value))
-    }
+    children.flat().forEach((value) => element.append(value))
     return element
 }

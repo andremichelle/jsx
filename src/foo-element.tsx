@@ -1,5 +1,5 @@
 export class FooElement extends HTMLElement {
-    #content: ReadonlyArray<string | Element> = []
+    #children: ReadonlyArray<string | Element> = []
 
     constructor(construct: {
         index: number,
@@ -10,13 +10,13 @@ export class FooElement extends HTMLElement {
         console.log("FooElement", construct.index, construct.name)
     }
 
-    append(...nodes: ReadonlyArray<string | Element>) {
-        this.#content = nodes
+    append(...elements: ReadonlyArray<string | Element>) {
+        this.#children = elements
     }
 
     connectedCallback(): void {
         const divElement = document.createElement("div")
-        divElement.append(...this.#content)
+        divElement.append(...this.#children)
         this.appendChild(divElement)
     }
 
@@ -24,4 +24,3 @@ export class FooElement extends HTMLElement {
         // TODO dispose children
     }
 }
-
