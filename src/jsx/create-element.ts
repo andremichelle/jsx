@@ -1,4 +1,4 @@
-import { SupportedSvgTags } from "./supported-svg-tags"
+import { SupportedSvgTags } from "@jsx/supported-svg-tags"
 
 type DomElement = HTMLElement | SVGElement
 

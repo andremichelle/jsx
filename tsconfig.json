@@ -22,8 +22,8 @@
     "jsxFactory": "createElement",
     "baseUrl": ".",
     "paths": {
-      "@tsx/*": [
-        "src/tsx/*"
+      "@jsx/*": [
+        "src/jsx/*"
       ]
     }
   },

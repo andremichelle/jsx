@@ -1,4 +1,4 @@
-import { Ref } from "./jsx/create-element"
+import { Ref } from "@jsx/create-element"
 import { BarElement } from "./bar-element"
 
 export const test = () => {

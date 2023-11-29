@@ -1,4 +1,4 @@
-import { CustomElementRegistry } from "./jsx/definitions"
+import { CustomElementRegistry } from "@jsx/definitions"
 import { test } from "./test"
 
 (async () => {
