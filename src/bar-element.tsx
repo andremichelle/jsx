@@ -1,4 +1,6 @@
-export class BarElement extends HTMLElement {
+import { CustomElement } from "@jsx/definitions.ts"
+
+export class BarElement extends HTMLElement implements CustomElement {
     constructor(construct: {
         nested: {
             deep: {
@@ -9,6 +11,11 @@ export class BarElement extends HTMLElement {
         super()
 
         console.log("BarElement", construct.nested.deep.value)
+    }
+    connectedCallback(): void {
+    }
+
+    disconnectedCallback(): void {
     }
 
     foo(): void {

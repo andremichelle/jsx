@@ -1,4 +1,6 @@
-export class FooElement extends HTMLElement {
+import { CustomElement } from "@jsx/definitions.ts"
+
+export class FooElement extends HTMLElement implements CustomElement {
     #children: ReadonlyArray<string | Element> = []
 
     constructor({ index, name }: {
@@ -10,8 +12,8 @@ export class FooElement extends HTMLElement {
         console.log("FooElement", index, name)
     }
 
-    append(...elements: ReadonlyArray<string | Element>) {
-        this.#children = elements
+    append(...children: ReadonlyArray<string | Element>) {
+        this.#children = children
     }
 
     connectedCallback(): void {
