@@ -1,5 +1,5 @@
-import { Ref } from "./jsx/create-element.ts"
-import { BarElement } from "./bar-element.tsx"
+import { Ref } from "./jsx/create-element"
+import { BarElement } from "./bar-element"
 
 export const test = () => {
     const refBar = Ref.create<BarElement>()

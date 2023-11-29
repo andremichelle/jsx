@@ -1,5 +1,5 @@
-import { CustomElementRegistry } from "./jsx/definitions.ts"
-import { test } from "./test.tsx"
+import { CustomElementRegistry } from "./jsx/definitions"
+import { test } from "./test"
 
 (async () => {
     await CustomElementRegistry.load()

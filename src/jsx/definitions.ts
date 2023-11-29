@@ -1,7 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { BarElement } from "../bar-element.tsx"
-import { FooElement } from "../foo-element.tsx"
+import { BarElement } from "../bar-element"
+import { FooElement } from "../foo-element"
 
 export namespace CustomElementRegistry {
     export const Definitions = {
