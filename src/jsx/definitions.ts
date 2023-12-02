@@ -4,7 +4,7 @@ import { BarElement } from "../bar-element"
 import { FooElement } from "../foo-element"
 
 export namespace CustomElementRegistry {
-    export const Definitions: Record<string, CustomElementClass> = {
+    export const Definitions = {
         "c-foo": FooElement,
         "c-bar": BarElement
     } as const
@@ -15,10 +15,6 @@ export namespace CustomElementRegistry {
             customElements.define(name, clazz)
             return customElements.whenDefined(name)
         }))
-
-    type CustomElementClass = {
-        new(attributes: any): CustomElement
-    }
 }
 
 export interface CustomElement extends HTMLElement {
@@ -53,16 +49,16 @@ type NativeElements =
     "a": {
         href: string,
         target: string
-    } // TODO You need to extend it with missing attributes, if needed
+    }
 }
 
 type CustomElementDefinitions = typeof CustomElementRegistry.Definitions
 type CustomElementAttributes<T> =
     T extends new (...args: any[]) => infer R
-        ? R extends Element
+        ? R extends CustomElement
             ? ExtractAttributes<R> & ConstructorParameters<T>[0]
-            : never
-        : never
+            : "class does not produce a CustomElement"
+        : "not a class"
 
 type CustomElements = { [K in keyof CustomElementDefinitions]: CustomElementAttributes<CustomElementDefinitions[K]> }
 
