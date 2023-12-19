@@ -61,7 +61,6 @@ export default function(tag: string | ComponentFactory,
             }
         })
     }
-    // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe
     children.flat().forEach((value: string | DomElement | Placeholder.NodeValue) => {
         if (value instanceof Placeholder.NodeValue) {
             const child: Text = document.createTextNode(String(value.value))
