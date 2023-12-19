@@ -57,9 +57,9 @@ export default function(tag: string | ComponentFactory,
     }
     children.flat().forEach((value: string | DomElement | Placeholder.NodeValue) => {
         if (value instanceof Placeholder.NodeValue) {
-            const child: Text = document.createTextNode(String(value.value))
-            value.subscribe((value) => child.nodeValue = String(value))
-            element.append(child)
+            const text: Text = document.createTextNode(String(value.value))
+            value.subscribe(text)
+            element.append(text)
         } else {
             element.append(typeof value === "string" ? document.createTextNode(value) : value)
         }
