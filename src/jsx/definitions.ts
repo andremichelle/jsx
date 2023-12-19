@@ -1,28 +1,5 @@
 // noinspection JSUnusedGlobalSymbols
 
-import { BarElement } from "../bar-element"
-import { FooElement } from "../foo-element"
-
-export namespace CustomElementRegistry {
-    export const Definitions = {
-        "c-foo": FooElement,
-        "c-bar": BarElement
-    } as const
-
-    export const load = async () => Promise.all(Object
-        .entries(CustomElementRegistry.Definitions)
-        .map(([name, clazz]) => {
-            customElements.define(name, clazz)
-            return customElements.whenDefined(name)
-        }))
-}
-
-export interface CustomElement extends HTMLElement {
-    connectedCallback(): void
-    disconnectedCallback(): void
-    adoptedCallback?(): void
-}
-
 // These are all utility type to typescript understand usual html and svg elements.
 //
 type StringTypes =
@@ -52,22 +29,14 @@ type NativeElements =
     }
 }
 
-type CustomElementDefinitions = typeof CustomElementRegistry.Definitions
-type CustomElementAttributes<T> =
-    T extends new (...args: any[]) => infer R
-        ? R extends CustomElement
-            ? ExtractAttributes<R> & ConstructorParameters<T>[0]
-            : "class does not produce a CustomElement"
-        : "not a class"
-
-type CustomElements = { [K in keyof CustomElementDefinitions]: CustomElementAttributes<CustomElementDefinitions[K]> }
-
 declare global {
     interface Ref<E extends Element> {
         get(): E
     }
 
-    namespace JSX {interface IntrinsicElements extends NativeElements, CustomElements {}}
+    type DomElement = HTMLElement | SVGElement
+
+    namespace JSX {interface IntrinsicElements extends NativeElements {}}
 }
 
 export {}
