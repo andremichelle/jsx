@@ -1,6 +1,6 @@
 import { SupportedSvgTags } from "@jsx/supported-svg-tags"
-import { Placeholder } from "@jsx/placeholder.ts"
-import { safeWrite } from "../common/lang.ts"
+import { Modifier } from "@jsx/modifier.ts"
+import { canWrite, safeWrite } from "../common/lang.ts"
 
 class _Ref<E extends DomElement> implements Ref<E> {
     element: E | null = null
@@ -37,8 +37,8 @@ export default function(tag: string | ComponentFactory,
     if (attributes !== null) {
         Object.entries(attributes).forEach(([key, value]: [string, unknown]) => {
             if (key === "class") {
-                if (value instanceof Placeholder.ClassList) {
-                    value.addElement(element)
+                if (value instanceof Modifier.ClassList) {
+                    value.addTarget(element)
                 } else {
                     element.classList.add(...(<string>value).split(" "))
                 }
@@ -50,8 +50,10 @@ export default function(tag: string | ComponentFactory,
                 } else {
                     throw new Error("value of 'ref' must be of type '_Ref'")
                 }
+            } else if (value instanceof Modifier.Attribute) {
+                value.addTarget(element, key)
             } else {
-                if (key in element) {
+                if (canWrite(element, key)) {
                     safeWrite(element, key, value)
                 } else {
                     element.setAttribute(key, String(value))
@@ -59,10 +61,10 @@ export default function(tag: string | ComponentFactory,
             }
         })
     }
-    children.flat().forEach((value: string | DomElement | Placeholder.TextContent) => {
-        if (value instanceof Placeholder.TextContent) {
+    children.flat().forEach((value: string | DomElement | Modifier.TextValue) => {
+        if (value instanceof Modifier.TextValue) {
             const text: Text = document.createTextNode(String(value.value))
-            value.addElement(text)
+            value.addTarget(text)
             element.append(text)
         } else {
             element.append(typeof value === "string" ? document.createTextNode(value) : value)

@@ -1,9 +1,9 @@
 import { int, Procedure } from "./lang.ts"
 
-export class WeakRefs<T extends WeakKey> {
+export class WeakRefSet<T extends WeakKey> {
     readonly #set = new Set<WeakRef<T>>()
 
-    subscribe(value: T): void {this.#set.add(new WeakRef<T>(value))}
+    add(value: T): void {this.#set.add(new WeakRef<T>(value))}
 
     forEach(callback: Procedure<T>): void {
         for (const weakRef of this.#set) {
@@ -17,8 +17,9 @@ export class WeakRefs<T extends WeakKey> {
     }
 
     count(): int {
-        return Array.from(this.#set)
-            .reduce((count: int, weakRef) => weakRef.deref() === undefined ? count : count + 1, 0)
+        let count = 0
+        this.forEach(() => count++)
+        return count
     }
 
     clear(): void {this.#set.clear()}
