@@ -1,49 +1,63 @@
 import { Terminable } from "../common/terminable.ts"
-import { int, Procedure } from "../common/lang.ts"
-
-class WeakRefs<T extends WeakKey> {
-    readonly #set = new Set<WeakRef<T>>()
-
-    subscribe(value: T): void {this.#set.add(new WeakRef<T>(value))}
-
-    forEach(callback: Procedure<T>): void {
-        for (const weakRef of this.#set) {
-            const value = weakRef.deref()
-            if (value === undefined) {
-                this.#set.delete(weakRef)
-            } else {
-                callback(value)
-            }
-        }
-    }
-
-    count(): int {
-        return Array.from(this.#set)
-            .reduce((count: int, weakRef) => weakRef.deref() === undefined ? count : count + 1, 0)
-    }
-
-    clear(): void {this.#set.clear()}
-}
+import { int } from "../common/lang.ts"
+import { WeakRefs } from "../common/references.ts"
 
 export namespace Placeholder {
     export class TextContent<T = unknown> implements Terminable {
-        readonly #texts = new WeakRefs<Text>()
+        readonly #element = new WeakRefs<Text>()
 
         #value: T
 
         constructor(value: T) {this.#value = value}
 
-        subscribe(text: Text): void {this.#texts.subscribe(text)}
+        addElement(text: Text): void {this.#element.subscribe(text)}
 
         get value(): T {return this.#value}
         set value(value: T) {
             if (this.#value === value) {return}
             this.#value = value
-            this.#texts.forEach(text => text.nodeValue = String(value))
+            this.#element.forEach(text => text.nodeValue = String(value))
         }
 
-        countObservers(): int {return this.#texts.count()}
+        countObservers(): int {return this.#element.count()}
 
-        terminate(): void {this.#texts.clear()}
+        terminate(): void {this.#element.clear()}
+    }
+
+    export class ClassList implements Terminable {
+        readonly #elements = new WeakRefs<Element>()
+        readonly #classes = new Set<string>()
+        readonly #updateElement: (element: Element) => string =
+            (element: Element) => element.className = Array.from(this.#classes).join(" ")
+
+        add(className: string): void {
+            this.#classes.add(className)
+            this.#updateElements()
+        }
+
+        remove(className: string): void {
+            this.#classes.delete(className)
+            this.#updateElements()
+        }
+
+        toggle(className: string, force: boolean = false): void {
+            if (this.#classes.has(className) && !force) {
+                this.#classes.delete(className)
+            } else {
+                this.#classes.add(className)
+            }
+            this.#updateElements()
+        }
+
+        addElement(element: Element): void {
+            this.#elements.subscribe(element)
+            this.#updateElement(element)
+        }
+
+        countObservers(): int {return this.#elements.count()}
+
+        terminate(): void {this.#elements.clear()}
+
+        #updateElements(): void {this.#elements.forEach(this.#updateElement)}
     }
 }

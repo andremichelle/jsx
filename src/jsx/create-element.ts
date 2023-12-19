@@ -37,7 +37,11 @@ export default function(tag: string | ComponentFactory,
     if (attributes !== null) {
         Object.entries(attributes).forEach(([key, value]: [string, unknown]) => {
             if (key === "class") {
-                element.classList.add(...(<string>value).split(" "))
+                if (value instanceof Placeholder.ClassList) {
+                    value.addElement(element)
+                } else {
+                    element.classList.add(...(<string>value).split(" "))
+                }
             } else if (key === "style") {
                 Object.assign(element.style, <CSSStyleDeclaration>value)
             } else if (key === "ref") {
@@ -58,7 +62,7 @@ export default function(tag: string | ComponentFactory,
     children.flat().forEach((value: string | DomElement | Placeholder.TextContent) => {
         if (value instanceof Placeholder.TextContent) {
             const text: Text = document.createTextNode(String(value.value))
-            value.subscribe(text)
+            value.addElement(text)
             element.append(text)
         } else {
             element.append(typeof value === "string" ? document.createTextNode(value) : value)
