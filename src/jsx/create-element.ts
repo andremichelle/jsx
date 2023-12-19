@@ -55,8 +55,8 @@ export default function(tag: string | ComponentFactory,
             }
         })
     }
-    children.flat().forEach((value: string | DomElement | Placeholder.NodeValue) => {
-        if (value instanceof Placeholder.NodeValue) {
+    children.flat().forEach((value: string | DomElement | Placeholder.TextContent) => {
+        if (value instanceof Placeholder.TextContent) {
             const text: Text = document.createTextNode(String(value.value))
             value.subscribe(text)
             element.append(text)

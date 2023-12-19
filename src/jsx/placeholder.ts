@@ -1,42 +1,48 @@
 import { Terminable } from "../common/terminable.ts"
-import { int } from "../common/lang.ts"
+import { int, Procedure } from "../common/lang.ts"
+
+class WeakRefs<T extends WeakKey> {
+    readonly #set = new Set<WeakRef<T>>()
+
+    subscribe(value: T): void {this.#set.add(new WeakRef<T>(value))}
+
+    forEach(callback: Procedure<T>): void {
+        for (const weakRef of this.#set) {
+            const value = weakRef.deref()
+            if (value === undefined) {
+                this.#set.delete(weakRef)
+            } else {
+                callback(value)
+            }
+        }
+    }
+
+    count(): int {
+        return Array.from(this.#set)
+            .reduce((count: int, weakRef) => weakRef.deref() === undefined ? count : count + 1, 0)
+    }
+
+    clear(): void {this.#set.clear()}
+}
 
 export namespace Placeholder {
-    export class NodeValue<T = unknown> implements Terminable {
-        readonly #texts = new Set<WeakRef<Text>>()
+    export class TextContent<T = unknown> implements Terminable {
+        readonly #texts = new WeakRefs<Text>()
 
         #value: T
 
         constructor(value: T) {this.#value = value}
 
-        subscribe(text: Text): void {this.#texts.add(new WeakRef<Text>(text))}
+        subscribe(text: Text): void {this.#texts.subscribe(text)}
 
         get value(): T {return this.#value}
         set value(value: T) {
             if (this.#value === value) {return}
             this.#value = value
-            for (const weakRef of this.#texts) {
-                const text = weakRef.deref()
-                if (text === undefined) {
-                    this.#texts.delete(weakRef)
-                } else {
-                    text.nodeValue = String(value)
-                }
-            }
+            this.#texts.forEach(text => text.nodeValue = String(value))
         }
 
-        clean(): void {
-            for (const weakRef of this.#texts) {
-                if (weakRef.deref() === undefined) {
-                    this.#texts.delete(weakRef)
-                }
-            }
-        }
-
-        countObservers(): int {
-            return Array.from(this.#texts)
-                .reduce((count: int, weakRef) => weakRef.deref() === undefined ? count : count + 1, 0)
-        }
+        countObservers(): int {return this.#texts.count()}
 
         terminate(): void {this.#texts.clear()}
     }
