@@ -12,11 +12,10 @@ class _Ref<E extends DomElement> implements Ref<E> {
 
 export const Ref = { create: <E extends DomElement>(): Ref<E> => new _Ref<E>() } as const
 
-type DomElement = HTMLElement | SVGElement
+export type DomElement = HTMLElement | SVGElement
 
 type ComponentFactory = (attributes: Readonly<Record<string, any>>) => DomElement
 
-// noinspection JSUnusedGlobalSymbols
 /**
  * This method must be exposed as the "createElement" method
  * to be passively called on each html element defined in jsx files.
@@ -37,12 +36,7 @@ export default function(tag: string | ComponentFactory,
     })()
     if (attributes !== null) {
         Object.entries(attributes).forEach(([key, value]: [string, unknown]) => {
-            console.log(key, value)
-            if (value instanceof Placeholder.NodeValue) {
-                value.subscribe(() => {
-                    console.log("Changed", element)
-                })
-            } else if (key === "class") {
+            if (key === "class") {
                 element.classList.add(...(<string>value).split(" "))
             } else if (key === "style") {
                 Object.assign(element.style, <CSSStyleDeclaration>value)
