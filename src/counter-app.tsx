@@ -7,7 +7,7 @@ const RemoveButton = ({ target, label }: { target: Ref<DomElement>, label: strin
 
 export const CounterApp = () => {
     const counterValue = new Placeholder.TextContent(0)
-    const classList = new Placeholder.ClassList()
+    const classList = new Placeholder.ClassList("red")
     const componentRef = Ref.create()
 
     return (

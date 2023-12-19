@@ -25,10 +25,16 @@ export namespace Placeholder {
     }
 
     export class ClassList implements Terminable {
-        readonly #elements = new WeakRefs<Element>()
-        readonly #classes = new Set<string>()
+        readonly #elements: WeakRefs<Element>
+        readonly #classes: Set<string>
+
         readonly #updateElement: (element: Element) => string =
             (element: Element) => element.className = Array.from(this.#classes).join(" ")
+
+        constructor(...classes: Array<string>) {
+            this.#elements = new WeakRefs<Element>()
+            this.#classes = new Set<string>(classes)
+        }
 
         add(className: string): void {
             this.#classes.add(className)
