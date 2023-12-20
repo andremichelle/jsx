@@ -16,7 +16,7 @@ export class WeakRefSet<T extends WeakKey> {
         }
     }
 
-    count(): int {
+    countReferences(): int {
         let count = 0
         this.forEach(() => count++)
         return count
