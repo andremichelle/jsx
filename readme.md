@@ -65,6 +65,16 @@ export const CounterApp = () => {
                 <label>Toggle svg use href attribute</label>
             </button>
             <RemoveButton target={componentRef} label="Remove App" />
+            <div>
+                <h4>Mapping to list items:</h4>
+                <ul>
+                    {
+                        // You can also inline child factories
+                        [2, 3, 5, 7, 11, 13].map(prime => <li>{prime} is prime</li>)
+                    }
+                    <li>Even I know you clicked {counterValue}</li>
+                </ul>
+            </div>
         </div>
     )
 }

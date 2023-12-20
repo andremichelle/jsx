@@ -5,7 +5,7 @@ import { Inject } from "@jsx/inject.ts"
 import { canWrite, safeWrite } from "@common/lang.ts"
 import { DomElement } from "@jsx/definitions.ts"
 
-type ComponentFactory = (attributes: Readonly<Record<string, any>>) => DomElement
+type ComponentFactory = (attributes: Readonly<Record<string, any>>) => DomElement | Array<DomElement>
 type TagOrFactory = string | ComponentFactory
 
 const EmptyAttributes = {} as const
@@ -17,8 +17,19 @@ const EmptyAttributes = {} as const
  */
 export default function(tagOrFactory: TagOrFactory,
                         attributes: Readonly<Record<string, any>> | null,
-                        ...children: ReadonlyArray<string | DomElement>): DomElement {
-    const element = createElement(tagOrFactory, attributes)
+                        ...children: ReadonlyArray<string | DomElement>): DomElement | Array<DomElement> {
+    const isFactory = typeof tagOrFactory === "function"
+    let element
+    if (isFactory) {
+        element = tagOrFactory(attributes ?? EmptyAttributes)
+        if (Array.isArray(element)) {
+            return element
+        }
+    } else {
+        element = SupportedSvgTags.has(tagOrFactory)
+            ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactory)
+            : document.createElement(tagOrFactory)
+    }
     if (attributes !== null) {
         transferAttributes(element, attributes)
     }
@@ -26,17 +37,6 @@ export default function(tagOrFactory: TagOrFactory,
         transferChildren(element, children)
     }
     return element
-}
-
-const createElement = (tagOrFactory: TagOrFactory, attributes: Readonly<Record<string, any>> | null): DomElement => {
-    const isFactory = typeof tagOrFactory === "function"
-    if (isFactory) {
-        return tagOrFactory(attributes ?? EmptyAttributes)
-    } else {
-        return SupportedSvgTags.has(tagOrFactory)
-            ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactory)
-            : document.createElement(tagOrFactory)
-    }
 }
 
 const transferAttributes = (element: DomElement, attributes: Readonly<Record<string, any>>) => {
@@ -68,7 +68,7 @@ const transferAttributes = (element: DomElement, attributes: Readonly<Record<str
 }
 
 const transferChildren = (element: DomElement, children: ReadonlyArray<string | DomElement>) => {
-    children.forEach((value: string | DomElement | Inject.TextValue) => {
+    children.flat().forEach((value: string | DomElement | Inject.TextValue) => {
         if (value instanceof Inject.TextValue) {
             const text: Text = document.createTextNode(String(value.value))
             value.addTarget(text)
