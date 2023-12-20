@@ -68,12 +68,12 @@ const transferAttributes = (element: DomElement, attributes: Readonly<Record<str
 }
 
 const transferChildren = (element: DomElement, children: ReadonlyArray<string | DomElement>) => {
-    children.flat().forEach((value: string | DomElement | Inject.TextValue) => {
+    children.flat().forEach((value: null | undefined | false | string | DomElement | Inject.TextValue) => {
         if (value instanceof Inject.TextValue) {
             const text: Text = document.createTextNode(String(value.value))
             value.addTarget(text)
             element.append(text)
-        } else {
+        } else if (value !== null && value !== undefined && value !== false) {
             element.append(value)
         }
     })
