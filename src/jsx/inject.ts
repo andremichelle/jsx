@@ -1,5 +1,5 @@
 import { Terminable } from "@common/terminable.ts"
-import { WeakRefSet } from "@common/references.ts"
+import { WeakRefSet } from "@common/weak.ts"
 import { Option } from "@common/option.ts"
 import { Stringifiable } from "@common/lang.ts"
 
