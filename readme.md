@@ -20,15 +20,15 @@ Allows to get a reference to a single dom element from any built tsx.
 
 ### Inject.TextValue
 
-Allows you to easily update text content in a single or multiple dom elements.
+Allows to easily update text content in a single or multiple dom elements.
 
 ### Inject.ClassList
 
-Allows you to easily update classes in a single or multiple dom elements.
+Allows to easily update classes in a single or multiple dom elements.
 
 ### Inject.Attributes
 
-Allows you to easily update an attribute in a single or multiple dom elements.
+Allows to easily update an attribute in a single or multiple dom elements.
 
 ### Example:
 
