@@ -32,7 +32,7 @@ Allows you to easily update an attribute in a single or multiple dom elements.
 
 ### Example:
 
-<video src="jsx.mov" controls="controls"></video>
+https://github.com/andremichelle/jsx/assets/6459974/74af3467-f79b-4d50-a0b1-598e6b169a35
 
 ```tsx
 import { Inject } from "@jsx/inject.ts"
@@ -69,8 +69,3 @@ export const CounterApp = () => {
     )
 }
 ```
-
-### Future Plans
-
-* Collecting feedback and feature requests
-* Implement a simple css injection system
