@@ -24,6 +24,9 @@
     "paths": {
       "@jsx/*": [
         "src/jsx/*"
+      ],
+      "@common/*": [
+        "src/common/*"
       ]
     }
   },

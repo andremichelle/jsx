@@ -35,6 +35,7 @@ export type Comparable<T> = { compareTo: (other: T) => number }
 export type Equality<T> = { equals: (other: T) => boolean }
 export type Nullable<T> = T | null
 export type AnyFunc = (...args: any[]) => any
+export type Stringifiable = { toString(): String }
 export const isDefined = <T>(value: Nullish<T>): value is T => value !== undefined && value !== null
 export const asDefined = <T>(value: Nullish<T>, fail: string = "asDefined failed"): T => value === null || value === undefined ? panic(fail) : value
 export const isInstanceOf = <T>(obj: unknown, clazz: Class<T>): obj is T => obj instanceof clazz
