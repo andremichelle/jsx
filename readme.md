@@ -10,7 +10,7 @@ box' magic and gives you control over when rendering occurs.
 ### Magic Injects
 
 However, there are four "magic pills" in **JSX Launchpad** that simplify
-the development process. These are not confined to the scope of a component. You maintain full control over the DOM and
+the development process. These are **not** confined to the scope of a component. You maintain full control over the DOM and
 its state at all times. These magic pills can be injected anywhere in your code, eliminating the need for 'useEffect'
 or 'useState'.
 
@@ -20,15 +20,15 @@ Allows to get a reference to a single dom element from any built tsx.
 
 ### Inject.TextValue
 
-Allows you to easily update text content in a single or multiple dom elements.
+Allows to easily update text content in a single or multiple dom elements.
 
 ### Inject.ClassList
 
-Allows you to easily update classes in a single or multiple dom elements.
+Allows to easily update classes in a single or multiple dom elements.
 
 ### Inject.Attributes
 
-Allows you to easily update an attribute in a single or multiple dom elements.
+Allows to easily update an attribute in a single or multiple dom elements.
 
 ### Example:
 
