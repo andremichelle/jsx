@@ -32,6 +32,8 @@ Allows you to easily update an attribute in a single or multiple dom elements.
 
 ### Example:
 
+<video src="jsx.mov" controls="controls"></video>
+
 ```tsx
 import { Inject } from "@jsx/inject.ts"
 import { DomElement } from "@jsx/definitions.ts"
