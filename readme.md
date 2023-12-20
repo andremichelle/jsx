@@ -32,7 +32,7 @@ Allows to easily update an attribute in a single or multiple dom elements.
 
 ### Example:
 
-https://github.com/andremichelle/jsx/assets/6459974/74af3467-f79b-4d50-a0b1-598e6b169a35
+https://github.com/andremichelle/jsx/assets/6459974/4559c8db-4a15-471f-8a08-81aadd1ea419
 
 ```tsx
 import { Inject } from "@jsx/inject.ts"
