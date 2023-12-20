@@ -10,7 +10,7 @@ box' magic and gives you control over when rendering occurs.
 ### Magic Injects
 
 However, there are four "magic pills" in **JSX Launchpad** that simplify
-the development process. These are not confined to the scope of a component. You maintain full control over the DOM and
+the development process. These are **not** confined to the scope of a component. You maintain full control over the DOM and
 its state at all times. These magic pills can be injected anywhere in your code, eliminating the need for 'useEffect'
 or 'useState'.
 
