@@ -69,3 +69,8 @@ export const CounterApp = () => {
     )
 }
 ```
+
+### Future Plans
+
+* Collecting feedback and feature requests
+* Implement a simple css injection system
