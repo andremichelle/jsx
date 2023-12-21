@@ -46,4 +46,4 @@ A Loader accepts a promise and updates to either a loading state or success or f
 https://github.com/andremichelle/jsx/assets/6459974/4559c8db-4a15-471f-8a08-81aadd1ea419
 
 
-https://github.com/andremichelle/jsx/blob/6da4336d4503428f689c5f66ec7c99693337d4c6/src/example-app.tsx#L1
+https://github.com/andremichelle/jsx/blob/6da4336d4503428f689c5f66ec7c99693337d4c6/src/example-app.tsx#L1-L999
