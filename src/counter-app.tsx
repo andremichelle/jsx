@@ -1,7 +1,6 @@
 import { Inject } from "@jsx/inject.ts"
 import { DomElement } from "@jsx/definitions.ts"
-import { Exec } from "@common/lang.ts"
-import { Hotspot } from "@jsx/utils.ts"
+import { Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 
 // classic function component
 const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
@@ -13,7 +12,7 @@ export const CounterApp = () => {
     const counterValue = Inject.text(0)
     const classList = Inject.classes("")
     const useHRefAttr = Inject.attribute("#checkbox-false")
-    const hotSpot = Inject.ref<{ update: Exec }>()
+    const hotSpotClicker = Inject.ref<HotspotUpdater>()
     return (
         <div ref={componentRef}
              style={{ display: "flex", flexDirection: "column", width: "fit-content", rowGap: "1em" }}>
@@ -47,9 +46,9 @@ export const CounterApp = () => {
                 </ul>
             </div>
             <div>
-                <Hotspot ref={hotSpot}
+                <Hotspot ref={hotSpotClicker}
                          render={() => <p>{`Hotspot (Last Update: ${new Date().toLocaleString()})`}</p>} />
-                <button onclick={() => hotSpot.get().update()}>Update HotSpot</button>
+                <button onclick={() => hotSpotClicker.get().update()}>Update HotSpot</button>
             </div>
         </div>
     )
