@@ -1,30 +1,19 @@
 import { Inject } from "@jsx/inject.ts"
 import { DomElement } from "@jsx/definitions.ts"
-import { Exec, Provider } from "@common/lang.ts"
-import Ref = Inject.Ref
+import { Exec } from "@common/lang.ts"
+import { Hotspot } from "@jsx/utils.ts"
 
+// classic function component
 const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
     <button onclick={() => target.get().remove()}>{label}</button>
 )
-
-type HotSpotProps = { render: Provider<Element>, ref: Ref<Exec> }
-
-const Hotspot = ({ render, ref }: HotSpotProps) => {
-    let current = render()
-    ref.addTarget(() => {
-        const next = render()
-        current.replaceWith(next)
-        current = next
-    })
-    return current
-}
 
 export const CounterApp = () => {
     const componentRef = Inject.ref<HTMLDivElement>()
     const counterValue = Inject.text(0)
     const classList = Inject.classes("")
     const useHRefAttr = Inject.attribute("#checkbox-false")
-    const hotSpot = Inject.ref<Provider<Element>>()
+    const hotSpot = Inject.ref<{ update: Exec }>()
     return (
         <div ref={componentRef}
              style={{ display: "flex", flexDirection: "column", width: "fit-content", rowGap: "1em" }}>
@@ -51,14 +40,17 @@ export const CounterApp = () => {
                         [2, 3, 5, 7, 11, 13].map(prime => <li>{prime} is prime</li>)
                     }
                     <li>Even I know you clicked {counterValue}</li>
+                    {/* The following values will not be rendered */}
+                    {false}
+                    {null}
+                    {undefined}
                 </ul>
             </div>
-            {false}
-            <Hotspot ref={hotSpot} render={() => <p>{Math.random()}</p>} />
-            <button onclick={() => {
-                hotSpot.get()()
-            }}>Update HotSpot
-            </button>
+            <div>
+                <Hotspot ref={hotSpot}
+                         render={() => <p>{`Hotspot (Last Update: ${new Date().toLocaleString()})`}</p>} />
+                <button onclick={() => hotSpot.get().update()}>Update HotSpot</button>
+            </div>
         </div>
     )
 }
