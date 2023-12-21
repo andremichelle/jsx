@@ -12,6 +12,9 @@ const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label
     <button onclick={() => target.get().remove()}>{label}</button>
 )
 
+// false, null, undefined will not be rendered
+const Null = () => null
+
 // App entry point
 export const ExampleApp = () => {
     const componentRef = Inject.ref<HTMLElement>()
@@ -49,6 +52,7 @@ export const ExampleApp = () => {
                     {false}
                     {null}
                     {undefined}
+                    <Null />
                 </ul>
             </div>
             <div>

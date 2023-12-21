@@ -5,10 +5,11 @@ import { Inject } from "@jsx/inject.ts"
 import { canWrite, safeWrite } from "@common/lang.ts"
 import { DomElement } from "@jsx/definitions.ts"
 
-type ComponentFactory = (attributes: Readonly<Record<string, any>>) => DomElement | Array<DomElement>
-type TagOrFactory = string | ComponentFactory
+type FactoryProduct = false | null | undefined | DomElement | Array<DomElement>
+type Factory = (attributes: Readonly<Record<string, any>>) => FactoryProduct
+type TagOrFactory = string | Factory
 
-const EmptyAttributes = {} as const
+const EmptyAttributes = Object.freeze({})
 
 /**
  * This method must be exposed as the "createElement" method
@@ -17,14 +18,15 @@ const EmptyAttributes = {} as const
  */
 export default function(tagOrFactory: TagOrFactory,
                         attributes: Readonly<Record<string, any>> | null,
-                        ...children: ReadonlyArray<string | DomElement>): DomElement | Array<DomElement> {
+                        ...children: ReadonlyArray<string | DomElement>): FactoryProduct {
     const isFactory = typeof tagOrFactory === "function"
     let element
     if (isFactory) {
         element = tagOrFactory(attributes ?? EmptyAttributes)
-        if (Array.isArray(element)) {
+        if (element === false || element === null || element === undefined || Array.isArray(element)) {
             return element
         }
+        // factories must have consumed all attributes
         attributes = null
     } else {
         element = SupportedSvgTags.has(tagOrFactory)
