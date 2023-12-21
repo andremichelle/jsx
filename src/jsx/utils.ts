@@ -1,4 +1,4 @@
-import { Exec, Provider } from "@common/lang.ts"
+import { Exec, Func, Provider } from "@common/lang.ts"
 import { Inject } from "@jsx/inject.ts"
 
 export type HotspotUpdater = { update: Exec }
@@ -15,5 +15,26 @@ export const Hotspot = ({ render, ref }: HotSpotProps) => {
         }
     }
     ref.addTarget(updater)
+    return current
+}
+
+export type AwaitProps<T> = {
+    promise: Promise<T>,
+    loading: Provider<Element>,
+    success: Func<T, Element>,
+    failure: Func<any, Element>
+}
+
+export const Await = <T>({ promise, loading, success, failure }: AwaitProps<T>) => {
+    let current = loading()
+    promise.then(result => {
+        const next = success(result)
+        current.replaceWith(next)
+        current = next
+    }, reason => {
+        const next = failure(reason)
+        current.replaceWith(next)
+        current = next
+    })
     return current
 }
