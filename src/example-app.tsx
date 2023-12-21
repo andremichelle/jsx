@@ -10,12 +10,13 @@ const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label
     <button onclick={() => target.get().remove()}>{label}</button>
 )
 
-export const CounterApp = () => {
+// App entry point
+export const ExampleApp = () => {
     const componentRef = Inject.ref<HTMLDivElement>()
     const counterValue = Inject.text(0)
     const classList = Inject.classes("")
     const useHRefAttr = Inject.attribute("#checkbox-false")
-    const hotSpotClicker = Inject.ref<HotspotUpdater>()
+    const hotSpot = Inject.ref<HotspotUpdater>()
     return (
         <div ref={componentRef}
              style={{ display: "flex", flexDirection: "column", width: "fit-content", rowGap: "1em" }}>
@@ -49,9 +50,9 @@ export const CounterApp = () => {
                 </ul>
             </div>
             <div>
-                <Hotspot ref={hotSpotClicker}
+                <Hotspot ref={hotSpot}
                          render={() => <p>{`Hotspot (Last Update: ${new Date().toLocaleString()})`}</p>} />
-                <button onclick={() => hotSpotClicker.get().update()}>Update HotSpot</button>
+                <button onclick={() => hotSpot.get().update()}>Update HotSpot</button>
             </div>
             <div>
                 <h4>Lovely Numbers</h4>

@@ -9,9 +9,11 @@ export const Hotspot = ({ render, ref }: HotSpotProps) => {
     let current: Element = render()
     const updater = {
         update: () => {
-            const next = render()
-            current.replaceWith(next)
-            current = next
+            if (current.isConnected) {
+                const next = render()
+                current.replaceWith(next)
+                current = next
+            }
         }
     }
     ref.addTarget(updater)
@@ -26,15 +28,15 @@ export type AwaitProps<T> = {
 }
 
 export const Await = <T>({ promise, loading, success, failure }: AwaitProps<T>) => {
-    let current = loading()
+    const element = loading()
     promise.then(result => {
-        const next = success(result)
-        current.replaceWith(next)
-        current = next
+        if (element.isConnected) {
+            element.replaceWith(success(result))
+        }
     }, reason => {
-        const next = failure(reason)
-        current.replaceWith(next)
-        current = next
+        if (!element.isConnected) {
+            element.replaceWith(failure(reason))
+        }
     })
-    return current
+    return element
 }
