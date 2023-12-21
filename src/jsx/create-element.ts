@@ -25,6 +25,7 @@ export default function(tagOrFactory: TagOrFactory,
         if (Array.isArray(element)) {
             return element
         }
+        attributes = null
     } else {
         element = SupportedSvgTags.has(tagOrFactory)
             ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactory)

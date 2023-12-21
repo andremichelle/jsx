@@ -1,15 +1,30 @@
 import { Inject } from "@jsx/inject.ts"
 import { DomElement } from "@jsx/definitions.ts"
+import { Exec, Provider } from "@common/lang.ts"
+import Ref = Inject.Ref
 
 const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
     <button onclick={() => target.get().remove()}>{label}</button>
 )
+
+type HotSpotProps = { render: Provider<Element>, ref: Ref<Exec> }
+
+const Hotspot = ({ render, ref }: HotSpotProps) => {
+    let current = render()
+    ref.addTarget(() => {
+        const next = render()
+        current.replaceWith(next)
+        current = next
+    })
+    return current
+}
 
 export const CounterApp = () => {
     const componentRef = Inject.ref<HTMLDivElement>()
     const counterValue = Inject.text(0)
     const classList = Inject.classes("")
     const useHRefAttr = Inject.attribute("#checkbox-false")
+    const hotSpot = Inject.ref<Provider<Element>>()
     return (
         <div ref={componentRef}
              style={{ display: "flex", flexDirection: "column", width: "fit-content", rowGap: "1em" }}>
@@ -39,6 +54,11 @@ export const CounterApp = () => {
                 </ul>
             </div>
             {false}
+            <Hotspot ref={hotSpot} render={() => <p>{Math.random()}</p>} />
+            <button onclick={() => {
+                hotSpot.get()()
+            }}>Update HotSpot
+            </button>
         </div>
     )
 }
