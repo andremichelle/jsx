@@ -8,6 +8,7 @@ are fine with: `npm install` and `vite`
 * `npx create-vite . --template vanilla-ts`
 * `npm install @rollup/plugin-inject --save-dev`
 * `npm install @types/node --save-dev`
+* `npm install -D sass`
 * Add to `ts-config.compilerOptions`
     * `"jsx": "preserve"`
     * `"jsxFactory": "createElement"`

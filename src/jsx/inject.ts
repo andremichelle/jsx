@@ -4,7 +4,7 @@ import { Option } from "@common/option.ts"
 import { Stringifiable } from "@common/lang.ts"
 
 export namespace Inject {
-    export const ref = <T = Element>() => new Ref<T>()
+    export const ref = <T>() => new Ref<T>()
     export const text = <T extends Stringifiable>(initialValue: T) => new TextValue<T>(initialValue)
     export const classes = (...initialClassNames: Array<string>) => new ClassList(initialClassNames)
     export const attribute = (initialAttributeValue: string) => new Attribute(initialAttributeValue)
@@ -13,7 +13,7 @@ export namespace Inject {
         addTarget(target: T, ...args: Array<unknown>): void
     }
 
-    export class Ref<T = Element> implements Injector<T> {
+    export class Ref<T> implements Injector<T> {
         #target: Option<T> = Option.None
 
         get(): T {return this.#target.unwrap("No target provided")}

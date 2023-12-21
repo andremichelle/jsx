@@ -52,21 +52,25 @@ import { Await, Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Wait } from "@common/wait.ts"
 import { TimeSpan } from "@common/time-span.ts"
 import { int } from "@common/lang.ts"
+import { Html } from "@ui/html.ts"
+import css from "./example-app.sass?inline"
 
 // classic function component
 const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
     <button onclick={() => target.get().remove()}>{label}</button>
 )
 
+// App entry point
 export const ExampleApp = () => {
-    const componentRef = Inject.ref<HTMLDivElement>()
+    const componentRef = Inject.ref<HTMLElement>()
     const counterValue = Inject.text(0)
     const classList = Inject.classes("")
     const useHRefAttr = Inject.attribute("#checkbox-false")
     const hotSpot = Inject.ref<HotspotUpdater>()
+    const className = Html.adoptStyleSheet(css, "example-app")
     return (
-        <div ref={componentRef}
-             style={{ display: "flex", flexDirection: "column", width: "fit-content", rowGap: "1em" }}>
+        <main class={className}
+              ref={componentRef}>
             <h3>Example:</h3>
             <div style={{ display: "flex", columnGap: "0.5em" }}>
                 <button onclick={() => {classList.toggle("red")}}>Toggle class red</button>
@@ -109,12 +113,7 @@ export const ExampleApp = () => {
                        failure={(reason) => <p>failure due to {reason}</p>}
                 />
             </div>
-        </div>
+        </main>
     )
 }
 ```
-
-### Future Plans
-
-* Collecting feedback and feature requests
-* Implement a simple css injection system
