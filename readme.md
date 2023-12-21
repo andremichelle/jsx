@@ -43,7 +43,7 @@ A Loader accepts a promise and updates to either a loading state or success or f
 
 ### Example:
 
-https://github.com/andremichelle/jsx/assets/6459974/4559c8db-4a15-471f-8a08-81aadd1ea419
+https://github.com/andremichelle/jsx/assets/6459974/f39e7c2b-7c8d-481b-85d4-c3cb04a39901
 
 ```tsx
 import { Inject } from "@jsx/inject.ts"
