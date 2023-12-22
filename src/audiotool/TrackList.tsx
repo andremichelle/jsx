@@ -1,40 +1,34 @@
 import { Track, UserTrackList } from "./api.ts"
-import { int } from "@common/lang.ts"
-import { Await } from "@jsx/utils.ts"
 import { Playback } from "./playback.ts"
+import { int } from "@common/lang.ts"
+import css from "./TrackList.sass?inline"
+import { Html } from "@ui/html.ts"
+
+const className = Html.adoptStyleSheet(css, "track-list")
 
 export type TrackListProps = {
-    request: RequestInfo
+    data: UserTrackList
     playback: Playback
 }
 
-export const TrackList = ({ request, playback }: TrackListProps) => (
-    <Await<UserTrackList>
-        promise={() => fetch(request).then(x => x.json())}
-        loading={() => <div class="loading">loading</div>}
-        success={(result) => (
-            <div>
-                <h1>{result.name}</h1>
-                <div class="tracks">
-                    {result.tracks.map((track: Track, index: int) => <TrackListItem playback={playback}
-                                                                                    track={track}
-                                                                                    index={index} />)}
-                </div>
-            </div>)}
-        failure={({ retry }) => (
-            <div class="failure">
-                <p>Could not load tracklist.</p>
-                <button onclick={retry}>Retry</button>
-            </div>)} />
+export const TrackList = ({ data, playback }: TrackListProps) => (
+    <div class={className}>
+        <h1>{data.name}</h1>
+        <div className="tracks">
+            {data.tracks.map((track: Track, index: int) => <TrackListItem playback={playback}
+                                                                          track={track}
+                                                                          index={index} />)}
+        </div>
+    </div>
 )
 
-type TrackListItemProps = {
+export type TrackListItemProps = {
     playback: Playback
     track: Track
     index: int
 }
 
-const TrackListItem = ({ playback, track, index }: TrackListItemProps) => (
+export const TrackListItem = ({ playback, track, index }: TrackListItemProps) => (
     <div class="track" data-track-key={track.key}>
         <button class="play" onclick={(event: Event) => {
             event.stopPropagation()
@@ -48,9 +42,9 @@ const TrackListItem = ({ playback, track, index }: TrackListItemProps) => (
                 <a href={`#tracks/${user.key}`}>{user.name}</a>
             ))}</div>
         </div>
-        <a href={`#genre/${track.genreKey}`} class="genre">{track.genreName}</a>
         <span class="date">{dateToString(new Date(track.created))}</span>
         <span class="duration">{durationToString(track.duration)}</span>
+        <a href={`#genre/${track.genreKey}`} class="genre">{track.genreName}</a>
     </div>
 )
 

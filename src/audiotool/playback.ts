@@ -1,7 +1,7 @@
 import { Option } from "@common/option.ts"
 import { Track } from "./api.ts"
 import { Notifier } from "@common/observers.ts"
-import { Procedure, unitValue } from "@common/lang.ts"
+import { isDefined, Procedure, unitValue } from "@common/lang.ts"
 import { Subscription } from "@common/terminable.ts"
 
 export type PlaybackEvent = {
@@ -20,8 +20,6 @@ export type PlaybackEvent = {
     state: "error"
     reason: string
 }
-
-export type PlaybackState = PlaybackEvent["state"]
 
 export class Playback {
     readonly #audio: HTMLAudioElement
@@ -46,22 +44,7 @@ export class Playback {
         this.eject()
         this.active = Option.wrap(track)
         this.#notify({ state: "buffering" })
-        this.#play(track)
-    }
-
-    playTrackFrom(track: Track, position: unitValue): void {
-        if (this.#active.contains(track)) {
-            this.#audio.currentTime = track.duration / 1000 * position
-            if (this.#audio.paused) {
-                this.#audio.play().catch()
-            }
-            return
-        }
-        this.eject()
-        this.active = Option.wrap(track)
-        this.#notify({ state: "buffering" })
-        this.#play(track)
-        this.#audio.currentTime = track.duration / 1000 * position
+        this.#playAudio(track)
     }
 
     eject(): void {
@@ -82,8 +65,8 @@ export class Playback {
         this.#notify({ state: "activate", track })
     }
 
-    #play(track: Track): void {
-        this.#audio.onended = () => {this.active = Option.None} // TODO Find successor
+    #playAudio(track: Track): void {
+        this.#audio.onended = () => this.active.ifSome(track => {if (isDefined(track.next)) {this.toggle(track.next)}})
         this.#audio.oncanplay = () => this.#notify({ state: "playing" })
         this.#audio.onpause = () => this.#notify({ state: "paused" })
         this.#audio.onerror = (event, _source, _lineno, _colno, error) => this.#notify({

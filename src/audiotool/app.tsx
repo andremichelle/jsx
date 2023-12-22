@@ -3,8 +3,9 @@ import { Html } from "@ui/html.ts"
 import css from "./app.sass?inline"
 import { Playback } from "./playback.ts"
 import { Inject } from "@jsx/inject.ts"
-import { TrackList } from "./TrackList.tsx"
+import { AwaitTrackList } from "./AwaitTrackList.tsx"
 import { Option } from "@common/option.ts"
+import { Player } from "./Player.tsx"
 
 const playback = new Playback()
 playback.subscribe(event => {
@@ -42,20 +43,19 @@ const router = (url: string): Option<RequestInfo> => {
 }
 
 export const AudiotoolApp = () => {
-    const trackListUpdater = Inject.ref<HotspotUpdater>()
-
     let request: Option<RequestInfo> = router(location.href)
+    const trackListUpdater = Inject.ref<HotspotUpdater>()
     window.addEventListener("hashchange", (event: HashChangeEvent) => {
         request = router(event.newURL)
         trackListUpdater.get().update()
     })
-
     return (
         <main class={Html.adoptStyleSheet(css, "audiotool")}>
             <Hotspot ref={trackListUpdater} render={() => request.match({
                 none: () => <p>Nothing selected. Start with <a href="#tracks/sandburgen">Sandburgen</a></p>,
-                some: request => <TrackList playback={playback} request={request} />
+                some: request => <AwaitTrackList playback={playback} request={request} />
             })} />
+            <Player />
         </main>
     )
 }
