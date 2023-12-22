@@ -45,5 +45,9 @@ export const Await = <T>({ promise, loading, success, failure }: AwaitProps<T>) 
         })
         return current
     }
-    return start()
+    // we put this in a container to keep an exchangeable element
+    const contents = document.createElement("div")
+    contents.style.display = "contents"
+    contents.appendChild(start())
+    return contents
 }

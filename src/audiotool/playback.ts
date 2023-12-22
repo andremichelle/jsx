@@ -83,7 +83,7 @@ export class Playback {
     }
 
     #play(track: Track): void {
-        this.#audio.onended = () => {} // TODO Find successor
+        this.#audio.onended = () => {this.active = Option.None} // TODO Find successor
         this.#audio.oncanplay = () => this.#notify({ state: "playing" })
         this.#audio.onpause = () => this.#notify({ state: "paused" })
         this.#audio.onerror = (event, _source, _lineno, _colno, error) => this.#notify({

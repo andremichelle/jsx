@@ -19,8 +19,9 @@ type NativeElements =
     // And it is in html and svg namespace.
     & {
     "a": {
-        href: string,
-        target: string
+        href?: string,
+        class?: string,
+        target?: string
     }
 }
 

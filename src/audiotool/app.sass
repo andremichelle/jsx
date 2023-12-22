@@ -7,6 +7,9 @@ html, body
   color: gray
   background-color: rgb(18, 18, 18)
 
+a
+  color: inherit
+
 component
   display: flex
   flex-direction: column
@@ -23,20 +26,27 @@ component
     left: 50%
     transform: translate(-50%, -50%)
     position: fixed
+    display: flex
+    flex-direction: column
+
+    > button
+      appearance: none
+      color: white
+      border: none
+      border-radius: 0.5em
+      background: black
+      padding: 0.5em
 
   h1
-    margin: 0
-    padding: 0
+    text-align: center
     color: white
-    top: 0.5em
-    position: sticky
 
   div.tracks
-    margin: 0 auto
+    margin: 4em auto
     width: auto
     max-width: max-content
     display: grid
-    grid-template-columns: repeat(2, max-content) minmax(0, 1fr) repeat(3, max-content)
+    grid-template-columns: repeat(2, max-content) minmax(auto, 40vw) repeat(3, max-content)
     align-items: center
     row-gap: 1em
     column-gap: 1em
@@ -50,26 +60,26 @@ component
       display: contents
 
       &.active
-        > button
+        > button.play
           @include play
 
           &:after
             display: none
 
-      &.buffering > button
+      &.buffering > button.play
         @include buffering
 
-      &.playing > button
+      &.playing > button.play
         @include pause
 
       &:not(.active)
-        > button:hover
+        > button.play:hover
           @include play
 
           &:after
             display: none
 
-      > button
+      > button.play
         width: 2em
         aspect-ratio: 1 / 1
         cursor: pointer
@@ -93,12 +103,38 @@ component
         width: 3em
         aspect-ratio: 1 / 1
         border-radius: 0.25em
+        object-fit: contain
         background-color: #222
 
       > .names
         display: flex
         flex-direction: column
         justify-content: center
+        padding: 0 2em 0 0
+
+        > .collaborators
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
+
+          > a
+            width: max-content
+            text-decoration: none
+
+            &:not(:last-child):after
+              content: ", "
+
+      > .genre
+        width: 100%
+        height: 50%
+        display: flex
+        align-items: center
+        justify-content: center
+        border-radius: 2em
+        padding: 0.25em
+        color: black
+        background-color: #303030
+        text-decoration: none
 
       > .date
         text-align: right

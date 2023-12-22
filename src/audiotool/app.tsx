@@ -1,22 +1,10 @@
-import { Await } from "@jsx/utils.ts"
-import { Track, UserTrackList } from "./api.ts"
+import { Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Html } from "@ui/html.ts"
 import css from "./app.sass?inline"
 import { Playback } from "./playback.ts"
-import { int } from "@common/lang.ts"
-
-const dateToString = (() => {
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const
-    return (date: Date) => [date.getDay() + 1, month[date.getMonth()], date.getFullYear()].join(" ")
-})()
-
-const durationToString = (millis: number) => {
-    const seconds = Math.floor(millis / 1000)
-    const s = Math.floor(seconds) % 60
-    const m = Math.floor(seconds / 60) % 60
-    const h = Math.floor(seconds / 3600)
-    return (h > 0 ? [h, m, s] : [m, s]).map(x => x.toString(10).padStart(2, "0")).join(":")
-}
+import { Inject } from "@jsx/inject.ts"
+import { TrackList } from "./TrackList.tsx"
+import { Option } from "@common/option.ts"
 
 const playback = new Playback()
 playback.subscribe(event => {
@@ -40,43 +28,34 @@ playback.subscribe(event => {
     }
 })
 
-const TrackListItem = ({ track, index }: { track: Track, index: int }) => (
-    <div class="track" data-track-key={track.key}>
-        <button onclick={(event: Event) => {
-            event.stopPropagation()
-            playback.toggle(track)
-        }} data-index={index + 1} />
-        <img src={track.coverUrl} />
-        <div class="names">
-            <span style={{ color: "white" }}>{track.name}</span>
-            <span>{track.user.name}</span>
-        </div>
-        <span class="genre">{track.genreName}</span>
-        <span class="date">{dateToString(new Date(track.created))}</span>
-        <span class="duration">{durationToString(track.duration)}</span>
-    </div>
-)
+const router = (url: string): Option<RequestInfo> => {
+    const API_URL = `https://api.audiotool.com`
+    const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
+    const scope = path[0]
+    if (scope === "tracks") {
+        return Option.wrap(`${API_URL}/user/${path[1]}/tracks.json?offset=0&limit=500`)
+    }
+    if (scope === "genre") {
+        return Option.wrap(`${API_URL}/tracks/query.json?genre=${path[1]}&offset=0&limit=500`)
+    }
+    return Option.None
+}
 
 export const AudiotoolApp = () => {
-    const request = "https://api.audiotool.com/user/sandburgen/tracks.json?offset=50&limit=500"
+    const trackListUpdater = Inject.ref<HotspotUpdater>()
+
+    let request: Option<RequestInfo> = router(location.href)
+    window.addEventListener("hashchange", (event: HashChangeEvent) => {
+        request = router(event.newURL)
+        trackListUpdater.get().update()
+    })
+
     return (
         <main class={Html.adoptStyleSheet(css, "audiotool")}>
-            <Await<UserTrackList>
-                promise={() => fetch(request).then(x => x.json())}
-                loading={() => <div class="loading">loading</div>}
-                success={(result) => (
-                    <div>
-                        <h1>{result.name}</h1>
-                        <div class="tracks">
-                            {result.tracks.map((track: Track, index: int) => <TrackListItem track={track}
-                                                                                            index={index} />)}
-                        </div>
-                    </div>)}
-                failure={({ retry }) => (
-                    <div class="failure">
-                        <p>Could not load tracklist.</p>
-                        <button onclick={retry}>Retry</button>
-                    </div>)} />
+            <Hotspot ref={trackListUpdater} render={() => request.match({
+                none: () => <p>Nothing selected. Start with <a href="#tracks/sandburgen">Sandburgen</a></p>,
+                some: request => <TrackList playback={playback} request={request} />
+            })} />
         </main>
     )
 }
