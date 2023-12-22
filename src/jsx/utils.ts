@@ -21,22 +21,29 @@ export const Hotspot = ({ render, ref }: HotSpotProps) => {
 }
 
 export type AwaitProps<T> = {
-    promise: Promise<T>,
+    promise: Provider<Promise<T>>,
     loading: Provider<Element>,
     success: Func<T, Element>,
-    failure: Func<any, Element>
+    failure: Func<{ reason: any, retry: Exec }, Element>
 }
 
 export const Await = <T>({ promise, loading, success, failure }: AwaitProps<T>) => {
-    const element = loading()
-    promise.then(result => {
-        if (element.isConnected) {
-            element.replaceWith(success(result))
+    const start = () => {
+        let current: Element = loading()
+        const replace = (next: Element) => {
+            current.replaceWith(next)
+            current = next
         }
-    }, reason => {
-        if (!element.isConnected) {
-            element.replaceWith(failure(reason))
-        }
-    })
-    return element
+        promise().then(result => {
+            if (current.isConnected) {
+                replace(success(result))
+            }
+        }, reason => {
+            if (current.isConnected) {
+                replace(failure({ reason, retry: () => replace(start()) }))
+            }
+        })
+        return current
+    }
+    return start()
 }

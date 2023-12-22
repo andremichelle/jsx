@@ -62,7 +62,7 @@ export const ExampleApp = () => {
             </div>
             <div>
                 <h4>Lovely Numbers</h4>
-                <Await<Array<int>> promise={Wait.timeSpan<Array<int>>(TimeSpan.seconds(1), [7, 13, 42, 303])}
+                <Await<Array<int>> promise={() => Wait.timeSpan<Array<int>>(TimeSpan.seconds(1), [7, 13, 42, 303])}
                                    loading={() => <p>loading...</p>}
                                    success={(result: Array<int>) => <ul>{result.map(number => <li>{number}</li>)}</ul>}
                                    failure={(reason) => <p>failure due to {reason}</p>}

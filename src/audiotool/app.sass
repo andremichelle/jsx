@@ -1,0 +1,104 @@
+@import ./icons
+@import ../sass/mixin
+
+html, body
+  font-family: Verdana
+  font-size: 11px
+  color: gray
+  background-color: rgb(18, 18, 18)
+
+component
+  display: flex
+  flex-direction: column
+
+  div.loading
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    letter-spacing: 0.25em
+    position: fixed
+
+  div.failure
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    position: fixed
+
+  h1
+    margin: 0
+    padding: 0
+    color: white
+    top: 0.5em
+    position: sticky
+
+  div.tracks
+    margin: 0 auto
+    width: auto
+    max-width: max-content
+    display: grid
+    grid-template-columns: repeat(2, max-content) minmax(0, 1fr) repeat(3, max-content)
+    align-items: center
+    row-gap: 1em
+    column-gap: 1em
+
+    span
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+
+    > div.track
+      display: contents
+
+      &.active
+        > button
+          @include play
+
+          &:after
+            display: none
+
+      &.buffering > button
+        @include buffering
+
+      &.playing > button
+        @include pause
+
+      &:not(.active)
+        > button:hover
+          @include play
+
+          &:after
+            display: none
+
+      > button
+        width: 2em
+        aspect-ratio: 1 / 1
+        cursor: pointer
+        position: relative
+        color: inherit
+        border: none
+        background: none
+        background-repeat: no-repeat
+        background-position: center
+
+        &:after
+          text-align: center
+          content: attr(data-index)
+          top: 50%
+          left: 50%
+          color: #333
+          transform: translate(-50%, -50%)
+          position: absolute
+
+      > img
+        width: 3em
+        aspect-ratio: 1 / 1
+        border-radius: 0.25em
+        background-color: #222
+
+      > .names
+        display: flex
+        flex-direction: column
+        justify-content: center
+
+      > .date
+        text-align: right
