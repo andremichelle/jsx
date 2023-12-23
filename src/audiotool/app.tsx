@@ -46,7 +46,7 @@ export const AudiotoolApp = () => {
                     some: request => <AwaitTrackList playback={playback} request={request} />
                 })} />
             </div>
-            <footer />
+            {/*<footer />*/}
         </main>
     )
 }

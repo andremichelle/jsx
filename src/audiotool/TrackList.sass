@@ -2,10 +2,10 @@
 
 component
   margin: 2em auto
-  width: auto
+  width: 96%
   max-width: max-content
   display: grid
-  grid-template-columns: repeat(2, max-content) minmax(auto, 30vw) repeat(3, max-content)
+  grid-template-columns: repeat(2, max-content) minmax(0, 1fr) repeat(3, max-content)
   align-items: center
   row-gap: 1em
   column-gap: 1em
@@ -22,7 +22,7 @@ component
       > button.play
         @include play
 
-        &:after
+        > span.index
           display: none
 
     &.buffering > button.play
@@ -35,28 +35,22 @@ component
       > button.play:hover
         @include play
 
-        &:after
+        > span.index
           display: none
 
     > button.play
-      width: 2em
-      aspect-ratio: 1 / 1
+      font-size: inherit
+      width: 2.5em
+      height: 2.5em
       cursor: pointer
-      position: relative
       color: inherit
       border: none
       background: none
       background-repeat: no-repeat
       background-position: center
 
-      &:after
-        text-align: center
-        content: attr(data-index)
-        top: 50%
-        left: 50%
+      > span.index
         color: #333
-        transform: translate(-50%, -50%)
-        position: absolute
 
     > img
       width: 3em
@@ -70,6 +64,13 @@ component
       flex-direction: column
       justify-content: center
       padding: 0 2em 0 0
+
+      > .track
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        color: white
+        cursor: pointer
 
     > .genre
       width: 100%

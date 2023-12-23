@@ -28,23 +28,26 @@ export type TrackListItemProps = {
     index: int
 }
 
-export const TrackListItem = ({ playback, track, index }: TrackListItemProps) => (
-    <div className="track" data-track-key={track.key}>
-        <button className="play" onclick={(event: Event) => {
-            event.stopPropagation()
-            playback.toggle(track)
-        }} data-index={index + 1} />
-        <img src={track.coverUrl}
-             onerror={(event: Event) => (event.target as HTMLImageElement).src = track.snapshotUrl} />
-        <div className="names">
-            <span style={{ color: "white" }}>{track.name}</span>
-            <UserList users={track.collaborators} />
+export const TrackListItem = ({ playback, track, index }: TrackListItemProps) => {
+    const toggleTrackHandler = (event: Event) => {
+        event.stopPropagation()
+        playback.toggle(track)
+    }
+    return (
+        <div className="track" data-track-key={track.key}>
+            <button className="play" onclick={toggleTrackHandler}><span className="index">{index + 1}</span></button>
+            <img src={track.coverUrl}
+                 onerror={(event: Event) => (event.target as HTMLImageElement).src = track.snapshotUrl} />
+            <div className="names">
+                <div className="track" onclick={toggleTrackHandler}>{track.name}</div>
+                <UserList users={track.collaborators} />
+            </div>
+            <span className="date">{dateToString(new Date(track.created))}</span>
+            <span className="duration">{durationToString(track.duration)}</span>
+            <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
         </div>
-        <span className="date">{dateToString(new Date(track.created))}</span>
-        <span className="duration">{durationToString(track.duration)}</span>
-        <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
-    </div>
-)
+    )
+}
 
 const dateToString = (() => {
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const
