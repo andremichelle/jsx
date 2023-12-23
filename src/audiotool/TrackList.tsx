@@ -1,9 +1,9 @@
-import { Track, User, UserTrackList } from "./api.ts"
+import { Track, UserTrackList } from "./api.ts"
 import { Playback } from "./playback.ts"
-import { int, Procedure } from "@common/lang.ts"
+import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
 import { Html } from "@ui/html.ts"
-import { Inject } from "@jsx/inject.ts"
+import { UserList } from "./UserList.tsx"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 
@@ -45,18 +45,6 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
         <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
     </div>
 )
-
-export type UserListProps = {
-    ref?: Inject.Ref<Procedure<ReadonlyArray<User>>>
-    users: ReadonlyArray<User>
-}
-
-export const UserList = ({ users, ref }: UserListProps) => {
-    const render = (users: ReadonlyArray<User>) => users.map(user => <a href={`#tracks/${user.key}`}>{user.name}</a>)
-    const inject = Inject.ref<HTMLDivElement>()
-    ref?.addTarget(users => inject.get().append(...render(users)))
-    return <div className="collaborators" ref={inject}>{render(users)}</div>
-}
 
 const dateToString = (() => {
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const

@@ -2,9 +2,9 @@ import css from "./Player.sass?inline"
 import { Html } from "@ui/html.ts"
 import { Playback } from "./playback.ts"
 import { Inject } from "@jsx/inject.ts"
-import { UserList } from "./TrackList.tsx"
 import { Procedure } from "@common/lang.ts"
 import { User } from "./api.ts"
+import { UserList } from "./UserList.tsx"
 
 export type PlayerProps = {
     playback: Playback
@@ -14,7 +14,6 @@ export const Player = ({ playback }: PlayerProps) => {
     const coverHref = Inject.attribute(Html.EmptyGif)
     const trackName = Inject.text("")
     const updateUserList = Inject.ref<Procedure<ReadonlyArray<User>>>()
-
     const element = <div className={Html.adoptStyleSheet(css, "player")}>
         <header className="cover">
             <img src={coverHref} />
