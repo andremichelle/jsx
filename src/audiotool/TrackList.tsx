@@ -4,6 +4,7 @@ import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
 import { Html } from "@ui/html.ts"
 import { UserList } from "./UserList.tsx"
+import { dateToString, timespanToString } from "./time-conversion.ts"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 
@@ -43,21 +44,8 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
                 <UserList users={track.collaborators} />
             </div>
             <span className="date">{dateToString(new Date(track.created))}</span>
-            <span className="duration">{durationToString(track.duration)}</span>
+            <span className="duration">{timespanToString(track.duration)}</span>
             <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
         </div>
     )
-}
-
-const dateToString = (() => {
-    const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const
-    return (date: Date) => [date.getDay() + 1, month[date.getMonth()], date.getFullYear()].join(" ")
-})()
-
-const durationToString = (millis: number) => {
-    const seconds = Math.floor(millis / 1000)
-    const s = Math.floor(seconds) % 60
-    const m = Math.floor(seconds / 60) % 60
-    const h = Math.floor(seconds / 3600)
-    return (h > 0 ? [h, m, s] : [m, s]).map(x => x.toString(10).padStart(2, "0")).join(":")
 }

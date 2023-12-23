@@ -1,15 +1,16 @@
 @import common
 
 component
+  height: 0.75em
   position: relative
-  border-radius: 0.125em
+  border-radius: 0.25em
   --progress: 0.0
 
   > div.socket
-    top: 0.25em
+    top: 0
     left: 0
     width: 100%
-    height: calc(100% - 0.5em)
+    height: 100%
     position: absolute
     border-radius: 0.0625em
     background-color: $PlaceHolderColor
@@ -21,4 +22,4 @@ component
       width: calc(var(--progress) * 100%)
       height: 100%
       position: absolute
-      background-color: gray
+      background-color: orange

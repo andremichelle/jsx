@@ -14,6 +14,8 @@ export type PlaybackEvent = {
 } | {
     state: "progress"
     progress: unitValue
+    elapsedInSeconds: number
+    durationInSeconds: number
 } | {
     state: "paused"
 } | {
@@ -91,10 +93,16 @@ export class Playback {
             reason: error?.message ?? event instanceof Event ? "Unknown" : event
         })
         this.#audio.onstalled = () => this.#notify({ state: "buffering" })
-        this.#audio.ontimeupdate = () => this.#notify({
-            state: "progress",
-            progress: this.#audio.currentTime / (track.duration / 1000)
-        })
+        this.#audio.ontimeupdate = () => {
+            const durationInSeconds = track.duration / 1000
+            const elapsedInSeconds = this.#audio.currentTime
+            this.#notify({
+                state: "progress",
+                progress: elapsedInSeconds / durationInSeconds,
+                elapsedInSeconds,
+                durationInSeconds
+            })
+        }
         this.#notify({ state: "buffering" })
         this.#audio.src = `https://api.audiotool.com/track/${track.key}/play.mp3`
         this.#audio.play().catch(() => {})

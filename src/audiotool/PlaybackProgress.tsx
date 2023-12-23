@@ -1,7 +1,7 @@
 import { Playback } from "./playback.ts"
 import { Html } from "@ui/html.ts"
-import css from "./PlaybackProgress.sass?inline"
 import { Inject } from "@jsx/inject.ts"
+import css from "./PlaybackProgress.sass?inline"
 
 const className = Html.adoptStyleSheet(css, "playback-progress")
 

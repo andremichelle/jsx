@@ -4,10 +4,10 @@ component
   top: 0
   position: sticky
   font-size: 1.25em
-  flex: 0 0 5em
+  flex: 0 0 6em
   padding: 0 1em
   display: grid
-  grid-template-columns: 4em 1fr
+  grid-template-columns: 5em 1fr
   width: 100%
   column-gap: 1em
   background-color: black
@@ -20,7 +20,7 @@ component
     position: relative
 
     > img
-      height: 4em
+      height: 5em
       aspect-ratio: 1 / 1
       object-fit: contain
       border-radius: 0.5em
@@ -36,8 +36,6 @@ component
     padding: 0 2em 0 0
 
     > div
-      height: 1.25em
-
       &:empty
         border-radius: 0.125em
         background-color: $PlaceHolderColor
@@ -45,5 +43,11 @@ component
     > div.track
       color: white
       white-space: nowrap
+      height: 1.25em
       overflow: hidden
       text-overflow: ellipsis
+
+    > div.time
+      display: flex
+      justify-content: space-between
+      font-size: 0.75em
