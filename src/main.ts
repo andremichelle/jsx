@@ -1,6 +1,6 @@
 import { IconLibrary } from "./icons.tsx"
-import { AudiotoolApp } from "./audiotool/app.tsx"
 import "./main.sass"
+import { AudiotoolApp } from "./audiotool/app.tsx"
 
 (async () => {
     document.body.appendChild(IconLibrary)

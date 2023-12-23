@@ -12,13 +12,12 @@ export type TrackListProps = {
 }
 
 export const TrackList = ({ data, playback }: TrackListProps) => (
-    <div class={className}>
-        <h1>{data.name}</h1>
-        <div className="tracks">
-            {data.tracks.map((track: Track, index: int) => <TrackListItem playback={playback}
-                                                                          track={track}
-                                                                          index={index} />)}
-        </div>
+    <div className={className}>
+        {data.tracks.map((track: Track, index: int) => (
+            <TrackListItem playback={playback}
+                           track={track}
+                           index={index} />
+        ))}
     </div>
 )
 
@@ -29,22 +28,22 @@ export type TrackListItemProps = {
 }
 
 export const TrackListItem = ({ playback, track, index }: TrackListItemProps) => (
-    <div class="track" data-track-key={track.key}>
-        <button class="play" onclick={(event: Event) => {
+    <div className="track" data-track-key={track.key}>
+        <button className="play" onclick={(event: Event) => {
             event.stopPropagation()
             playback.toggle(track)
         }} data-index={index + 1} />
         <img src={track.coverUrl}
              onerror={(event: Event) => (event.target as HTMLImageElement).src = track.snapshotUrl} />
-        <div class="names">
+        <div className="names">
             <span style={{ color: "white" }}>{track.name}</span>
-            <div class="collaborators">{track.collaborators.map(user => (
+            <div className="collaborators">{track.collaborators.map(user => (
                 <a href={`#tracks/${user.key}`}>{user.name}</a>
             ))}</div>
         </div>
-        <span class="date">{dateToString(new Date(track.created))}</span>
-        <span class="duration">{durationToString(track.duration)}</span>
-        <a href={`#genre/${track.genreKey}`} class="genre">{track.genreName}</a>
+        <span className="date">{dateToString(new Date(track.created))}</span>
+        <span className="duration">{durationToString(track.duration)}</span>
+        <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
     </div>
 )
 

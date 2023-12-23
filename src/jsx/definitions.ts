@@ -8,7 +8,7 @@ export type DomElement = HTMLElement | SVGElement
 //
 type ExtractProperties<T extends Element> = Partial<{
     [K in keyof T]: T[K] extends Function ? never : Partial<T[K]>
-}> & { ref?: Inject.Ref<T> } & Record<string, unknown>
+}> & { ref?: Inject.Ref<T> } & { className: string } & Record<string, unknown>
 
 type NativeElements =
     & { [K in keyof Omit<SVGElementTagNameMap, "a">]: Omit<ExtractProperties<SVGElementTagNameMap[K]>, "a"> }
@@ -20,8 +20,8 @@ type NativeElements =
     & {
     "a": {
         href?: string,
-        class?: string,
         target?: string
+        className?: string,
     }
 }
 

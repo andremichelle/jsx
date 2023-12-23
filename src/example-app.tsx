@@ -23,13 +23,13 @@ export const ExampleApp = () => {
     const useHRefAttr = Inject.attribute("#checkbox-false")
     const hotSpot = Inject.ref<HotspotUpdater>()
     return (
-        <main class={Html.adoptStyleSheet(css, "example-app")}
+        <main className={Html.adoptStyleSheet(css, "example-app")}
               ref={componentRef}>
             <h3>Example:</h3>
-            <div style={{ display: "flex", columnGap: "0.5em" }}>
+            <div style={{ display: "flex", columnGap: "0.5em", alignItems: "center" }}>
                 <button onclick={() => {classList.toggle("red")}}>Toggle class red</button>
                 <button onclick={() => {counterValue.value++}}>Increase Counter</button>
-                <label class={classList}>You clicked me {counterValue} times.</label>
+                <label className={classList}>You clicked me {counterValue} times.</label>
             </div>
             <button
                 style={{ display: "flex", alignItems: "center", justifyContent: "center", columnGap: "0.5em" }}

@@ -13,13 +13,13 @@ export type AwaitTrackListProps = {
 }
 
 export const AwaitTrackList = ({ request, playback }: AwaitTrackListProps) => (
-    <div class={className}>
+    <div className={className}>
         <Await<UserTrackList>
             promise={() => fetchTrackList(request)}
             loading={() => <div class="loading">loading</div>}
             success={(data) => <TrackList data={data} playback={playback} />}
             failure={({ retry }) => (
-                <div class="failure">
+                <div className="failure">
                     <p>Could not load tracklist.</p>
                     <button onclick={retry}>Retry</button>
                 </div>)} />

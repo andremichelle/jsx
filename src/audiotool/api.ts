@@ -1,4 +1,5 @@
 import { int } from "@common/lang.ts"
+import { Option } from "@common/option.ts"
 
 export type UserTrackList = {
     name: string
@@ -35,6 +36,19 @@ export type User = {
     key: string
     name: string
     avatar: string
+}
+
+export const router = (url: string): Option<RequestInfo> => {
+    const API_URL = `https://api.audiotool.com`
+    const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
+    const scope = path[0]
+    switch (scope) {
+        case "tracks":
+            return Option.wrap(`${API_URL}/user/${path[1]}/tracks.json?cover=64&offset=0&limit=500`)
+        case "genre":
+            return Option.wrap(`${API_URL}/tracks/query.json?cover=128&genre=${path[1]}&offset=0&limit=500`)
+    }
+    return Option.None
 }
 
 export const fetchTrackList = async (request: RequestInfo): Promise<UserTrackList> => {

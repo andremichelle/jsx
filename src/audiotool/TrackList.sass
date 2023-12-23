@@ -1,105 +1,98 @@
 @import ./icons
 component
-  min-height: 100%
+  margin: 8em auto
+  width: auto
+  max-width: max-content
+  display: grid
+  grid-template-columns: repeat(2, max-content) minmax(auto, 30vw) repeat(3, max-content)
+  align-items: center
+  row-gap: 1em
+  column-gap: 1em
 
-  h1
-    text-align: center
-    color: white
+  span
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
 
-  div.tracks
-    margin: 4em auto
-    width: auto
-    max-width: max-content
-    display: grid
-    grid-template-columns: repeat(2, max-content) minmax(auto, 30vw) repeat(3, max-content)
-    align-items: center
-    row-gap: 1em
-    column-gap: 1em
+  > div.track
+    display: contents
 
-    span
-      white-space: nowrap
-      overflow: hidden
-      text-overflow: ellipsis
-
-    > div.track
-      display: contents
-
-      &.active
-        > button.play
-          @include play
-
-          &:after
-            display: none
-
-      &.buffering > button.play
-        @include buffering
-
-      &.playing > button.play
-        @include pause
-
-      &:not(.active)
-        > button.play:hover
-          @include play
-
-          &:after
-            display: none
-
+    &.active
       > button.play
-        width: 2em
-        aspect-ratio: 1 / 1
-        cursor: pointer
-        position: relative
-        color: inherit
-        border: none
-        background: none
-        background-repeat: no-repeat
-        background-position: center
+        @include play
 
         &:after
-          text-align: center
-          content: attr(data-index)
-          top: 50%
-          left: 50%
-          color: #333
-          transform: translate(-50%, -50%)
-          position: absolute
+          display: none
 
-      > img
-        width: 3em
-        aspect-ratio: 1 / 1
-        border-radius: 0.25em
-        object-fit: contain
-        background-color: #222
+    &.buffering > button.play
+      @include buffering
 
-      > .names
-        display: flex
-        flex-direction: column
-        justify-content: center
-        padding: 0 2em 0 0
+    &.playing > button.play
+      @include pause
 
-        > .collaborators
-          white-space: nowrap
-          overflow: hidden
-          text-overflow: ellipsis
+    &:not(.active)
+      > button.play:hover
+        @include play
 
-          > a
-            width: max-content
-            text-decoration: none
+        &:after
+          display: none
 
-            &:not(:last-child):after
-              content: ", "
+    > button.play
+      width: 2em
+      aspect-ratio: 1 / 1
+      cursor: pointer
+      position: relative
+      color: inherit
+      border: none
+      background: none
+      background-repeat: no-repeat
+      background-position: center
 
-      > .genre
-        width: 100%
-        height: 50%
-        display: flex
-        align-items: center
-        justify-content: center
-        border-radius: 2em
-        padding: 0.25em
-        color: black
-        background-color: #303030
-        text-decoration: none
+      &:after
+        text-align: center
+        content: attr(data-index)
+        top: 50%
+        left: 50%
+        color: #333
+        transform: translate(-50%, -50%)
+        position: absolute
 
-      > .date
-        text-align: right
+    > img
+      width: 3em
+      aspect-ratio: 1 / 1
+      border-radius: 0.25em
+      object-fit: contain
+      background-color: #222
+
+    > .names
+      display: flex
+      flex-direction: column
+      justify-content: center
+      padding: 0 2em 0 0
+
+      > .collaborators
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
+        > a
+          width: max-content
+          text-decoration: none
+
+          &:not(:last-child):after
+            content: ", "
+
+    > .genre
+      width: 100%
+      height: 50%
+      display: flex
+      align-items: center
+      justify-content: center
+      border-radius: 2em
+      padding: 0.25em
+      color: black
+      background-color: #303030
+      text-decoration: none
+
+    > .date
+      text-align: right

@@ -44,7 +44,10 @@ export default function(tagOrFactory: TagOrFactory,
 
 const transferAttributes = (element: DomElement, attributes: Readonly<Record<string, any>>) => {
     Object.entries(attributes).forEach(([key, value]: [string, unknown]) => {
-        if (key === "class") {
+        if(key === "class") {
+            console.log(value, element)
+        }
+        if (key === "class" || key === "className") {
             if (value instanceof Inject.ClassList) {
                 value.addTarget(element)
             } else {

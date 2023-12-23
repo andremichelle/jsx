@@ -6,6 +6,7 @@ import { Inject } from "@jsx/inject.ts"
 import { AwaitTrackList } from "./AwaitTrackList.tsx"
 import { Option } from "@common/option.ts"
 import { Player } from "./Player.tsx"
+import { router } from "./api.ts"
 
 const playback = new Playback()
 playback.subscribe(event => {
@@ -29,19 +30,6 @@ playback.subscribe(event => {
     }
 })
 
-const router = (url: string): Option<RequestInfo> => {
-    const API_URL = `https://api.audiotool.com`
-    const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
-    const scope = path[0]
-    if (scope === "tracks") {
-        return Option.wrap(`${API_URL}/user/${path[1]}/tracks.json?offset=0&limit=500`)
-    }
-    if (scope === "genre") {
-        return Option.wrap(`${API_URL}/tracks/query.json?genre=${path[1]}&offset=0&limit=500`)
-    }
-    return Option.None
-}
-
 export const AudiotoolApp = () => {
     let request: Option<RequestInfo> = router(location.href)
     const trackListUpdater = Inject.ref<HotspotUpdater>()
@@ -50,12 +38,15 @@ export const AudiotoolApp = () => {
         trackListUpdater.get().update()
     })
     return (
-        <main class={Html.adoptStyleSheet(css, "audiotool")}>
-            <Hotspot ref={trackListUpdater} render={() => request.match({
-                none: () => <p>Nothing selected. Start with <a href="#tracks/sandburgen">Sandburgen</a></p>,
-                some: request => <AwaitTrackList playback={playback} request={request} />
-            })} />
+        <main className={Html.adoptStyleSheet(css, "audiotool")}>
             <Player />
+            <div className="content">
+                <Hotspot ref={trackListUpdater} render={() => request.match({
+                    none: () => <p>Nothing selected. Start with <a href="#tracks/sandburgen">Sandburgen</a></p>,
+                    some: request => <AwaitTrackList playback={playback} request={request} />
+                })} />
+            </div>
+            <footer />
         </main>
     )
 }
