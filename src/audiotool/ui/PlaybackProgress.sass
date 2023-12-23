@@ -1,5 +1,11 @@
 @import common
 
+@keyframes blink
+  from
+    background-color: rgba(orange, 0.04)
+  to
+    background-color: rgba(orange, 0.00)
+
 component
   height: 0.66em
   position: relative
@@ -23,3 +29,7 @@ component
       height: 100%
       position: absolute
       background-color: orange
+
+      &.buffering
+        width: 100%
+        animation: blink 250ms alternate infinite

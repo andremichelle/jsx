@@ -21,6 +21,8 @@ export type PlaybackEvent = {
 } | {
     state: "error"
     reason: string
+} | {
+    state: "idle"
 }
 
 export class Playback {
@@ -28,6 +30,7 @@ export class Playback {
     readonly #notifier: Notifier<PlaybackEvent>
 
     #active: Option<Track> = Option.None
+    #state: PlaybackEvent["state"] = "idle"
 
     constructor() {
         this.#audio = new Audio()
@@ -38,7 +41,6 @@ export class Playback {
     toggle(track: Track): void {
         if (this.#active.contains(track)) {
             if (this.#audio.paused) {
-                this.#notify({ state: "playing" })
                 this.#audio.play().catch(() => {})
             } else {
                 this.#audio.pause()
@@ -87,7 +89,13 @@ export class Playback {
 
     #playAudio(track: Track): void {
         this.#audio.onended = () => this.active.ifSome(track => {if (isDefined(track.next)) {this.toggle(track.next)}})
-        this.#audio.oncanplay = () => this.#notify({ state: "playing" })
+        this.#audio.onplay = () => {
+            if (this.#audio.currentTime === 0) {
+                this.#notify({ state: "buffering" })
+            } else {
+                this.#notify({ state: "playing" })
+            }
+        }
         this.#audio.onpause = () => this.#notify({ state: "paused" })
         this.#audio.onerror = (event, _source, _lineno, _colno, error) => this.#notify({
             state: "error",
@@ -95,6 +103,9 @@ export class Playback {
         })
         this.#audio.onstalled = () => this.#notify({ state: "buffering" })
         this.#audio.ontimeupdate = () => {
+            if (this.#state === "buffering") {
+                this.#notify({ state: "playing" })
+            }
             const durationInSeconds = track.duration / 1000
             const elapsedInSeconds = this.#audio.currentTime
             this.#notify({
@@ -104,10 +115,12 @@ export class Playback {
                 durationInSeconds
             })
         }
-        this.#notify({ state: "buffering" })
         this.#audio.src = `https://api.audiotool.com/track/${track.key}/play.mp3`
         this.#audio.play().catch(() => {})
     }
 
-    #notify(event: PlaybackEvent) {this.#notifier.notify(event)}
+    #notify(event: PlaybackEvent) {
+        this.#state = event.state
+        this.#notifier.notify(event)
+    }
 }

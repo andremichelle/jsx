@@ -14,6 +14,10 @@ export const PlaybackProgress = ({ playback }: PlaybackProgressType) => {
     playback.subscribe(event => {
         if (event.state === "progress") {
             bar.get().style.setProperty("--progress", event.progress.toString())
+        } else if (event.state === "buffering") {
+            bar.get().classList.add("buffering")
+        } else {
+            bar.get().classList.remove("buffering")
         }
     })
     return (
