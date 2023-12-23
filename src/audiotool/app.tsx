@@ -29,6 +29,7 @@ export const AudiotoolApp = () => {
                         <ul>
                             <li><a href="#tracks/sandburgen">Sandburgen</a></li>
                             <li><a href="#tracks/kepz">Kepz</a></li>
+                            <li><a href="#album/huqtsd2pt">Album 2019</a></li>
                         </ul>
                     </div>,
                     some: request => <AwaitTrackList playback={playback} request={request} />
