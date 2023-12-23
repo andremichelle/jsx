@@ -39,6 +39,8 @@ export type User = {
     avatar: string
 }
 
+// orderBy=[favs,created]
+
 export const router = (url: string): Option<RequestInfo> => {
     const API_URL = `https://api.audiotool.com`
     const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
@@ -46,13 +48,18 @@ export const router = (url: string): Option<RequestInfo> => {
     const value = path[1]
     if (value === undefined) {return Option.None}
     switch (scope) {
-        case "artist":
+        // tracks of user
         case "tracks":
-            return Option.wrap(`${API_URL}/user/${value}/tracks.json?cover=64&offset=0&limit=500`)
+            return Option.wrap(`${API_URL}/user/${value}/tracks.json?orderBy=created&cover=64&offset=0&limit=500`)
+        // tracks of genre
         case "genre":
             return Option.wrap(`${API_URL}/tracks/query.json?cover=128&genre=${value}&offset=0&limit=500`)
+        // tracks of album
         case "album":
             return Option.wrap(`${API_URL}/album/${value}/tracks.json?cover=128&genre=${value}&offset=0&limit=500`)
+        // albums of user
+        case "albums":
+            return Option.None
     }
     return Option.None
 }

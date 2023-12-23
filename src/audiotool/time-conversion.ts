@@ -1,6 +1,6 @@
 export const dateToString = (() => {
     const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const
-    return (date: Date) => [date.getDay() + 1, month[date.getMonth()], date.getFullYear()].join(" ")
+    return (date: Date) => [date.getUTCDate().toString().padStart(2, "0"), month[date.getUTCMonth()], date.getUTCFullYear()].join(" ")
 })()
 
 export const timespanToString = (millis: number) => {
