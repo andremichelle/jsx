@@ -46,4 +46,6 @@ export namespace Html {
         document.adoptedStyleSheets.push(sheet)
         return className
     }
+
+    export const EmptyGif = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" as const
 }

@@ -39,7 +39,7 @@ export const AudiotoolApp = () => {
     })
     return (
         <main className={Html.adoptStyleSheet(css, "audiotool")}>
-            <Player />
+            <Player playback={playback} />
             <div className="content">
                 <Hotspot ref={trackListUpdater} render={() => request.match({
                     none: () => <p>Nothing selected. Start with <a href="#tracks/sandburgen">Sandburgen</a></p>,
