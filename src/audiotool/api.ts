@@ -46,6 +46,7 @@ export const router = (url: string): Option<RequestInfo> => {
     const value = path[1]
     if (value === undefined) {return Option.None}
     switch (scope) {
+        case "artist":
         case "tracks":
             return Option.wrap(`${API_URL}/user/${value}/tracks.json?cover=64&offset=0&limit=500`)
         case "genre":
