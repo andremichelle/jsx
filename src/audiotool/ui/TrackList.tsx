@@ -1,10 +1,10 @@
-import { Track, UserTrackList } from "./api.ts"
-import { Playback } from "./playback.ts"
+import { Track, UserTrackList } from "../api.ts"
+import { Playback } from "../playback.ts"
 import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
 import { Html } from "@ui/html.ts"
 import { UserList } from "./UserList.tsx"
-import { dateToString, timespanToString } from "./time-conversion.ts"
+import { dateToString, timespanToString } from "../time-conversion.ts"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 

@@ -1,6 +1,6 @@
-import { fetchTrackList, UserTrackList } from "./api.ts"
+import { fetchTrackList, UserTrackList } from "../api.ts"
 import { Await } from "@jsx/utils.ts"
-import { Playback } from "./playback.ts"
+import { Playback } from "../playback.ts"
 import { TrackList } from "./TrackList.tsx"
 import { Html } from "@ui/html.ts"
 import css from "./AwaitTrackList.sass?inline"

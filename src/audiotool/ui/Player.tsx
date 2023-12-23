@@ -1,12 +1,12 @@
 import css from "./Player.sass?inline"
 import { Html } from "@ui/html.ts"
-import { Playback } from "./playback.ts"
+import { Playback } from "../playback.ts"
 import { Inject } from "@jsx/inject.ts"
 import { Procedure } from "@common/lang.ts"
-import { User } from "./api.ts"
+import { User } from "../api.ts"
 import { UserList } from "./UserList.tsx"
 import { PlaybackProgress } from "./PlaybackProgress.tsx"
-import { timespanToString } from "./time-conversion.ts"
+import { timespanToString } from "../time-conversion.ts"
 
 export type PlayerProps = {
     playback: Playback

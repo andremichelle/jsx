@@ -1,6 +1,6 @@
 import { Inject } from "@jsx/inject.ts"
 import { Procedure } from "@common/lang.ts"
-import { User } from "./api.ts"
+import { User } from "../api.ts"
 import { Html } from "@ui/html.ts"
 import css from "./UserList.sass?inline"
 

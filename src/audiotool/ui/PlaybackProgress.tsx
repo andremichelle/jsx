@@ -1,4 +1,4 @@
-import { Playback } from "./playback.ts"
+import { Playback } from "../playback.ts"
 import { Html } from "@ui/html.ts"
 import { Inject } from "@jsx/inject.ts"
 import css from "./PlaybackProgress.sass?inline"

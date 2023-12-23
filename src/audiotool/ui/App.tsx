@@ -1,18 +1,18 @@
 import { Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Html } from "@ui/html.ts"
-import css from "./app.sass?inline"
-import { Playback } from "./playback.ts"
 import { Inject } from "@jsx/inject.ts"
-import { AwaitTrackList } from "./AwaitTrackList.tsx"
 import { Option } from "@common/option.ts"
+import { router } from "../api.ts"
+import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
-import { router } from "./api.ts"
+import { AwaitTrackList } from "./AwaitTrackList.tsx"
+import css from "./App.sass?inline"
 
 const playback = new Playback()
 
 document.title = "audiotool music browser"
 
-export const AudiotoolApp = () => {
+export const App = () => {
     let request: Option<RequestInfo> = router(location.href)
     const trackListUpdater = Inject.ref<HotspotUpdater>()
     window.onhashchange = (event: HashChangeEvent) => {
@@ -29,7 +29,7 @@ export const AudiotoolApp = () => {
                         <ul>
                             <li><a href="#tracks/sandburgen">Sandburgen</a></li>
                             <li><a href="#tracks/kepz">Kepz</a></li>
-                            <li><a href="#album/huqtsd2pt">Album 2019</a></li>
+                            <li><a href="#album/huqtsd2pt">Album 2019 (Sandburgen)</a></li>
                         </ul>
                     </div>,
                     some: request => <AwaitTrackList playback={playback} request={request} />
@@ -40,6 +40,7 @@ export const AudiotoolApp = () => {
     )
 }
 
+// old school dom manipulation for list-player states
 playback.subscribe(event => {
     if (event.state === "activate") {
         document.querySelectorAll(".track.active")
