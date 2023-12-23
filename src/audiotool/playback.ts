@@ -31,6 +31,7 @@ export class Playback {
 
     constructor() {
         this.#audio = new Audio()
+        this.#audio.crossOrigin = "true"
         this.#notifier = new Notifier<PlaybackEvent>()
     }
 

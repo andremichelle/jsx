@@ -51,13 +51,15 @@ export const router = (url: string): Option<RequestInfo> => {
     return Option.None
 }
 
-export const fetchTrackList = async (request: RequestInfo): Promise<UserTrackList> => {
-    return fetch(request).then(x => x.json()).then((json: UserTrackList) => {
-        const tracks = json.tracks
-        tracks.forEach((track: Track, index: int) => {
-            track.prev = tracks[index - 1]
-            track.next = tracks[index + 1]
+export const fetchTrackList = async (request: RequestInfo): Promise<UserTrackList> =>
+    fetch(request)
+        .then(x => x.json())
+        .then((json: UserTrackList) => {
+            const tracks = json.tracks
+            tracks.forEach((track: Track, index: int) => {
+                track.prev = tracks[index - 1]
+                track.next = tracks[index + 1]
+                track.collaborators
+            })
+            return json
         })
-        return json
-    })
-}

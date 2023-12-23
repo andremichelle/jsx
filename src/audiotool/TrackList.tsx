@@ -37,14 +37,25 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
     return (
         <div className="track" data-track-key={track.key}>
             <button className="play" onclick={toggleTrackHandler}><span className="index">{index + 1}</span></button>
-            <img src={track.coverUrl}
-                 onerror={(event: Event) => (event.target as HTMLImageElement).src = track.snapshotUrl} />
+            <img src={track.coverUrl ?? track.snapshotUrl} />
             <div className="names">
                 <div className="track" onclick={toggleTrackHandler}>{track.name}</div>
                 <UserList users={track.collaborators} />
             </div>
-            <span className="date">{dateToString(new Date(track.created))}</span>
-            <span className="duration">{timespanToString(track.duration)}</span>
+            <div className="meta">
+                <div className="date">
+                    <svg>
+                        <use href="#create" />
+                    </svg>
+                    <span>{dateToString(new Date(track.created))}</span>
+                </div>
+                <div className="duration">
+                    <svg>
+                        <use href="#duration" />
+                    </svg>
+                    <span>{timespanToString(track.duration)}</span>
+                </div>
+            </div>
             <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
         </div>
     )

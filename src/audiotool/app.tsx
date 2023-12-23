@@ -9,6 +9,36 @@ import { Player } from "./Player.tsx"
 import { router } from "./api.ts"
 
 const playback = new Playback()
+
+document.title = "audiotool browser"
+
+export const AudiotoolApp = () => {
+    let request: Option<RequestInfo> = router(location.href)
+    const trackListUpdater = Inject.ref<HotspotUpdater>()
+    window.onhashchange = (event: HashChangeEvent) => {
+        request = router(event.newURL)
+        trackListUpdater.get().update()
+    }
+    return (
+        <main className={Html.adoptStyleSheet(css, "audiotool")}>
+            <Player playback={playback} />
+            <div className="content">
+                <Hotspot ref={trackListUpdater} render={() => request.match({
+                    none: () => <div>
+                        <h4>Start with of my favourites:</h4>
+                        <ul>
+                            <li><a href="#tracks/sandburgen">Sandburgen</a></li>
+                            <li><a href="#tracks/kepz">Kepz</a></li>
+                        </ul>
+                    </div>,
+                    some: request => <AwaitTrackList playback={playback} request={request} />
+                })} />
+            </div>
+            {/*<footer />*/}
+        </main>
+    )
+}
+
 playback.subscribe(event => {
     if (event.state === "activate") {
         document.querySelectorAll(".track.active")
@@ -29,24 +59,3 @@ playback.subscribe(event => {
             .forEach(element => element.classList.remove("playing"))
     }
 })
-
-export const AudiotoolApp = () => {
-    let request: Option<RequestInfo> = router(location.href)
-    const trackListUpdater = Inject.ref<HotspotUpdater>()
-    window.addEventListener("hashchange", (event: HashChangeEvent) => {
-        request = router(event.newURL)
-        trackListUpdater.get().update()
-    })
-    return (
-        <main className={Html.adoptStyleSheet(css, "audiotool")}>
-            <Player playback={playback} />
-            <div className="content">
-                <Hotspot ref={trackListUpdater} render={() => request.match({
-                    none: () => <p>Nothing selected. Start with <a href="#tracks/sandburgen">Sandburgen</a></p>,
-                    some: request => <AwaitTrackList playback={playback} request={request} />
-                })} />
-            </div>
-            {/*<footer />*/}
-        </main>
-    )
-}

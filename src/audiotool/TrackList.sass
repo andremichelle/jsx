@@ -1,10 +1,11 @@
+@import ../sass/mixin
 @import ./common
 
 component
   margin: 2em auto
   width: 96%
   display: grid
-  grid-template-columns: repeat(2, max-content) minmax(0, 1fr) repeat(3, max-content)
+  grid-template-columns: repeat(2, max-content) minmax(0, 1fr) repeat(2, max-content)
   align-items: center
   row-gap: 1em
   column-gap: 1em
@@ -62,7 +63,7 @@ component
       display: flex
       flex-direction: column
       justify-content: center
-      padding: 0 2em 0 0
+      padding: 0 1em 0 0
 
       > .track
         white-space: nowrap
@@ -80,8 +81,41 @@ component
       border-radius: 2em
       padding: 0.25em
       color: black
-      background-color: #303030
+      background-color: rgba(white, 0.25)
       text-decoration: none
 
-    > .date
-      text-align: right
+    > .meta
+      display: flex
+      @include mobile
+        flex-direction: column
+      align-items: end
+      column-gap: 1em
+
+      svg
+        opacity: 0.5
+
+      > .date
+        display: flex
+        align-items: center
+        column-gap: 0.25em
+
+        > svg
+          fill: currentColor
+          height: 1.25em
+          aspect-ratio: 1 / 1
+
+        > span
+          text-align: right
+
+      > .duration
+        display: flex
+        align-items: center
+        column-gap: 0.25em
+
+        > svg
+          fill: currentColor
+          height: 1.25em
+          aspect-ratio: 1 / 1
+
+        > span
+          text-align: left

@@ -7,13 +7,17 @@ import css from "./UserList.sass?inline"
 const className = Html.adoptStyleSheet(css, "user-list")
 
 export type UserListProps = {
-    ref?: Inject.Ref<Procedure<ReadonlyArray<User>>>
+    populate?: Inject.Ref<Procedure<ReadonlyArray<User>>>
     users: ReadonlyArray<User>
 }
 
-export const UserList = ({ users, ref }: UserListProps) => {
+export const UserList = ({ users, populate }: UserListProps) => {
     const render = (users: ReadonlyArray<User>) => users.map(user => <a href={`#tracks/${user.key}`}>{user.name}</a>)
-    const inject = Inject.ref<HTMLDivElement>()
-    ref?.addTarget(users => inject.get().append(...render(users)))
-    return <div className={className} ref={inject}>{render(users)}</div>
+    const ref = Inject.ref<HTMLDivElement>()
+    populate?.addTarget(users => {
+        const element = ref.get()
+        Html.empty(element)
+        element.append(...render(users))
+    })
+    return <div className={className} ref={ref}>{render(users)}</div>
 }

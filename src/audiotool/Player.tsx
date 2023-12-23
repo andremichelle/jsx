@@ -24,7 +24,7 @@ export const Player = ({ playback }: PlayerProps) => {
         </header>
         <div className="info">
             <div className="track">{trackName}</div>
-            <UserList ref={updateUserList} users={[]} />
+            <UserList populate={updateUserList} users={[]} />
             <PlaybackProgress playback={playback} />
             <div className="time">
                 <span>{playbackElapsed}</span>
@@ -39,9 +39,11 @@ export const Player = ({ playback }: PlayerProps) => {
                     coverHref.value = ""
                     trackName.value = ""
                     updateUserList.get()([])
+                    playbackElapsed.value = timespanToString(0)
+                    playbackDuration.value = timespanToString(0)
                 },
                 some: track => {
-                    coverHref.value = `${location.protocol}${track.coverUrl}`
+                    coverHref.value = `${location.protocol}${track.coverUrl ?? track.snapshotUrl}`
                     trackName.value = track.name
                     updateUserList.get()(track.collaborators)
                     playbackDuration.value = timespanToString(track.duration)
