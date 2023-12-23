@@ -71,3 +71,5 @@ export const ExampleApp = () => {
         </main>
     )
 }
+
+document.title = "JSX Launchpad"

@@ -10,7 +10,7 @@ import { router } from "./api.ts"
 
 const playback = new Playback()
 
-document.title = "audiotool browser"
+document.title = "audiotool music browser"
 
 export const AudiotoolApp = () => {
     let request: Option<RequestInfo> = router(location.href)
