@@ -15,6 +15,9 @@ playback.subscribe(event => {
             .forEach(element => element.classList.remove("active", "buffering", "playing", "error"))
         event.track.ifSome(track => document.querySelectorAll(`.track[data-track-key="${track.key}"]`)
             .forEach(element => element.classList.add("active")))
+    } else if (event.state === "buffering") {
+        document.querySelectorAll(".track.active")
+            .forEach(element => element.classList.add("buffering"))
     } else if (event.state === "playing") {
         document.querySelectorAll(".track.active")
             .forEach(element => {
@@ -24,9 +27,6 @@ playback.subscribe(event => {
     } else if (event.state === "paused") {
         document.querySelectorAll(".track.active")
             .forEach(element => element.classList.remove("playing"))
-    } else if (event.state === "buffering") {
-        document.querySelectorAll(".track.active")
-            .forEach(element => element.classList.add("buffering"))
     }
 })
 

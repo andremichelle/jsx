@@ -1,0 +1,24 @@
+@import common
+
+component
+  position: relative
+  border-radius: 0.125em
+  --progress: 0.0
+
+  > div.socket
+    top: 0.25em
+    left: 0
+    width: 100%
+    height: calc(100% - 0.5em)
+    position: absolute
+    border-radius: 0.0625em
+    background-color: $PlaceHolderColor
+    overflow: hidden
+
+    > div.bar
+      top: 0
+      left: 0
+      width: calc(var(--progress) * 100%)
+      height: 100%
+      position: absolute
+      background-color: gray

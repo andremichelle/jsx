@@ -1,5 +1,5 @@
-import { IconLibrary } from "./icons.tsx"
 import "./main.sass"
+import { IconLibrary } from "./icons.tsx"
 import { AudiotoolApp } from "./audiotool/app.tsx"
 
 (async () => {

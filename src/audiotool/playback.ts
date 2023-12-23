@@ -23,12 +23,13 @@ export type PlaybackEvent = {
 
 export class Playback {
     readonly #audio: HTMLAudioElement
-    readonly #notifier = new Notifier<PlaybackEvent>
+    readonly #notifier: Notifier<PlaybackEvent>
 
     #active: Option<Track> = Option.None
 
     constructor() {
         this.#audio = new Audio()
+        this.#notifier = new Notifier<PlaybackEvent>()
     }
 
     toggle(track: Track): void {
@@ -45,6 +46,22 @@ export class Playback {
         this.active = Option.wrap(track)
         this.#notify({ state: "buffering" })
         this.#playAudio(track)
+    }
+
+    playTrackFrom(track: Track, position: unitValue): void {
+        if (this.#active.contains(track)) {
+            this.#notify({ state: "buffering" })
+            this.#audio.currentTime = (track.duration / 1000) * position
+            if (this.#audio.paused) {
+                this.#audio.play().catch()
+            }
+            return
+        }
+        this.eject()
+        this.active = Option.wrap(track)
+        this.#notify({ state: "buffering" })
+        this.#playAudio(track)
+        this.#audio.currentTime = (track.duration / 1000) * position
     }
 
     eject(): void {

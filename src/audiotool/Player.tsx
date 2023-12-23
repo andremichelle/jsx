@@ -5,6 +5,7 @@ import { Inject } from "@jsx/inject.ts"
 import { Procedure } from "@common/lang.ts"
 import { User } from "./api.ts"
 import { UserList } from "./UserList.tsx"
+import { PlaybackProgress } from "./PlaybackProgress.tsx"
 
 export type PlayerProps = {
     playback: Playback
@@ -15,12 +16,13 @@ export const Player = ({ playback }: PlayerProps) => {
     const trackName = Inject.text("")
     const updateUserList = Inject.ref<Procedure<ReadonlyArray<User>>>()
     const element = <div className={Html.adoptStyleSheet(css, "player")}>
-        <header className="cover">
+        <header className="cover" onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
             <img src={coverHref} />
         </header>
-        <div className="names">
+        <div className="info">
             <div className="track">{trackName}</div>
             <UserList ref={updateUserList} users={[]} />
+            <PlaybackProgress playback={playback} />
         </div>
     </div>
     playback.subscribe(event => {
