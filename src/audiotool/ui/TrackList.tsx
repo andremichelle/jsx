@@ -9,13 +9,13 @@ import { dateToString, timespanToString } from "../time-conversion.ts"
 const className = Html.adoptStyleSheet(css, "track-list")
 
 export type TrackListProps = {
-    data: UserTrackList
+    list: UserTrackList
     playback: Playback
 }
 
-export const TrackList = ({ data, playback }: TrackListProps) => (
+export const TrackList = ({ list, playback }: TrackListProps) => (
     <div className={className}>
-        {data.tracks.map((track: Track, index: int) => (
+        {list.tracks.map((track: Track, index: int) => (
             <TrackListItem playback={playback}
                            track={track}
                            index={index} />
@@ -36,7 +36,9 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
     }
     return (
         <div className="track" data-track-key={track.key}>
-            <button className="play" onclick={toggleTrackHandler}><span className="index">{index + 1}</span></button>
+            <button className="play" onclick={toggleTrackHandler}>
+                <span className="index">{index + 1}</span>
+            </button>
             <img src={track.coverUrl ?? track.snapshotUrl} />
             <div className="names">
                 <div className="track" onclick={toggleTrackHandler}>{track.name}</div>

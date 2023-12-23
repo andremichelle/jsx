@@ -7,6 +7,7 @@ component
   flex: 0 0 6.5em
   padding: 0 1em
   display: grid
+  align-items: center
   grid-template-columns: 5em 1fr
   width: 100%
   column-gap: 1em
@@ -16,18 +17,42 @@ component
   box-shadow: 0 1em 1em 0 rgba(black, 0.5)
 
   > header.cover
+    height: 5em
     display: flex
     align-items: center
     justify-content: center
     position: relative
+    overflow: hidden
+    border-radius: 0.5em
 
     > img
-      height: 5em
+      height: 100%
       aspect-ratio: 1 / 1
       object-fit: contain
-      border-radius: 0.5em
       background-color: $PlaceHolderColor
       @include audiotool
+
+    &.active:hover > div.state
+      visibility: visible
+
+    > div.state
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      position: absolute
+      background-size: 50%
+      background-color: rgba(black, 0.2)
+      visibility: hidden
+      cursor: pointer
+
+      @include play
+
+      &.playing
+        @include pause
+
+      &.buffering
+        @include buffering
 
   > div.info
     display: flex

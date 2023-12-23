@@ -17,7 +17,7 @@ export const AwaitTrackList = ({ request, playback }: AwaitTrackListProps) => (
         <Await<UserTrackList>
             promise={() => fetchTrackList(request)}
             loading={() => <div className="loading">loading</div>}
-            success={(data) => <TrackList data={data} playback={playback} />}
+            success={(data) => <TrackList list={data} playback={playback} />}
             failure={({ retry }) => (
                 <div className="failure">
                     <p>Could not load tracklist.</p>
