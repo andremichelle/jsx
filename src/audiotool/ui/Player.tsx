@@ -26,6 +26,7 @@ export const Player = ({ playback }: PlayerProps) => {
                 <header className={headerClasses}
                         onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
                     <img src={coverHref} />
+                    <img src={coverHref} />
                     <div className={stateClasses} />
                 </header>
                 <div className="info">

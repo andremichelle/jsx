@@ -26,10 +26,12 @@ export const App = () => {
             <section className="content">
                 <Hotspot ref={trackListUpdater} render={() => request.match({
                     none: () => <div>
-                        <h4>Start with of my favourites:</h4>
+                        <h3>Missing Homepage</h3>
+                        <h4>Start with of my favourites...</h4>
                         <ul>
                             <li><a href="#tracks/sandburgen">Sandburgen</a></li>
                             <li><a href="#tracks/kepz">Kepz</a></li>
+                            <li><a href="#tracks/sumad">Sumad</a></li>
                             <li><a href="#album/huqtsd2pt">Album 2019 (Sandburgen)</a></li>
                         </ul>
                     </div>,
