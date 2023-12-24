@@ -1,5 +1,3 @@
-// import { int, Procedure } from "./lang.ts"
-
 export class WeakRefSet<T extends WeakKey> {
     readonly #set = new Set<WeakRef<T>>()
 

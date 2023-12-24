@@ -21,7 +21,7 @@ export const Player = ({ playback }: PlayerProps) => {
     const playbackDuration = Inject.text("00:00")
     const updateUserList = Inject.ref<Procedure<ReadonlyArray<User>>>()
     const element = (
-        <div className={Html.adoptStyleSheet(css, "player")}>
+        <section className={Html.adoptStyleSheet(css, "player")}>
             <header className={headerClasses}
                     onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
                 <img src={coverHref} />
@@ -36,7 +36,7 @@ export const Player = ({ playback }: PlayerProps) => {
                     <span>{playbackDuration}</span>
                 </div>
             </div>
-        </div>
+        </section>
     )
     playback.subscribe(event => {
         if (event.state === "activate") {

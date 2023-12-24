@@ -5,8 +5,8 @@ import { Option } from "@common/option.ts"
 import { router } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
-import css from "./App.sass?inline"
 import { TrackList } from "./TrackList.tsx"
+import css from "./App.sass?inline"
 
 const playback = new Playback()
 
@@ -22,7 +22,7 @@ export const App = () => {
     return (
         <main className={Html.adoptStyleSheet(css, "audiotool")}>
             <Player playback={playback} />
-            <div className="content">
+            <section className="content">
                 <Hotspot ref={trackListUpdater} render={() => request.match({
                     none: () => <div>
                         <h4>Start with of my favourites:</h4>
@@ -34,7 +34,7 @@ export const App = () => {
                     </div>,
                     some: request => <TrackList playback={playback} request={request} />
                 })} />
-            </div>
+            </section>
             {/*<footer />*/}
         </main>
     )
@@ -46,7 +46,10 @@ playback.subscribe(event => {
         document.querySelectorAll(".track.active")
             .forEach(element => element.classList.remove("active", "buffering", "playing", "error"))
         event.track.ifSome(track => document.querySelectorAll(`.track[data-track-key="${track.key}"]`)
-            .forEach(element => element.classList.add("active")))
+            .forEach(element => {
+                element.classList.add("active")
+                element.firstElementChild?.scrollIntoView({ behavior: "smooth", block: "center" })
+            }))
     } else if (event.state === "buffering") {
         document.querySelectorAll(".track.active")
             .forEach(element => element.classList.add("buffering"))
@@ -59,5 +62,13 @@ playback.subscribe(event => {
     } else if (event.state === "paused") {
         document.querySelectorAll(".track.active")
             .forEach(element => element.classList.remove("playing"))
+    }
+})
+
+window.addEventListener("keyup", (event: KeyboardEvent) => {
+    if (event.key === "ArrowRight") {
+        playback.nextTrack()
+    } else if (event.key === "ArrowLeft") {
+        playback.prevTrack()
     }
 })

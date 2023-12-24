@@ -17,19 +17,19 @@ export type TrackListProps = {
 
 export const TrackList = ({ playback, request }: TrackListProps) => {
     let index: int = 0
-    const element: HTMLDivElement = <div className={className} />
+    let lastTrack: Track | undefined
+    const element: HTMLElement = <section className={className} />
     const fetchTracks = (request: RequestInfo) =>
-        fetchTrackList(request)
+        fetchTrackList(request, lastTrack)
             .then(list => {
-                if (!element.isConnected) {
-                    console.debug(`ignore ${request}`)
-                    return
-                }
-                element.append(...list.tracks.map((track: Track) => (
+                if (!element.isConnected) {return}
+                const tracks: ReadonlyArray<Track> = list.tracks
+                element.append(...tracks.map((track: Track) => (
                     <TrackListItem playback={playback}
                                    track={track}
                                    index={index++} />
                 )))
+                lastTrack = tracks.at(-1)
                 const nextRequest = list.next
                 if (nextRequest === undefined) {return}
                 const moreEntriesIndicator = <LoadingIndicator title="loading more tracks" />
@@ -39,15 +39,13 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
                         observer.disconnect()
                     }
                 })
-                observer.observe(moreEntriesIndicator)
                 element.append(moreEntriesIndicator)
+                observer.observe(moreEntriesIndicator)
             })
             .catch(() => {
                 if (element.isConnected) {
-                    element.append(
-                        <FailureIndicatorIndicator title="Could not load more tracks"
-                                                   onRetry={() => fetchTracks(request)} />
-                    )
+                    element.append(<FailureIndicatorIndicator title="Could not load more tracks"
+                                                              onRetry={() => fetchTracks(request)} />)
                 }
             })
     const loadingIndicator = <LoadingIndicator title="loading tracks" />

@@ -4,7 +4,7 @@ import { Html } from "@ui/html.ts"
 
 export type UserTrackList = {
     name: string
-    tracks: Track[]
+    tracks: ReadonlyArray<Track>
     next?: string
 }
 
@@ -20,7 +20,7 @@ export type Track = {
     snapshotUrl: string
     pksUrl: string
     coverUrl: string
-    collaborators: User[]
+    collaborators: ReadonlyArray<User>
     bpm: number
     genreKey: string
     genreName: string
@@ -54,13 +54,13 @@ export const router = (url: string): Option<RequestInfo> => {
     switch (scope) {
         // tracks of user
         case "tracks":
-            return Option.wrap(`${API_URL}/user/${value}/tracks.json?orderBy=created&cover=64&offset=0&limit=500`)
+            return Option.wrap(`${API_URL}/user/${value}/tracks.json?orderBy=created&cover=64&offset=0&limit=50`)
         // tracks of genre
         case "genre":
-            return Option.wrap(`${API_URL}/tracks/query.json?cover=128&genre=${value}&offset=0&limit=500`)
+            return Option.wrap(`${API_URL}/tracks/query.json?cover=128&genre=${value}&offset=0&limit=50`)
         // tracks of album
         case "album":
-            return Option.wrap(`${API_URL}/album/${value}/tracks.json?cover=128&genre=${value}&offset=0&limit=500`)
+            return Option.wrap(`${API_URL}/album/${value}/tracks.json?cover=128&genre=${value}&offset=0&limit=50`)
         // albums of user
         case "albums":
             return Option.None
@@ -93,7 +93,7 @@ export const fetchUserAlbumList = async (userKey: string): Promise<ReadonlyArray
                 })
         })
 
-export const fetchTrackList = async (request: RequestInfo): Promise<UserTrackList> =>
+export const fetchTrackList = async (request: RequestInfo, lastTrack?: Track): Promise<UserTrackList> =>
     fetch(request)
         .then(x => x.json())
         .then((json: UserTrackList) => {
@@ -103,5 +103,9 @@ export const fetchTrackList = async (request: RequestInfo): Promise<UserTrackLis
                 track.next = tracks[index + 1]
                 track.collaborators
             })
+            if (lastTrack !== undefined) {
+                tracks[0].prev = lastTrack
+                lastTrack.next = tracks[0]
+            }
             return json
         })
