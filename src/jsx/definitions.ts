@@ -19,7 +19,7 @@ type NativeElements =
     // And it is in html and svg namespace.
     & {
     "a": {
-        href?: string,
+        href?: string | object,
         target?: string
         className?: string,
     }

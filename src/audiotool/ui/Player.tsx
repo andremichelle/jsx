@@ -14,6 +14,7 @@ export const Player = ({ playback }: PlayerProps) => {
     const headerClasses = Inject.classes("cover")
     const stateClasses = Inject.classes("state")
     const coverHref = Inject.attribute(Html.EmptyGif)
+    const profileLink = Inject.attribute("#")
     const trackName = Inject.text("")
     const playbackElapsed = Inject.text("00:00")
     const playbackDuration = Inject.text("00:00")
@@ -28,7 +29,7 @@ export const Player = ({ playback }: PlayerProps) => {
                     <div className={stateClasses} />
                 </header>
                 <div className="info">
-                    <div className="top">{trackName}</div>
+                    <a className="top" href={profileLink}>{trackName}</a>
                     <AuthorList populate={populateUserList} users={[]} />
                     <PlaybackProgress playback={playback} />
                     <div className="time">

@@ -11,9 +11,7 @@ const className = Html.adoptStyleSheet(css, "artist-cards")
 
 let cache: Option<ReadonlyArray<User>> = Option.None
 
-export type ArtistCardsProps = {
-    keys: ReadonlyArray<string>
-}
+export type ArtistCardsProps = { keys: ReadonlyArray<string> }
 
 export const ArtistCards = ({ keys }: ArtistCardsProps) => {
     const element: HTMLElement = <section className={className} />
