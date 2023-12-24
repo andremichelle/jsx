@@ -22,18 +22,20 @@ export const Player = ({ playback }: PlayerProps) => {
     const updateUserList = Inject.ref<Procedure<ReadonlyArray<User>>>()
     const element = (
         <section className={Html.adoptStyleSheet(css, "player")}>
-            <header className={headerClasses}
-                    onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
-                <img src={coverHref} />
-                <div className={stateClasses} />
-            </header>
-            <div className="info">
-                <div className="track">{trackName}</div>
-                <UserList populate={updateUserList} users={[]} />
-                <PlaybackProgress playback={playback} />
-                <div className="time">
-                    <span>{playbackElapsed}</span>
-                    <span>{playbackDuration}</span>
+            <div className="center">
+                <header className={headerClasses}
+                        onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
+                    <img src={coverHref} />
+                    <div className={stateClasses} />
+                </header>
+                <div className="info">
+                    <div className="track">{trackName}</div>
+                    <UserList populate={updateUserList} users={[]} />
+                    <PlaybackProgress playback={playback} />
+                    <div className="time">
+                        <span>{playbackElapsed}</span>
+                        <span>{playbackDuration}</span>
+                    </div>
                 </div>
             </div>
         </section>

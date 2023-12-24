@@ -1,12 +1,11 @@
-import { UserList } from "./UserList.tsx"
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
-import { dateToString, timespanToString } from "../time-conversion.ts"
 import { fetchTrackList, Track } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Html } from "@ui/html.ts"
 import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
+import { TrackListItem } from "./TrackListItem.tsx"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 
@@ -52,44 +51,4 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
     element.append(loadingIndicator)
     fetchTracks(request).then(() => loadingIndicator.remove())
     return element
-}
-
-type TrackListItemProps = {
-    playback: Playback
-    track: Track
-    index: int
-}
-
-const TrackListItem = ({ playback, track, index }: TrackListItemProps) => {
-    const toggleTrackHandler = (event: Event) => {
-        event.stopPropagation()
-        playback.toggle(track)
-    }
-    return (
-        <div className="track" data-track-key={track.key}>
-            <button className="play" onclick={toggleTrackHandler}>
-                <span className="index">{index + 1}</span>
-            </button>
-            <img src={track.coverUrl ?? track.snapshotUrl} />
-            <div className="names">
-                <div className="track" onclick={toggleTrackHandler}>{track.name}</div>
-                <UserList users={track.collaborators} />
-            </div>
-            <div className="meta">
-                <div className="date">
-                    <svg>
-                        <use href="#create" />
-                    </svg>
-                    <span>{dateToString(new Date(track.created))}</span>
-                </div>
-                <div className="duration">
-                    <svg>
-                        <use href="#duration" />
-                    </svg>
-                    <span>{timespanToString(track.duration)}</span>
-                </div>
-            </div>
-            <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
-        </div>
-    )
 }
