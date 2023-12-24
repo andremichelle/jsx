@@ -26,7 +26,7 @@ export const router = (url: string): Option<ApiRequest> => {
         case "playlist":
             return Option.wrap({
                 scope: "playlist",
-                fetch: () => fetchTracks(`${API_URL}/album/${key}/tracks.json?cover=128&genre=${key}&offset=0&limit=50`)
+                fetch: () => fetchTracks(`${API_URL}/album/${key}/tracks.json?cover=128&offset=0&limit=50`)
             })
         case "genre":
             return Option.wrap({

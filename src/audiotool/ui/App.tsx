@@ -77,12 +77,12 @@ playback.subscribe(event => {
 })
 
 window.addEventListener("keydown", (event: KeyboardEvent) => {
-    event.preventDefault()
     if (event.code === "ArrowRight") {
         playback.nextTrack()
     } else if (event.code === "ArrowLeft") {
         playback.prevTrack()
     } else if (event.code === "Space") {
+        event.preventDefault()
         playback.togglePlay()
     }
 })
