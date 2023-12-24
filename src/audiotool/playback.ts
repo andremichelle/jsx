@@ -49,14 +49,26 @@ export class Playback {
         }
         this.eject()
         this.active = Option.wrap(track)
-        this.#notify({ state: "buffering" })
+        this.#notify({
+            state: "progress",
+            progress: 1.0,
+            elapsedInSeconds: 0,
+            durationInSeconds: track.duration / 1000
+        })
         this.#playAudio(track)
     }
 
-    playTrackFrom(track: Track, position: unitValue): void {
+    playTrackFrom(track: Track, progress: unitValue): void {
+        const durationInSeconds = track.duration / 1000
         if (this.#active.contains(track)) {
+            this.#notify({
+                state: "progress",
+                progress,
+                elapsedInSeconds: durationInSeconds * progress,
+                durationInSeconds
+            })
             this.#notify({ state: "buffering" })
-            this.#audio.currentTime = (track.duration / 1000) * position
+            this.#audio.currentTime = durationInSeconds * progress
             if (this.#audio.paused) {
                 this.#audio.play().catch()
             }
@@ -66,7 +78,7 @@ export class Playback {
         this.active = Option.wrap(track)
         this.#notify({ state: "buffering" })
         this.#playAudio(track)
-        this.#audio.currentTime = (track.duration / 1000) * position
+        this.#audio.currentTime = durationInSeconds * progress
     }
 
     eject(): void {
@@ -89,31 +101,31 @@ export class Playback {
 
     #playAudio(track: Track): void {
         this.#audio.onended = () => this.active.ifSome(track => {if (isDefined(track.next)) {this.toggle(track.next)}})
-        this.#audio.onplay = () => {
-            if (this.#audio.currentTime === 0) {
-                this.#notify({ state: "buffering" })
-            } else {
-                this.#notify({ state: "playing" })
-            }
-        }
+        this.#audio.onplay = () => this.#notify({ state: this.#canPlayImmediately() ? "playing" : "buffering" })
         this.#audio.onpause = () => this.#notify({ state: "paused" })
         this.#audio.onerror = (event, _source, _lineno, _colno, error) => this.#notify({
             state: "error",
             reason: error?.message ?? event instanceof Event ? "Unknown" : event
         })
-        this.#audio.onstalled = () => this.#notify({ state: "buffering" })
+        this.#audio.onstalled = () => {
+            if (this.#state !== "paused") {
+                this.#notify({ state: "buffering" })
+            }
+        }
         this.#audio.ontimeupdate = () => {
             if (this.#state === "buffering") {
                 this.#notify({ state: "playing" })
             }
-            const durationInSeconds = track.duration / 1000
             const elapsedInSeconds = this.#audio.currentTime
-            this.#notify({
-                state: "progress",
-                progress: elapsedInSeconds / durationInSeconds,
-                elapsedInSeconds,
-                durationInSeconds
-            })
+            if (elapsedInSeconds > 0.0) {
+                const durationInSeconds = track.duration / 1000
+                this.#notify({
+                    state: "progress",
+                    progress: elapsedInSeconds / durationInSeconds,
+                    elapsedInSeconds,
+                    durationInSeconds
+                })
+            }
         }
         this.#audio.src = `https://api.audiotool.com/track/${track.key}/play.mp3`
         this.#audio.play().catch(() => {})
@@ -122,5 +134,16 @@ export class Playback {
     #notify(event: PlaybackEvent) {
         this.#state = event.state
         this.#notifier.notify(event)
+    }
+
+    #canPlayImmediately(): boolean {
+        const buffered = this.#audio.buffered
+        const currentTime = this.#audio.currentTime
+        for (let index = 0; index < buffered.length; index++) {
+            if (buffered.start(index) <= currentTime && currentTime < buffered.end(index)) {
+                return true
+            }
+        }
+        return false
     }
 }

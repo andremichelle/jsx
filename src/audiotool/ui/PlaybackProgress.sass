@@ -2,9 +2,9 @@
 
 @keyframes blink
   from
-    background-color: rgba(orange, 0.04)
+    background-position-x: 0%
   to
-    background-color: rgba(orange, 0.00)
+    background-position-x: 200%
 
 component
   height: 0.5em
@@ -32,5 +32,6 @@ component
       background-color: orange
 
       &.buffering
-        width: 100%
-        animation: blink 250ms alternate infinite
+        background: linear-gradient(to right, rgba(orange, 0.2) 0%, rgba(orange, 0.3) 50%, rgba(orange, 0.2) 100%)
+        background-size: 200%
+        animation: blink 500ms backwards infinite linear
