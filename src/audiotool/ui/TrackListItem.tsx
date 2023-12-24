@@ -24,7 +24,7 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
             <button className="play" onclick={toggleTrackHandler}>
                 <span className="index">{index + 1}</span>
             </button>
-            <img src={track.coverUrl ?? track.snapshotUrl} />
+            <img src={track.coverUrl ?? track.snapshotUrl} onclick={toggleTrackHandler} />
             <div className="names">
                 <div className="track" onclick={toggleTrackHandler}>{track.name}</div>
                 <UserList users={track.collaborators} />

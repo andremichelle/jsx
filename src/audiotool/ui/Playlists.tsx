@@ -17,13 +17,14 @@ export const Playlists = ({ request }: PlaylistsProps) => {
         .then((response: PlaylistsResponse) => {
             if (!element.isConnected) {return}
             element.append(
-                <ListHeader name={`${response.artistName}'s Playlists`} button={{
+                <ListHeader name={response.name} link={{
                     label: "Show Artists Tracks",
-                    onClick: () => location.hash = `tracks/${request.artistKey}`
+                    href: `#tracks/${request.artistKey}`
                 }} />)
             element.append(...response.playlists.map(playlist => (
                 <button onclick={() => location.hash = `playlist/${playlist.key}`}>
-                    {playlist.name}
+                    <img src={playlist.image} />
+                    <div>{playlist.name}</div>
                 </button>
             )))
         })

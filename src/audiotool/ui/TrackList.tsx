@@ -23,11 +23,11 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
             if (!element.isConnected) {return}
             if (index === 0) {
                 element.append(
-                    <ListHeader name={response.name} button={
+                    <ListHeader name={response.name} link={
                         request.scope === "tracks"
                             ? {
                                 label: "Show Artists Playlists",
-                                onClick: () => location.hash = `playlists/${request.artistKey}`
+                                href: `#playlists/${request.artistKey}`
                             } : undefined} />)
             }
             const tracks: ReadonlyArray<Track> = response.tracks

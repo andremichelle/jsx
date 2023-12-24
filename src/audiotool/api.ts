@@ -9,7 +9,7 @@ export type TrackListResponse = {
 }
 
 export type PlaylistsResponse = {
-    artistName: string
+    name: string
     playlists: ReadonlyArray<Playlist>
 }
 
@@ -130,7 +130,7 @@ export const fetchUserPlaylists = async (userKey: string): Promise<PlaylistsResp
             const documentElement = new DOMParser().parseFromString(x, "text/xml").documentElement
             const artistName = documentElement.getAttribute("subtitle") ?? "Untitled"
             return {
-                artistName,
+                name: `${artistName}'s Playlists`,
                 playlists: Array.from(documentElement.children)
                     .map((element: Element) => {
                         let uri = element.getAttribute("uri")!

@@ -6,9 +6,8 @@ import { ApiRequest, router } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
-import css from "./App.sass?inline"
-import { Footer } from "./Footer.tsx"
 import { Playlists } from "./Playlists.tsx"
+import css from "./App.sass?inline"
 
 const playback = new Playback()
 
@@ -33,7 +32,7 @@ export const App = () => {
                             <li><a href="#tracks/sandburgen">Sandburgen</a></li>
                             <li><a href="#tracks/kepz">Kepz</a></li>
                             <li><a href="#tracks/sumad">Sumad</a></li>
-                            <li><a href="#album/huqtsd2pt">Album 2019 (Sandburgen)</a></li>
+                            <li><a href="#playlist/huqtsd2pt">Playlist 2019 (Sandburgen)</a></li>
                         </ul>
                     </div>,
                     some: request => {
@@ -45,7 +44,7 @@ export const App = () => {
                     }
                 })} />
             </section>
-            <Footer />
+            {/*<Footer />*/}
         </main>
     )
 }
