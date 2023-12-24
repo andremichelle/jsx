@@ -8,7 +8,10 @@ export type TrackListResponse = {
     next?: string
 }
 
-export type PlaylistsResponse = ReadonlyArray<Playlist>
+export type PlaylistsResponse = {
+    artistName: string
+    playlists: ReadonlyArray<Playlist>
+}
 
 export type Track = {
     key: string
@@ -123,15 +126,22 @@ export const fetchTracks = async (info: RequestInfo, lastTrack?: Track): Promise
 export const fetchUserPlaylists = async (userKey: string): Promise<PlaylistsResponse> =>
     fetch(`https://api.audiotool.com/browse/user/${userKey}/albums/`)
         .then(x => x.text())
-        .then(x => Array.from(new DOMParser().parseFromString(x, "text/xml").documentElement.children)
-            .map((element: Element) => {
-                let uri = element.getAttribute("uri")!
-                uri = uri.slice(0, -1)
-                uri = uri.slice(uri.lastIndexOf("/") + 1)
-                const image = element.getAttribute("image")
-                return ({
-                    key: uri,
-                    name: element.getAttribute("title") ?? "Untitled",
-                    image: image === null ? Html.EmptyGif : `${location.protocol}${image}`
-                })
-            }))
+        .then(x => {
+            const documentElement = new DOMParser().parseFromString(x, "text/xml").documentElement
+            const artistName = documentElement.getAttribute("subtitle") ?? "Untitled"
+            return {
+                artistName,
+                playlists: Array.from(documentElement.children)
+                    .map((element: Element) => {
+                        let uri = element.getAttribute("uri")!
+                        uri = uri.slice(0, -1)
+                        uri = uri.slice(uri.lastIndexOf("/") + 1)
+                        const image = element.getAttribute("image")
+                        return ({
+                            key: uri,
+                            name: element.getAttribute("title") ?? "Untitled",
+                            image: image === null ? Html.EmptyGif : `${location.protocol}${image}`
+                        })
+                    })
+            }
+        })

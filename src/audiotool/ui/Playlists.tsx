@@ -17,12 +17,15 @@ export const Playlists = ({ request }: PlaylistsProps) => {
         .then((response: PlaylistsResponse) => {
             if (!element.isConnected) {return}
             element.append(
-                <ListHeader name="Playlists" button={{
+                <ListHeader name={`${response.artistName}'s Playlists`} button={{
                     label: "Show Artists Tracks",
                     onClick: () => location.hash = `tracks/${request.artist}`
                 }} />)
-            element.append(...response.map(playlist => <button
-                onclick={() => location.hash = `playlist/${playlist.key}`}>{playlist.name}</button>))
+            element.append(...response.playlists.map(playlist => (
+                <button onclick={() => location.hash = `playlist/${playlist.key}`}>
+                    {playlist.name}
+                </button>
+            )))
         })
         .catch(() => {
             if (element.isConnected) {
