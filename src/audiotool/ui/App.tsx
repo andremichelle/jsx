@@ -8,6 +8,7 @@ import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import css from "./App.sass?inline"
 import { Footer } from "./Footer.tsx"
+import { Playlists } from "./Playlists.tsx"
 
 const playback = new Playback()
 
@@ -37,8 +38,7 @@ export const App = () => {
                     </div>,
                     some: request => {
                         if (request.scope === "playlists") {
-                            // TODO
-                            return <p>not yet implemented</p>
+                            return <Playlists request={request} />
                         } else {
                             return <TrackList playback={playback} request={request} />
                         }

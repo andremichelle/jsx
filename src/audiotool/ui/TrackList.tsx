@@ -1,34 +1,34 @@
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
-import { ApiTrackListResponse, fetchTracks, Track } from "../api.ts"
+import { TrackListItem } from "./TrackListItem.tsx"
+import { ApiTrackListRequest, fetchTracks, Track } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Html } from "@ui/html.ts"
 import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
-import { TrackListItem } from "./TrackListItem.tsx"
+import { ListHeader } from "./ListHeader.tsx"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 
 export type TrackListProps = {
     playback: Playback
-    request: ApiTrackListResponse
+    request: ApiTrackListRequest
 }
 
 export const TrackList = ({ playback, request }: TrackListProps) => {
     let index: int = 0
     const element: HTMLElement = <section className={className} />
-    const fetch = (request: ApiTrackListResponse) => request.fetch()
+    const fetch = (request: ApiTrackListRequest) => request.fetch()
         .then(response => {
             if (!element.isConnected) {return}
-            if (index === 0 && request.scope === "tracks") {
+            if (index === 0) {
                 element.append(
-                    <header>
-                        <h1>{response.name}</h1>
-                        <button onclick={() => location.hash = `playlists/${request.artist}`}>
-                            Show Artists Playlists
-                        </button>
-                    </header>
-                )
+                    <ListHeader name={response.name} button={
+                        request.scope === "tracks"
+                            ? {
+                                label: "Show Artists Playlists",
+                                onClick: () => location.hash = `playlists/${request.artist}`
+                            } : undefined} />)
             }
             const tracks: ReadonlyArray<Track> = response.tracks
             element.append(...tracks.map((track: Track) => (

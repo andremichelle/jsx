@@ -8,6 +8,8 @@ export type TrackListResponse = {
     next?: string
 }
 
+export type PlaylistsResponse = ReadonlyArray<Playlist>
+
 export type Track = {
     key: string
     id: number
@@ -39,9 +41,9 @@ export type User = {
     avatar: string
 }
 
-export type ApiRequest = ApiTrackListResponse | ApiPlayListResponse
+export type ApiRequest = ApiTrackListRequest | ApiPlayListsRequest
 
-export type ApiTrackListResponse = {
+export type ApiTrackListRequest = {
     scope: "tracks"
     artist: string
     fetch: Provider<Promise<TrackListResponse>>
@@ -53,10 +55,10 @@ export type ApiTrackListResponse = {
     fetch: Provider<Promise<TrackListResponse>>
 }
 
-export type ApiPlayListResponse = {
+export type ApiPlayListsRequest = {
     scope: "playlists"
     artist: string
-    fetch: Provider<Promise<ReadonlyArray<Album>>>
+    fetch: Provider<Promise<PlaylistsResponse>>
 }
 
 // orderBy=[favs,created]
@@ -95,7 +97,7 @@ export const router = (url: string): Option<ApiRequest> => {
     return Option.None
 }
 
-export type Album = {
+export type Playlist = {
     key: string
     name: string
     image: string
@@ -118,7 +120,7 @@ export const fetchTracks = async (info: RequestInfo, lastTrack?: Track): Promise
             return json
         })
 
-export const fetchUserPlaylists = async (userKey: string): Promise<ReadonlyArray<Album>> =>
+export const fetchUserPlaylists = async (userKey: string): Promise<PlaylistsResponse> =>
     fetch(`https://api.audiotool.com/browse/user/${userKey}/albums/`)
         .then(x => x.text())
         .then(x => Array.from(new DOMParser().parseFromString(x, "text/xml").documentElement.children)
