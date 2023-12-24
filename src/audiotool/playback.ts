@@ -1,8 +1,8 @@
 import { Option } from "@common/option.ts"
-import { Track } from "./api.ts"
 import { Notifier } from "@common/observers.ts"
 import { isDefined, Procedure, unitValue } from "@common/lang.ts"
 import { Subscription } from "@common/terminable.ts"
+import { Track } from "./data-types.ts"
 
 export type PlaybackEvent = {
     state: "activate"

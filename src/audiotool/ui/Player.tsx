@@ -3,14 +3,12 @@ import { Html } from "@ui/html.ts"
 import { Playback } from "../playback.ts"
 import { Inject } from "@jsx/inject.ts"
 import { Procedure } from "@common/lang.ts"
-import { User } from "../api.ts"
 import { AuthorList } from "./AuthorList.tsx"
 import { PlaybackProgress } from "./PlaybackProgress.tsx"
 import { timespanToString } from "../time-conversion.ts"
+import { User } from "../data-types.ts"
 
-export type PlayerProps = {
-    playback: Playback
-}
+export type PlayerProps = { playback: Playback }
 
 export const Player = ({ playback }: PlayerProps) => {
     const headerClasses = Inject.classes("cover")
@@ -19,7 +17,7 @@ export const Player = ({ playback }: PlayerProps) => {
     const trackName = Inject.text("")
     const playbackElapsed = Inject.text("00:00")
     const playbackDuration = Inject.text("00:00")
-    const updateUserList = Inject.ref<Procedure<ReadonlyArray<User>>>()
+    const populateUserList = Inject.ref<Procedure<ReadonlyArray<User>>>()
     const element = (
         <section className={Html.adoptStyleSheet(css, "player")}>
             <div className="center">
@@ -31,7 +29,7 @@ export const Player = ({ playback }: PlayerProps) => {
                 </header>
                 <div className="info">
                     <div className="top">{trackName}</div>
-                    <AuthorList populate={updateUserList} users={[]} />
+                    <AuthorList populate={populateUserList} users={[]} />
                     <PlaybackProgress playback={playback} />
                     <div className="time">
                         <span>{playbackElapsed}</span>
@@ -47,7 +45,7 @@ export const Player = ({ playback }: PlayerProps) => {
                 none: () => {
                     coverHref.value = ""
                     trackName.value = ""
-                    updateUserList.get()([])
+                    populateUserList.get()([])
                     playbackElapsed.value = timespanToString(0)
                     playbackDuration.value = timespanToString(0)
                     headerClasses.remove("active")
@@ -55,7 +53,7 @@ export const Player = ({ playback }: PlayerProps) => {
                 some: track => {
                     coverHref.value = `${location.protocol}${track.coverUrl ?? track.snapshotUrl}`
                     trackName.value = track.name
-                    updateUserList.get()(track.collaborators)
+                    populateUserList.get()(track.collaborators)
                     playbackDuration.value = timespanToString(track.duration)
                     headerClasses.add("active")
                 }

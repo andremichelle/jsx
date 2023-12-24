@@ -1,12 +1,13 @@
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
 import { TrackListItem } from "./TrackListItem.tsx"
-import { ApiTrackListRequest, fetchTracks, Track } from "../api.ts"
+import { fetchTracks } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Html } from "@ui/html.ts"
 import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
 import { ListHeader } from "./ListHeader.tsx"
+import { ApiTrackListRequest, Track, TrackListResponse } from "../data-types.ts"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 
@@ -19,16 +20,17 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
     let index: int = 0
     const element: HTMLElement = <section className={className} />
     const fetch = (request: ApiTrackListRequest) => request.fetch()
-        .then(response => {
+        .then((response: TrackListResponse) => {
             if (!element.isConnected) {return}
             if (index === 0) {
                 element.append(
                     <ListHeader name={response.name} link={
                         request.scope === "tracks"
                             ? {
-                                label: "Show Artists Playlists",
+                                label: "Show Artist's Playlists",
                                 href: `#playlists/${request.artistKey}`
-                            } : undefined} />)
+                            } : undefined} />
+                )
             }
             const tracks: ReadonlyArray<Track> = response.tracks
             element.append(...tracks.map((track: Track) => (

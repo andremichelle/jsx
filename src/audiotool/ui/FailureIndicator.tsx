@@ -18,7 +18,8 @@ export const FailureIndicatorIndicator = ({ title, onRetry }: FailureIndicatorPr
                 if (clicked) {return}
                 clicked = true
                 onRetry().finally(() => element.remove())
-            }}>Retry
+            }}>
+                Retry
             </button>
         </div>
     )

@@ -1,15 +1,13 @@
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
-import { ApiPlayListsRequest, PlaylistsResponse } from "../api.ts"
 import { Html } from "@ui/html.ts"
 import css from "./Playlists.sass?inline"
 import { ListHeader } from "./ListHeader.tsx"
+import { ApiPlayListsRequest, PlaylistsResponse } from "../data-types.ts"
 
 const className = Html.adoptStyleSheet(css, "playlists")
 
-export type PlaylistsProps = {
-    request: ApiPlayListsRequest
-}
+export type PlaylistsProps = { request: ApiPlayListsRequest }
 
 export const Playlists = ({ request }: PlaylistsProps) => {
     const element: HTMLElement = <section className={className} />
@@ -20,7 +18,8 @@ export const Playlists = ({ request }: PlaylistsProps) => {
                 <ListHeader name={response.name} link={{
                     label: "Show Artists Tracks",
                     href: `#tracks/${request.artistKey}`
-                }} />)
+                }} />
+            )
             element.append(...response.playlists.map(playlist => (
                 <button onclick={() => location.hash = `playlist/${playlist.key}`}>
                     <img src={playlist.image} />

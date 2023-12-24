@@ -1,71 +1,7 @@
-import { int, Provider } from "@common/lang.ts"
+import { int } from "@common/lang.ts"
 import { Option } from "@common/option.ts"
 import { Html } from "@ui/html.ts"
-
-export type TrackListResponse = {
-    name: string
-    tracks: ReadonlyArray<Track>
-    next?: string
-}
-
-export type PlaylistsResponse = {
-    name: string
-    playlists: ReadonlyArray<Playlist>
-}
-
-export type Track = {
-    key: string
-    id: number
-    name: string
-    created: number
-    modified: number
-    user: User
-    template: boolean
-    published: boolean
-    snapshotUrl: string
-    pksUrl: string
-    coverUrl: string
-    collaborators: ReadonlyArray<User>
-    bpm: number
-    genreKey: string
-    genreName: string
-    duration: number
-    isNextTrack: boolean
-    joinPolicy: number
-    license: number
-} & {
-    prev?: Track
-    next?: Track
-}
-
-export type User = {
-    key: string
-    name: string
-    avatar: string
-}
-
-export type ApiRequest = ApiTrackListRequest | ApiPlayListsRequest
-
-export type ApiTrackListRequest = {
-    scope: "tracks"
-    artistKey: string
-    fetch: Provider<Promise<TrackListResponse>>
-} | {
-    scope: "playlist"
-    fetch: Provider<Promise<TrackListResponse>>
-} | {
-    scope: "genre"
-    fetch: Provider<Promise<TrackListResponse>>
-}
-
-export type ApiPlayListsRequest = {
-    scope: "playlists"
-    artistKey: string
-    fetch: Provider<Promise<PlaylistsResponse>>
-}
-
-// orderBy=[favs,created]
-// so=[relevance]
+import { ApiRequest, PlaylistsResponse, Track, TrackListResponse, User } from "./data-types.ts"
 
 const API_URL = `https://api.audiotool.com`
 
@@ -99,12 +35,6 @@ export const router = (url: string): Option<ApiRequest> => {
             })
     }
     return Option.None
-}
-
-export type Playlist = {
-    key: string
-    name: string
-    image: string
 }
 
 export const fetchUsers = async (...keys: ReadonlyArray<string>): Promise<ReadonlyArray<User>> =>

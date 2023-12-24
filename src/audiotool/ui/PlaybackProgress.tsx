@@ -1,23 +1,20 @@
 import { Playback } from "../playback.ts"
 import { Html } from "@ui/html.ts"
-import { Inject } from "@jsx/inject.ts"
 import css from "./PlaybackProgress.sass?inline"
 
 const className = Html.adoptStyleSheet(css, "playback-progress")
 
-export type PlaybackProgressType = {
-    playback: Playback
-}
+export type PlaybackProgressType = { playback: Playback }
 
 export const PlaybackProgress = ({ playback }: PlaybackProgressType) => {
-    const bar = Inject.ref<HTMLDivElement>()
+    const bar = <div className="bar" />
     playback.subscribe(event => {
         if (event.state === "progress") {
-            bar.get().style.setProperty("--progress", event.progress.toString())
+            bar.style.setProperty("--progress", event.progress.toString())
         } else if (event.state === "buffering") {
-            bar.get().classList.add("buffering")
+            bar.classList.add("buffering")
         } else {
-            bar.get().classList.remove("buffering")
+            bar.classList.remove("buffering")
         }
     })
     return (
@@ -27,9 +24,7 @@ export const PlaybackProgress = ({ playback }: PlaybackProgressType) => {
                 const clientRect = target.getBoundingClientRect()
                 const position = (event.clientX - clientRect.left) / clientRect.width
                 playback.active.ifSome(track => playback.playTrackFrom(track, position))
-            }}>
-                <div className="bar" ref={bar} />
-            </div>
+            }}>{bar}</div>
         </div>
     )
 }

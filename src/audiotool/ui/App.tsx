@@ -2,13 +2,14 @@ import { Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Html } from "@ui/html.ts"
 import { Inject } from "@jsx/inject.ts"
 import { Option } from "@common/option.ts"
-import { ApiRequest, router } from "../api.ts"
+import { router } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import { Playlists } from "./Playlists.tsx"
 import css from "./App.sass?inline"
 import { ArtistCards } from "./ArtistCards.tsx"
+import { ApiRequest } from "../data-types.ts"
 
 const playback = new Playback()
 
@@ -19,7 +20,7 @@ const artists = [
     "borozo", "intracktion", "flying-baby-seal", "structure", "yafeelma", "nominal", "tophat", "fbs_cgman", "cgman",
     "oscarollie", "almate", "offbeatninja123", "cuddlexdude", "foxyfennec", "daftwill", "jambam", "tottenhauser",
     "amoeba", "opaqity", "808chunk", "joa", "trulsenstad", "tornsage"
-].sort(() => Math.sign(Math.random() * 2.0 - 1.0))
+] as const
 
 document.title = "audiotool music browser"
 
