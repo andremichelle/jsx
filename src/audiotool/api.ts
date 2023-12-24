@@ -1,8 +1,8 @@
-import { int } from "@common/lang.ts"
+import { int, Provider } from "@common/lang.ts"
 import { Option } from "@common/option.ts"
 import { Html } from "@ui/html.ts"
 
-export type UserTrackList = {
+export type TrackListResponse = {
     name: string
     tracks: ReadonlyArray<Track>
     next?: string
@@ -39,31 +39,58 @@ export type User = {
     avatar: string
 }
 
-export interface ApiRequest {
+export type ApiRequest = ApiTrackListResponse | ApiPlayListResponse
+
+export type ApiTrackListResponse = {
+    scope: "tracks"
+    artist: string
+    fetch: Provider<Promise<TrackListResponse>>
+} | {
+    scope: "playlist"
+    fetch: Provider<Promise<TrackListResponse>>
+} | {
+    scope: "genre"
+    fetch: Provider<Promise<TrackListResponse>>
+}
+
+export type ApiPlayListResponse = {
+    scope: "playlists"
+    artist: string
+    fetch: Provider<Promise<ReadonlyArray<Album>>>
 }
 
 // orderBy=[favs,created]
 // so=[relevance]
 
-export const router = (url: string): Option<RequestInfo> => {
+export const router = (url: string): Option<ApiRequest> => {
     const API_URL = `https://api.audiotool.com`
     const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
     const scope = path[0]
-    const value = path[1]
-    if (value === undefined) {return Option.None}
+    const key = path[1]
+    if (key === undefined) {return Option.None}
     switch (scope) {
-        // tracks of user
         case "tracks":
-            return Option.wrap(`${API_URL}/user/${value}/tracks.json?orderBy=created&cover=64&offset=0&limit=50`)
-        // tracks of genre
+            return Option.wrap({
+                scope: "tracks",
+                artist: key,
+                fetch: () => fetchTracks(`${API_URL}/user/${key}/tracks.json?orderBy=created&cover=64&offset=0&limit=50`)
+            })
+        case "playlists":
+            return Option.wrap({
+                scope: "playlists",
+                artist: key,
+                fetch: () => fetchUserPlaylists(key)
+            })
+        case "playlist":
+            return Option.wrap({
+                scope: "playlist",
+                fetch: () => fetchTracks(`${API_URL}/album/${key}/tracks.json?cover=128&genre=${key}&offset=0&limit=50`)
+            })
         case "genre":
-            return Option.wrap(`${API_URL}/tracks/query.json?cover=128&genre=${value}&offset=0&limit=50`)
-        // tracks of album
-        case "album":
-            return Option.wrap(`${API_URL}/album/${value}/tracks.json?cover=128&genre=${value}&offset=0&limit=50`)
-        // albums of user
-        case "albums":
-            return Option.None
+            return Option.wrap({
+                scope: "genre",
+                fetch: () => fetchTracks(`${API_URL}/tracks/query.json?cover=128&genre=${key}&offset=0&limit=50`)
+            })
     }
     return Option.None
 }
@@ -74,29 +101,10 @@ export type Album = {
     image: string
 }
 
-export const fetchUserAlbumList = async (userKey: string): Promise<ReadonlyArray<Album>> =>
-    fetch(`https://api.audiotool.com/browse/user/${userKey}/albums/`)
-        .then(x => x.text())
-        .then(x => {
-            return Array
-                .from(new DOMParser().parseFromString(x, "text/xml").documentElement.children)
-                .map((element: Element) => {
-                    let uri = element.getAttribute("uri")!
-                    uri = uri.slice(0, -1)
-                    uri = uri.slice(uri.lastIndexOf("/") + 1)
-                    const image = element.getAttribute("image")
-                    return ({
-                        key: uri,
-                        name: element.getAttribute("title") ?? "Untitled",
-                        image: image === null ? Html.EmptyGif : `${location.protocol}${image}`
-                    })
-                })
-        })
-
-export const fetchTrackList = async (request: RequestInfo, lastTrack?: Track): Promise<UserTrackList> =>
-    fetch(request)
+export const fetchTracks = async (info: RequestInfo, lastTrack?: Track): Promise<TrackListResponse> =>
+    fetch(info)
         .then(x => x.json())
-        .then((json: UserTrackList) => {
+        .then((json: TrackListResponse) => {
             const tracks = json.tracks
             tracks.forEach((track: Track, index: int) => {
                 track.prev = tracks[index - 1]
@@ -109,3 +117,19 @@ export const fetchTrackList = async (request: RequestInfo, lastTrack?: Track): P
             }
             return json
         })
+
+export const fetchUserPlaylists = async (userKey: string): Promise<ReadonlyArray<Album>> =>
+    fetch(`https://api.audiotool.com/browse/user/${userKey}/albums/`)
+        .then(x => x.text())
+        .then(x => Array.from(new DOMParser().parseFromString(x, "text/xml").documentElement.children)
+            .map((element: Element) => {
+                let uri = element.getAttribute("uri")!
+                uri = uri.slice(0, -1)
+                uri = uri.slice(uri.lastIndexOf("/") + 1)
+                const image = element.getAttribute("image")
+                return ({
+                    key: uri,
+                    name: element.getAttribute("title") ?? "Untitled",
+                    image: image === null ? Html.EmptyGif : `${location.protocol}${image}`
+                })
+            }))

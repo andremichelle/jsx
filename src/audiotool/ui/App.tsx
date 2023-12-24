@@ -2,7 +2,7 @@ import { Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Html } from "@ui/html.ts"
 import { Inject } from "@jsx/inject.ts"
 import { Option } from "@common/option.ts"
-import { router } from "../api.ts"
+import { ApiRequest, router } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
@@ -14,7 +14,7 @@ const playback = new Playback()
 document.title = "audiotool music browser"
 
 export const App = () => {
-    let request: Option<RequestInfo> = router(location.href)
+    let request: Option<ApiRequest> = router(location.href)
     const trackListUpdater = Inject.ref<HotspotUpdater>()
     window.onhashchange = (event: HashChangeEvent) => {
         request = router(event.newURL)
@@ -26,7 +26,7 @@ export const App = () => {
             <section className="content">
                 <Hotspot ref={trackListUpdater} render={() => request.match({
                     none: () => <div>
-                        <h3>Missing Homepage</h3>
+                        <h1>Missing Homepage</h1>
                         <h4>Start with of my favourites...</h4>
                         <ul>
                             <li><a href="#tracks/sandburgen">Sandburgen</a></li>
@@ -35,7 +35,14 @@ export const App = () => {
                             <li><a href="#album/huqtsd2pt">Album 2019 (Sandburgen)</a></li>
                         </ul>
                     </div>,
-                    some: request => <TrackList playback={playback} request={request} />
+                    some: request => {
+                        if (request.scope === "playlists") {
+                            // TODO
+                            return <p>not yet implemented</p>
+                        } else {
+                            return <TrackList playback={playback} request={request} />
+                        }
+                    }
                 })} />
             </section>
             <Footer />
@@ -68,13 +75,13 @@ playback.subscribe(event => {
     }
 })
 
-window.addEventListener("keyup", (event: KeyboardEvent) => {
-    if (event.key === "ArrowRight") {
+window.addEventListener("keydown", (event: KeyboardEvent) => {
+    event.preventDefault()
+    if (event.code === "ArrowRight") {
         playback.nextTrack()
-    } else if (event.key === "ArrowLeft") {
+    } else if (event.code === "ArrowLeft") {
         playback.prevTrack()
-    } else if (event.key === "Space") {
-        event.preventDefault()
+    } else if (event.code === "Space") {
         playback.togglePlay()
     }
 })
