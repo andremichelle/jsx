@@ -60,6 +60,7 @@ export class Playback {
 
     nextTrack(): void {this.#active.ifSome(track => {if (track.next) {this.toggle(track.next)}})}
     prevTrack(): void {this.#active.ifSome(track => {if (track.prev) {this.toggle(track.prev)}})}
+    togglePlay(): void {this.#active.ifSome(track => {this.toggle(track)})}
 
     playTrackFrom(track: Track, progress: unitValue): void {
         const durationInSeconds = track.duration / 1000

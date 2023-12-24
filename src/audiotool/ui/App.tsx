@@ -70,5 +70,8 @@ window.addEventListener("keyup", (event: KeyboardEvent) => {
         playback.nextTrack()
     } else if (event.key === "ArrowLeft") {
         playback.prevTrack()
+    } else if (event.key === "Space") {
+        event.preventDefault()
+        playback.togglePlay()
     }
 })
