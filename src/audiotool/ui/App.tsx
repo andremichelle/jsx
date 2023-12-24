@@ -43,24 +43,24 @@ export const App = () => {
 // old school dom manipulation for list-player states
 playback.subscribe(event => {
     if (event.state === "activate") {
-        document.querySelectorAll(".track.active")
+        document.querySelectorAll("[data-track-key].active")
             .forEach(element => element.classList.remove("active", "buffering", "playing", "error"))
-        event.track.ifSome(track => document.querySelectorAll(`.track[data-track-key="${track.key}"]`)
+        event.track.ifSome(track => document.querySelectorAll(`[data-track-key="${track.key}"]`)
             .forEach(element => {
                 element.classList.add("active")
                 element.firstElementChild?.scrollIntoView({ behavior: "smooth", block: "center" })
             }))
     } else if (event.state === "buffering") {
-        document.querySelectorAll(".track.active")
+        document.querySelectorAll("[data-track-key].active")
             .forEach(element => element.classList.add("buffering"))
     } else if (event.state === "playing") {
-        document.querySelectorAll(".track.active")
+        document.querySelectorAll("[data-track-key].active")
             .forEach(element => {
                 element.classList.remove("buffering")
                 element.classList.add("playing")
             })
     } else if (event.state === "paused") {
-        document.querySelectorAll(".track.active")
+        document.querySelectorAll("[data-track-key].active")
             .forEach(element => element.classList.remove("playing"))
     }
 })
