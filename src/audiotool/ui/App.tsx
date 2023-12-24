@@ -7,6 +7,7 @@ import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import css from "./App.sass?inline"
+import { Footer } from "./Footer.tsx"
 
 const playback = new Playback()
 
@@ -35,7 +36,7 @@ export const App = () => {
                     some: request => <TrackList playback={playback} request={request} />
                 })} />
             </section>
-            {/*<footer />*/}
+            <Footer />
         </main>
     )
 }
