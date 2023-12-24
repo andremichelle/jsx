@@ -67,8 +67,9 @@ export type ApiPlayListsRequest = {
 // orderBy=[favs,created]
 // so=[relevance]
 
+const API_URL = `https://api.audiotool.com`
+
 export const router = (url: string): Option<ApiRequest> => {
-    const API_URL = `https://api.audiotool.com`
     const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
     const scope = path[0]
     const key = path[1]
@@ -106,6 +107,9 @@ export type Playlist = {
     image: string
 }
 
+export const fetchUsers = async (...keys: ReadonlyArray<string>): Promise<ReadonlyArray<User>> =>
+    Promise.all(keys.map(key => fetch(`${API_URL}/user/${key}.json`).then(x => x.json())))
+
 export const fetchTracks = async (info: RequestInfo, lastTrack?: Track): Promise<TrackListResponse> =>
     fetch(info)
         .then(x => x.json())
@@ -124,7 +128,7 @@ export const fetchTracks = async (info: RequestInfo, lastTrack?: Track): Promise
         })
 
 export const fetchUserPlaylists = async (userKey: string): Promise<PlaylistsResponse> =>
-    fetch(`https://api.audiotool.com/browse/user/${userKey}/albums/`)
+    fetch(`${API_URL}/browse/user/${userKey}/albums/`)
         .then(x => x.text())
         .then(x => {
             const documentElement = new DOMParser().parseFromString(x, "text/xml").documentElement

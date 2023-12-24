@@ -4,7 +4,7 @@ import { Playback } from "../playback.ts"
 import { Inject } from "@jsx/inject.ts"
 import { Procedure } from "@common/lang.ts"
 import { User } from "../api.ts"
-import { UserList } from "./UserList.tsx"
+import { AuthorList } from "./AuthorList.tsx"
 import { PlaybackProgress } from "./PlaybackProgress.tsx"
 import { timespanToString } from "../time-conversion.ts"
 
@@ -31,7 +31,7 @@ export const Player = ({ playback }: PlayerProps) => {
                 </header>
                 <div className="info">
                     <div className="top">{trackName}</div>
-                    <UserList populate={updateUserList} users={[]} />
+                    <AuthorList populate={updateUserList} users={[]} />
                     <PlaybackProgress playback={playback} />
                     <div className="time">
                         <span>{playbackElapsed}</span>

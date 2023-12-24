@@ -8,8 +8,18 @@ import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import { Playlists } from "./Playlists.tsx"
 import css from "./App.sass?inline"
+import { ArtistCards } from "./ArtistCards.tsx"
 
 const playback = new Playback()
+
+const artists = [
+    "sandburgen", "kepz", "kurpingspace2", "sumad", "dabrig", "1n50mn1ac", "brainwalker", "retrorhythm", "eliatrix",
+    "trancefreak12", "melancolia", "christian-chrom", "hipposandos", "markolmx", "ole", "chackoflakko", "sharkyyo",
+    "banterclaus", "jordynth", "ewan_mcculloch", "snowfire", "shakey63", "meastrostromea", "jetdarc", "skyboundzoo",
+    "borozo", "intracktion", "flying-baby-seal", "structure", "yafeelma", "nominal", "tophat", "fbs_cgman", "cgman",
+    "oscarollie", "almate", "offbeatninja123", "cuddlexdude", "foxyfennec", "daftwill", "jambam", "tottenhauser",
+    "amoeba", "opaqity", "808chunk", "joa", "trulsenstad", "tornsage"
+].sort(() => Math.sign(Math.random() * 2.0 - 1.0))
 
 document.title = "audiotool music browser"
 
@@ -25,16 +35,7 @@ export const App = () => {
             <Player playback={playback} />
             <section className="content">
                 <Hotspot ref={trackListUpdater} render={() => request.match({
-                    none: () => <div>
-                        <h1>Missing Homepage</h1>
-                        <h4>Start with of my favourites...</h4>
-                        <ul>
-                            <li><a href="#tracks/sandburgen">Sandburgen</a></li>
-                            <li><a href="#tracks/kepz">Kepz</a></li>
-                            <li><a href="#tracks/sumad">Sumad</a></li>
-                            <li><a href="#playlist/huqtsd2pt">Playlist 2019 (Sandburgen)</a></li>
-                        </ul>
-                    </div>,
+                    none: () => <ArtistCards keys={artists} />,
                     some: request => {
                         if (request.scope === "playlists") {
                             return <Playlists request={request} />

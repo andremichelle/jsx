@@ -1,4 +1,4 @@
-import { UserList } from "./UserList.tsx"
+import { AuthorList } from "./AuthorList.tsx"
 import { dateToString, timespanToString } from "../time-conversion.ts"
 import { Playback } from "../playback.ts"
 import { Track } from "../api.ts"
@@ -27,7 +27,7 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
             <img src={track.coverUrl ?? track.snapshotUrl} onclick={toggleTrackHandler} />
             <div className="names">
                 <div className="track" onclick={toggleTrackHandler}>{track.name}</div>
-                <UserList users={track.collaborators} />
+                <AuthorList users={track.collaborators} />
             </div>
             <div className="meta">
                 <div className="date">
