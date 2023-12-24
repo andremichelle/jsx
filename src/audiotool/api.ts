@@ -5,7 +5,7 @@ import { Html } from "@ui/html.ts"
 export type UserTrackList = {
     name: string
     tracks: Track[]
-    next: string
+    next?: string
 }
 
 export type Track = {
@@ -39,7 +39,11 @@ export type User = {
     avatar: string
 }
 
+export interface ApiRequest {
+}
+
 // orderBy=[favs,created]
+// so=[relevance]
 
 export const router = (url: string): Option<RequestInfo> => {
     const API_URL = `https://api.audiotool.com`

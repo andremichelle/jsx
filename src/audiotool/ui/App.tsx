@@ -5,8 +5,8 @@ import { Option } from "@common/option.ts"
 import { router } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
-import { AwaitTrackList } from "./AwaitTrackList.tsx"
 import css from "./App.sass?inline"
+import { TrackList } from "./TrackList.tsx"
 
 const playback = new Playback()
 
@@ -32,7 +32,7 @@ export const App = () => {
                             <li><a href="#album/huqtsd2pt">Album 2019 (Sandburgen)</a></li>
                         </ul>
                     </div>,
-                    some: request => <AwaitTrackList playback={playback} request={request} />
+                    some: request => <TrackList playback={playback} request={request} />
                 })} />
             </div>
             {/*<footer />*/}
