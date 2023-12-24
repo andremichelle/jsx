@@ -29,7 +29,7 @@ export const Player = ({ playback }: PlayerProps) => {
                     <div className={stateClasses} />
                 </header>
                 <div className="info">
-                    <a className="top" href={profileLink}>{trackName}</a>
+                    <a className="top" href={profileLink} target="audiotool">{trackName}</a>
                     <AuthorList populate={populateUserList} users={[]} />
                     <PlaybackProgress playback={playback} />
                     <div className="time">
@@ -50,6 +50,7 @@ export const Player = ({ playback }: PlayerProps) => {
                     playbackElapsed.value = timespanToString(0)
                     playbackDuration.value = timespanToString(0)
                     headerClasses.remove("active")
+                    profileLink.value = "#"
                 },
                 some: track => {
                     coverHref.value = `${location.protocol}${track.coverUrl ?? track.snapshotUrl}`
@@ -57,6 +58,7 @@ export const Player = ({ playback }: PlayerProps) => {
                     populateUserList.get()(track.collaborators)
                     playbackDuration.value = timespanToString(track.duration)
                     headerClasses.add("active")
+                    profileLink.value = `https://www.audiotool.com/track/${track.key}`
                 }
             })
         } else if (event.state === "progress") {
