@@ -30,7 +30,7 @@ export const Player = ({ playback }: PlayerProps) => {
                     <div className={stateClasses} />
                 </header>
                 <div className="info">
-                    <div className="track">{trackName}</div>
+                    <div className="top">{trackName}</div>
                     <UserList populate={updateUserList} users={[]} />
                     <PlaybackProgress playback={playback} />
                     <div className="time">
