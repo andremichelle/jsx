@@ -27,7 +27,7 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
                         request.scope === "tracks"
                             ? {
                                 label: "Show Artists Playlists",
-                                onClick: () => location.hash = `playlists/${request.artist}`
+                                onClick: () => location.hash = `playlists/${request.artistKey}`
                             } : undefined} />)
             }
             const tracks: ReadonlyArray<Track> = response.tracks

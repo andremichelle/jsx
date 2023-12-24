@@ -19,7 +19,7 @@ export const Playlists = ({ request }: PlaylistsProps) => {
             element.append(
                 <ListHeader name={`${response.artistName}'s Playlists`} button={{
                     label: "Show Artists Tracks",
-                    onClick: () => location.hash = `tracks/${request.artist}`
+                    onClick: () => location.hash = `tracks/${request.artistKey}`
                 }} />)
             element.append(...response.playlists.map(playlist => (
                 <button onclick={() => location.hash = `playlist/${playlist.key}`}>

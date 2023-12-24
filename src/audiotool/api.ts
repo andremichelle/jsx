@@ -48,7 +48,7 @@ export type ApiRequest = ApiTrackListRequest | ApiPlayListsRequest
 
 export type ApiTrackListRequest = {
     scope: "tracks"
-    artist: string
+    artistKey: string
     fetch: Provider<Promise<TrackListResponse>>
 } | {
     scope: "playlist"
@@ -60,7 +60,7 @@ export type ApiTrackListRequest = {
 
 export type ApiPlayListsRequest = {
     scope: "playlists"
-    artist: string
+    artistKey: string
     fetch: Provider<Promise<PlaylistsResponse>>
 }
 
@@ -77,13 +77,13 @@ export const router = (url: string): Option<ApiRequest> => {
         case "tracks":
             return Option.wrap({
                 scope: "tracks",
-                artist: key,
+                artistKey: key,
                 fetch: () => fetchTracks(`${API_URL}/user/${key}/tracks.json?orderBy=created&cover=64&offset=0&limit=50`)
             })
         case "playlists":
             return Option.wrap({
                 scope: "playlists",
-                artist: key,
+                artistKey: key,
                 fetch: () => fetchUserPlaylists(key)
             })
         case "playlist":
