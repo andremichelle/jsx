@@ -47,7 +47,6 @@ export class Playback {
             }
             return
         }
-        this.eject()
         this.active = Option.wrap(track)
         this.#notify({
             state: "progress",
@@ -78,27 +77,19 @@ export class Playback {
             }
             return
         }
-        this.eject()
         this.active = Option.wrap(track)
         this.#notify({ state: "buffering" })
         this.#playAudio(track)
         this.#audio.currentTime = durationInSeconds * progress
     }
 
-    eject(): void {
-        this.active = Option.None
-        this.#audio.onended = null
-        this.#audio.onplay = null
-        this.#audio.onpause = null
-        this.#audio.onerror = null
-        this.#audio.onstalled = null
-        this.#audio.ontimeupdate = null
-    }
+    eject(): void {this.active = Option.None}
 
     subscribe(observer: Procedure<PlaybackEvent>): Subscription {return this.#notifier.subscribe(observer)}
 
     get active(): Option<ApiV1.Track> {return this.#active}
     set active(track: Option<ApiV1.Track>) {
+        this.#unloadAudio()
         this.#active = track
         this.#notify({ state: "activate", track })
     }
@@ -135,6 +126,14 @@ export class Playback {
         this.#audio.play().catch(() => {})
     }
 
+    #unloadAudio(): void {
+        this.#audio.onended = null
+        this.#audio.onplay = null
+        this.#audio.onpause = null
+        this.#audio.onerror = null
+        this.#audio.onstalled = null
+        this.#audio.ontimeupdate = null
+    }
     #notify(event: PlaybackEvent) {
         this.#state = event.state
         this.#notifier.notify(event)
