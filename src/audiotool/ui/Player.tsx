@@ -19,9 +19,8 @@ export const Player = ({ playback }: PlayerProps) => {
     const playbackElapsed = Inject.text("00:00")
     const playbackDuration = Inject.text("00:00")
     const populateUserList = Inject.ref<Procedure<ReadonlyArray<ApiV1.User>>>()
-    const test = Inject.ref<HTMLElement>()
     const element = (
-        <section ref={test} className={Html.adoptStyleSheet(css, "player")}>
+        <section className={Html.adoptStyleSheet(css, "player")}>
             <div className="center">
                 <header className={headerClasses}
                         onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
@@ -52,9 +51,9 @@ export const Player = ({ playback }: PlayerProps) => {
                             </button>
                         </nav>
                     </div>
-                    <PlaybackProgress playback={playback} />
                     <div className="time">
                         <span>{playbackElapsed}</span>
+                        <PlaybackProgress playback={playback} />
                         <span>{playbackDuration}</span>
                     </div>
                 </div>

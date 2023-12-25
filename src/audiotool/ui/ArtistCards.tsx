@@ -1,10 +1,10 @@
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
-import { Html } from "@ui/html.ts"
-import css from "./ArtistCards.sass?inline"
 import { ListHeader } from "./ListHeader.tsx"
 import { Option } from "@common/option.ts"
 import { ApiV1 } from "../api.v1.ts"
+import { Html } from "@ui/html.ts"
+import css from "./ArtistCards.sass?inline"
 
 const className = Html.adoptStyleSheet(css, "artist-cards")
 
@@ -19,7 +19,7 @@ export const ArtistCards = ({ keys }: ArtistCardsProps) => {
         element.append(...users.toSorted(() => Math.sign(Math.random() * 2.0 - 1.0))
             .map(user => (
                 <button onclick={() => location.hash = `tracks/${user.key}`}>
-                    <img src={user.avatar} />
+                    <img src={user.avatar} width={128} loading="lazy" />
                     <div>{user.name}</div>
                 </button>
             )))

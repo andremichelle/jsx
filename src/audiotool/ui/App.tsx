@@ -6,10 +6,10 @@ import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import { Playlists } from "./Playlists.tsx"
-import css from "./App.sass?inline"
 import { ArtistCards } from "./ArtistCards.tsx"
 import { ApiV1 } from "../api.v1.ts"
 import { router } from "../router.ts"
+import css from "./App.sass?inline"
 
 const playback = new Playback()
 
@@ -19,8 +19,14 @@ const artists = [
     "banterclaus", "jordynth", "ewan_mcculloch", "snowfire", "shakey63", "meastrostromea", "jetdarc", "skyboundzoo",
     "borozo", "intracktion", "flying-baby-seal", "structure", "yafeelma", "nominal", "tophat", "fbs_cgman", "cgman",
     "oscarollie", "almate", "offbeatninja123", "cuddlexdude", "foxyfennec", "daftwill", "jambam", "tottenhauser",
-    "amoeba", "opaqity", "808chunk", "joa", "trulsenstad", "tornsage"
-] as const
+    "amoeba", "opaqity", "808chunk", "joa", "trulsenstad", "tornsage", "infyuthsion", "nick123456", "beat123",
+    "frigolito", "xavrockbeats", "nmgbeats", "pandasparks", "crazydruminator", "dove", "musicmanpw", "trance10",
+    "vistamista", "djsolace1000", "naswalt", "mark-lewis_ndikintum", "synthinox", "traptaco", "dublion", "crashwarrior",
+    "farcio", "inxile412", "zerod", "bluedude", "leadenshrew", "questionone", "ola", "heisten", "universecosmic",
+    "no-worries-atmosphere", "rnzr", "stagefright", "physik", "zonemusic", "untamed", "theclient", "dracogotwings",
+    "tomderry", "themp20q", "djcandie", "tteerabeats", "jewan", "31pablo", "looper", "dillonco", "callkay",
+    "maddragon", "iwanbeflylo23", "martinstoj", "anotherevolution", "exist", "puppiez1006", "pimpmastaj"
+]
 
 document.title = "audiotool music browser"
 

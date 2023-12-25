@@ -17,10 +17,12 @@ type ExtractProperties<T extends Element> = Partial<{
     K extends keyof AttributeMap ? AttributeMap[K] :
         K extends keyof GlobalEventHandlers ? GlobalEventHandlers[K] :
             T[K] extends Function ? never :
-                T[K] extends SVGAnimatedBoolean ? boolean | string :
+                (T[K] extends SVGAnimatedBoolean ? boolean | string :
                     T[K] extends SVGAnimatedAngle ? number | string :
                         T[K] extends SVGAnimatedLength ? number | string :
-                            Inject.Attribute | string
+                            T[K] extends number ? number | string :
+                                T[K] extends boolean ? boolean | string :
+                                    string) | Inject.Attribute
 }> & {
     ref?: Inject.Ref<T>
 } & Record<string, unknown>
