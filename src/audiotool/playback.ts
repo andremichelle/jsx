@@ -5,7 +5,7 @@ import { Subscription } from "@common/terminable.ts"
 import { ApiV1 } from "./api.v1.ts"
 
 export type PlaybackEvent = {
-    state: "activate"
+    state: "changed"
     track: Option<ApiV1.Track>
 } | {
     state: "buffering"
@@ -87,6 +87,7 @@ export class Playback {
 
     subscribe(observer: Procedure<PlaybackEvent>): Subscription {return this.#notifier.subscribe(observer)}
 
+    get state(): PlaybackEvent["state"] {return this.#state}
     get active(): Option<ApiV1.Track> {return this.#active}
     set active(track: Option<ApiV1.Track>) {
         this.#unwatchAudio()
@@ -95,7 +96,7 @@ export class Playback {
             this.#audio.src = `https://api.audiotool.com/track/${track.key}/play.mp3`
             this.#watchAudio(track)
         })
-        this.#notify({ state: "activate", track })
+        this.#notify({ state: "changed", track })
     }
 
     isActive(track: ApiV1.Track): boolean {return this.#active.unwrapOrNull()?.key === track.key}

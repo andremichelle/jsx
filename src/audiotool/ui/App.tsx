@@ -75,7 +75,7 @@ export const App = () => {
 
 // old school dom manipulation for list-player states
 playback.subscribe(event => {
-    if (event.state === "activate") {
+    if (event.state === "changed") {
         document.querySelectorAll("[data-track-key].active")
             .forEach(element => element.classList.remove("active", "buffering", "playing", "error"))
         event.track.ifSome(track => document.querySelectorAll(`[data-track-key="${track.key}"]`)

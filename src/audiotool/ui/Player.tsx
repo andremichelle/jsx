@@ -70,7 +70,7 @@ export const Player = ({ playback }: PlayerProps) => {
         </section>
     )
     playback.subscribe(event => {
-        if (event.state === "activate") {
+        if (event.state === "changed") {
             event.track.match({
                 none: () => {
                     coverHref.value = ""

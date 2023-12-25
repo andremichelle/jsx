@@ -2,9 +2,9 @@ import { AuthorList } from "./AuthorList.tsx"
 import { dateToString, timespanToString } from "../time-conversion.ts"
 import { Playback } from "../playback.ts"
 import { int } from "@common/lang.ts"
-import css from "./TrackListItem.sass?inline"
 import { Html } from "@ui/html.ts"
 import { ApiV1 } from "../api.v1.ts"
+import css from "./TrackListItem.sass?inline"
 
 const className = Html.adoptStyleSheet(css, "track-list-item")
 
@@ -14,14 +14,29 @@ export type TrackListItemProps = {
     index: int
 }
 
+const resolveClassName = (playback: Playback, track: ApiV1.Track): string => {
+    if (playback.isActive(track)) {
+        // catchup current state
+        const classes: Array<string> = [className, "active"]
+        if (playback.state === "buffering") {
+            classes.push("buffering")
+        } else if (playback.state === "playing" || playback.state === "progress") {
+            classes.push("playing")
+        }
+        return classes.join(" ")
+    } else {
+        return className
+    }
+}
+
 export const TrackListItem = ({ playback, track, index }: TrackListItemProps) => {
     const toggleTrackHandler = (event: Event) => {
         event.stopPropagation()
         playback.toggle(track)
     }
+
     return (
-        <div className={playback.isActive(track) ? ["active", className].join(" ") : className}
-             data-track-key={track.key}>
+        <div className={resolveClassName(playback, track)} data-track-key={track.key}>
             <button className="play" onclick={toggleTrackHandler}>
                 <span className="index">{index + 1}</span>
             </button>
@@ -44,7 +59,8 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
                     <span>{timespanToString(track.duration)}</span>
                 </div>
             </div>
-            <a href={`#genre/${track.genreKey}`} className="genre" title={`Browse ${track.genreName}`}>{track.genreName}</a>
+            <a href={`#genre/${track.genreKey}`} className="genre"
+               title={`Browse ${track.genreName}`}>{track.genreName}</a>
         </div>
     )
 }
