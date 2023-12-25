@@ -3,5 +3,4 @@
 * sort created, favs, relevant, popular
   * orderBy=[favs,created]
   * so=[relevance]
-* the types extraction in definition.ts are still fuzzy
-* store current track in url search param
+* Anchor in definition.ts is still fuzzy
