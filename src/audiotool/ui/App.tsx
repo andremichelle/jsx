@@ -46,7 +46,6 @@ export const App = () => {
                     }
                 })} />
             </section>
-            {/*<Footer />*/}
         </main>
     )
 }

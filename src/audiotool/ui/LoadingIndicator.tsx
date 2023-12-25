@@ -3,9 +3,7 @@ import css from "./LoadingIndicator.sass?inline"
 
 const className = Html.adoptStyleSheet(css, "load-more-entries-indicator")
 
-export type LoadMoreEntriesProps = {
-    title: string
-}
+export type LoadMoreEntriesProps = { title: string }
 
 export const LoadingIndicator = ({ title }: LoadMoreEntriesProps) => {
     return (
