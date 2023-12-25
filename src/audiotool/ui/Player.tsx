@@ -19,8 +19,9 @@ export const Player = ({ playback }: PlayerProps) => {
     const playbackElapsed = Inject.text("00:00")
     const playbackDuration = Inject.text("00:00")
     const populateUserList = Inject.ref<Procedure<ReadonlyArray<ApiV1.User>>>()
+    const test = Inject.ref<HTMLElement>()
     const element = (
-        <section className={Html.adoptStyleSheet(css, "player")}>
+        <section ref={test} className={Html.adoptStyleSheet(css, "player")}>
             <div className="center">
                 <header className={headerClasses}
                         onclick={() => playback.active.ifSome(track => playback.toggle(track))}>
