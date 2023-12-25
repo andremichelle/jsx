@@ -20,7 +20,8 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
         playback.toggle(track)
     }
     return (
-        <div className={className} data-track-key={track.key}>
+        <div className={playback.isActive(track) ? ["active", className].join(" ") : className}
+             data-track-key={track.key}>
             <button className="play" onclick={toggleTrackHandler}>
                 <span className="index">{index + 1}</span>
             </button>
@@ -43,7 +44,7 @@ export const TrackListItem = ({ playback, track, index }: TrackListItemProps) =>
                     <span>{timespanToString(track.duration)}</span>
                 </div>
             </div>
-            <a href={`#genre/${track.genreKey}`} className="genre">{track.genreName}</a>
+            <a href={`#genre/${track.genreKey}`} className="genre" title={`Browse ${track.genreName}`}>{track.genreName}</a>
         </div>
     )
 }

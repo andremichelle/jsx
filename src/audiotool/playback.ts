@@ -39,7 +39,7 @@ export class Playback {
     }
 
     toggle(track: ApiV1.Track): void {
-        if (this.#active.contains(track)) {
+        if (this.isActive(track)) {
             if (this.#audio.paused) {
                 this.#audio.play().catch(() => {})
             } else {
@@ -54,7 +54,7 @@ export class Playback {
             elapsedInSeconds: 0,
             durationInSeconds: track.duration / 1000
         })
-        this.#playAudio(track)
+        this.#audio.play().catch(() => {})
     }
 
     nextTrack(): void {this.#active.ifSome(track => {if (track.next) {this.toggle(track.next)}})}
@@ -63,7 +63,7 @@ export class Playback {
 
     playTrackFrom(track: ApiV1.Track, progress: unitValue): void {
         const durationInSeconds = track.duration / 1000
-        if (this.#active.contains(track)) {
+        if (this.isActive(track)) {
             this.#notify({
                 state: "progress",
                 progress,
@@ -79,7 +79,7 @@ export class Playback {
         }
         this.active = Option.wrap(track)
         this.#notify({ state: "buffering" })
-        this.#playAudio(track)
+        this.#audio.play().catch(() => {})
         this.#audio.currentTime = durationInSeconds * progress
     }
 
@@ -89,12 +89,18 @@ export class Playback {
 
     get active(): Option<ApiV1.Track> {return this.#active}
     set active(track: Option<ApiV1.Track>) {
-        this.#unloadAudio()
+        this.#unwatchAudio()
         this.#active = track
+        this.#active.ifSome(track => {
+            this.#audio.src = `https://api.audiotool.com/track/${track.key}/play.mp3`
+            this.#watchAudio(track)
+        })
         this.#notify({ state: "activate", track })
     }
 
-    #playAudio(track: ApiV1.Track): void {
+    isActive(track: ApiV1.Track): boolean {return this.#active.unwrapOrNull()?.key === track.key}
+
+    #watchAudio(track: ApiV1.Track): void {
         this.#audio.onended = () => this.active.ifSome(track => {if (isDefined(track.next)) {this.toggle(track.next)}})
         this.#audio.onplay = () => this.#notify({ state: this.#canPlayImmediately() ? "playing" : "buffering" })
         this.#audio.onpause = () => this.#notify({ state: "paused" })
@@ -122,11 +128,9 @@ export class Playback {
                 })
             }
         }
-        this.#audio.src = `https://api.audiotool.com/track/${track.key}/play.mp3`
-        this.#audio.play().catch(() => {})
     }
 
-    #unloadAudio(): void {
+    #unwatchAudio(): void {
         this.#audio.onended = null
         this.#audio.onplay = null
         this.#audio.onpause = null
@@ -134,6 +138,7 @@ export class Playback {
         this.#audio.onstalled = null
         this.#audio.ontimeupdate = null
     }
+
     #notify(event: PlaybackEvent) {
         this.#state = event.state
         this.#notifier.notify(event)

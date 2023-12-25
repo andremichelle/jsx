@@ -79,6 +79,12 @@ export namespace ApiV1 {
     export const fetchUsers = async (...keys: ReadonlyArray<string>): Promise<ReadonlyArray<ApiV1.User>> =>
         Promise.all(keys.map(key => fetch(`${URL}/user/${key}.json`).then(x => x.json())))
 
+    export const fetchTrack = async (trackKey: string): Promise<Track> => {
+        return fetch(`${ApiV1.URL}/track/${trackKey}.json`)
+            .then(x => x.json())
+            .then(x => x["track"] as ApiV1.Track)
+    }
+
     export const fetchTracks = async (info: RequestInfo, lastTrack?: ApiV1.Track): Promise<ApiV1.TrackListResponse> =>
         fetch(info)
             .then(x => x.json())

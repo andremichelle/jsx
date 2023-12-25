@@ -10,8 +10,18 @@ import { ArtistCards } from "./ArtistCards.tsx"
 import { Page, router } from "../router.ts"
 import css from "./App.sass?inline"
 import { SearchPage } from "./SearchPage.tsx"
+import { ApiV1 } from "../api.v1.ts"
 
 const playback = new Playback()
+
+const url = new URL(location.href)
+const params = url.searchParams
+const track = Option.wrap(params.get("track"))
+track.ifSome(async (key: string) => {
+    params.delete("track")
+    history.replaceState(null, "", url)
+    playback.active = Option.wrap(await ApiV1.fetchTrack(key))
+})
 
 const artists = [
     "sandburgen", "kepz", "kurpingspace2", "sumad", "dabrig", "1n50mn1ac", "brainwalker", "retrorhythm", "eliatrix",

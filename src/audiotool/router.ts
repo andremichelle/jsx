@@ -10,6 +10,12 @@ export type Page = {
     request: ApiV1.Request
 }
 
+export const shareURL = (track: Option<ApiV1.Track>) => {
+    const url = new URL(location.href)
+    track.ifSome(track => url.searchParams.set("track", track.key))
+    navigator.clipboard.writeText(url.href).then(() => alert("URL to share now in clipboard"))
+}
+
 export const router = (url: string): Option<Page> => {
     const path: ReadonlyArray<string> = new URL(url).hash.substring(1).split("/")
     const scope = path[0]
