@@ -1,26 +1,25 @@
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
 import { TrackListItem } from "./TrackListItem.tsx"
-import { fetchTracks } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Html } from "@ui/html.ts"
 import { int } from "@common/lang.ts"
 import css from "./TrackList.sass?inline"
 import { ListHeader } from "./ListHeader.tsx"
-import { ApiTrackListRequest, Track, TrackListResponse } from "../data-types.ts"
+import { ApiV1 } from "../api.v1.ts"
 
 const className = Html.adoptStyleSheet(css, "track-list")
 
 export type TrackListProps = {
     playback: Playback
-    request: ApiTrackListRequest
+    request: ApiV1.TrackListRequest
 }
 
 export const TrackList = ({ playback, request }: TrackListProps) => {
     let index: int = 0
     const element: HTMLElement = <section className={className} />
-    const fetch = (request: ApiTrackListRequest) => request.fetch()
-        .then((response: TrackListResponse) => {
+    const fetch = (request: ApiV1.TrackListRequest) => request.fetch()
+        .then((response: ApiV1.TrackListResponse) => {
             if (!element.isConnected) {return}
             if (index === 0) {
                 element.append(
@@ -32,8 +31,8 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
                             } : undefined} />
                 )
             }
-            const tracks: ReadonlyArray<Track> = response.tracks
-            element.append(...tracks.map((track: Track) => (
+            const tracks: ReadonlyArray<ApiV1.Track> = response.tracks
+            element.append(...tracks.map((track: ApiV1.Track) => (
                 <TrackListItem playback={playback}
                                track={track}
                                index={index++} />
@@ -43,7 +42,7 @@ export const TrackList = ({ playback, request }: TrackListProps) => {
             const moreEntriesIndicator = <LoadingIndicator title="loading more tracks" />
             const observer = new IntersectionObserver(([entry]) => {
                 if (entry.isIntersecting) {
-                    fetch({ ...request, fetch: () => fetchTracks(nextInfo, tracks.at(-1)) })
+                    fetch({ ...request, fetch: () => ApiV1.fetchTracks(nextInfo, tracks.at(-1)) })
                         .finally(() => moreEntriesIndicator.remove())
                     observer.disconnect()
                 }

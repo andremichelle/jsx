@@ -4,13 +4,13 @@ import { Playback } from "../playback.ts"
 import { int } from "@common/lang.ts"
 import css from "./TrackListItem.sass?inline"
 import { Html } from "@ui/html.ts"
-import { Track } from "../data-types.ts"
+import { ApiV1 } from "../api.v1.ts"
 
 const className = Html.adoptStyleSheet(css, "track-list-item")
 
 export type TrackListItemProps = {
     playback: Playback
-    track: Track
+    track: ApiV1.Track
     index: int
 }
 

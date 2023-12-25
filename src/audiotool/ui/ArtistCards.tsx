@@ -1,21 +1,20 @@
 import { LoadingIndicator } from "./LoadingIndicator.tsx"
 import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
 import { Html } from "@ui/html.ts"
-import { fetchUsers } from "../api.ts"
 import css from "./ArtistCards.sass?inline"
 import { ListHeader } from "./ListHeader.tsx"
 import { Option } from "@common/option.ts"
-import { User } from "../data-types.ts"
+import { ApiV1 } from "../api.v1.ts"
 
 const className = Html.adoptStyleSheet(css, "artist-cards")
 
-let cache: Option<ReadonlyArray<User>> = Option.None
+let cache: Option<ReadonlyArray<ApiV1.User>> = Option.None
 
 export type ArtistCardsProps = { keys: ReadonlyArray<string> }
 
 export const ArtistCards = ({ keys }: ArtistCardsProps) => {
     const element: HTMLElement = <section className={className} />
-    const populate = (users: ReadonlyArray<User>) => {
+    const populate = (users: ReadonlyArray<ApiV1.User>) => {
         element.append(<ListHeader name="Popular Audiotool Artists" />)
         element.append(...users.toSorted(() => Math.sign(Math.random() * 2.0 - 1.0))
             .map(user => (
@@ -31,8 +30,8 @@ export const ArtistCards = ({ keys }: ArtistCardsProps) => {
         const fetch = async () => {
             const loadingIndicator = <LoadingIndicator title="loading artists" />
             element.append(loadingIndicator)
-            return fetchUsers(...keys)
-                .then((users: ReadonlyArray<User>) => {
+            return ApiV1.fetchUsers(...keys)
+                .then((users: ReadonlyArray<ApiV1.User>) => {
                     cache = Option.wrap(users)
                     if (element.isConnected) {populate(users)}
                 })

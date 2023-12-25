@@ -2,11 +2,11 @@ import { Option } from "@common/option.ts"
 import { Notifier } from "@common/observers.ts"
 import { isDefined, Procedure, unitValue } from "@common/lang.ts"
 import { Subscription } from "@common/terminable.ts"
-import { Track } from "./data-types.ts"
+import { ApiV1 } from "./api.v1.ts"
 
 export type PlaybackEvent = {
     state: "activate"
-    track: Option<Track>
+    track: Option<ApiV1.Track>
 } | {
     state: "buffering"
 } | {
@@ -29,7 +29,7 @@ export class Playback {
     readonly #audio: HTMLAudioElement
     readonly #notifier: Notifier<PlaybackEvent>
 
-    #active: Option<Track> = Option.None
+    #active: Option<ApiV1.Track> = Option.None
     #state: PlaybackEvent["state"] = "idle"
 
     constructor() {
@@ -38,7 +38,7 @@ export class Playback {
         this.#notifier = new Notifier<PlaybackEvent>()
     }
 
-    toggle(track: Track): void {
+    toggle(track: ApiV1.Track): void {
         if (this.#active.contains(track)) {
             if (this.#audio.paused) {
                 this.#audio.play().catch(() => {})
@@ -62,7 +62,7 @@ export class Playback {
     prevTrack(): void {this.#active.ifSome(track => {if (track.prev) {this.toggle(track.prev)}})}
     togglePlay(): void {this.#active.ifSome(track => {this.toggle(track)})}
 
-    playTrackFrom(track: Track, progress: unitValue): void {
+    playTrackFrom(track: ApiV1.Track, progress: unitValue): void {
         const durationInSeconds = track.duration / 1000
         if (this.#active.contains(track)) {
             this.#notify({
@@ -97,13 +97,13 @@ export class Playback {
 
     subscribe(observer: Procedure<PlaybackEvent>): Subscription {return this.#notifier.subscribe(observer)}
 
-    get active(): Option<Track> {return this.#active}
-    set active(track: Option<Track>) {
+    get active(): Option<ApiV1.Track> {return this.#active}
+    set active(track: Option<ApiV1.Track>) {
         this.#active = track
         this.#notify({ state: "activate", track })
     }
 
-    #playAudio(track: Track): void {
+    #playAudio(track: ApiV1.Track): void {
         this.#audio.onended = () => this.active.ifSome(track => {if (isDefined(track.next)) {this.toggle(track.next)}})
         this.#audio.onplay = () => this.#notify({ state: this.#canPlayImmediately() ? "playing" : "buffering" })
         this.#audio.onpause = () => this.#notify({ state: "paused" })

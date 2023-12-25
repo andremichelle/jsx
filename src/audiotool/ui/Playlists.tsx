@@ -3,16 +3,16 @@ import { FailureIndicatorIndicator } from "./FailureIndicator.tsx"
 import { Html } from "@ui/html.ts"
 import css from "./Playlists.sass?inline"
 import { ListHeader } from "./ListHeader.tsx"
-import { ApiPlayListsRequest, PlaylistsResponse } from "../data-types.ts"
+import { ApiV1 } from "../api.v1.ts"
 
 const className = Html.adoptStyleSheet(css, "playlists")
 
-export type PlaylistsProps = { request: ApiPlayListsRequest }
+export type PlaylistsProps = { request: ApiV1.PlayListsRequest }
 
 export const Playlists = ({ request }: PlaylistsProps) => {
     const element: HTMLElement = <section className={className} />
-    const fetch = (request: ApiPlayListsRequest) => request.fetch()
-        .then((response: PlaylistsResponse) => {
+    const fetch = (request: ApiV1.PlayListsRequest) => request.fetch()
+        .then((response: ApiV1.PlaylistsResponse) => {
             if (!element.isConnected) {return}
             element.append(
                 <ListHeader name={response.name} link={{

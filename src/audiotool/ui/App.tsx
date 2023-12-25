@@ -2,14 +2,14 @@ import { Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Html } from "@ui/html.ts"
 import { Inject } from "@jsx/inject.ts"
 import { Option } from "@common/option.ts"
-import { router } from "../api.ts"
 import { Playback } from "../playback.ts"
 import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import { Playlists } from "./Playlists.tsx"
 import css from "./App.sass?inline"
 import { ArtistCards } from "./ArtistCards.tsx"
-import { ApiRequest } from "../data-types.ts"
+import { ApiV1 } from "../api.v1.ts"
+import { router } from "../router.ts"
 
 const playback = new Playback()
 
@@ -25,7 +25,7 @@ const artists = [
 document.title = "audiotool music browser"
 
 export const App = () => {
-    let request: Option<ApiRequest> = router(location.href)
+    let request: Option<ApiV1.Request> = router(location.href)
     const trackListUpdater = Inject.ref<HotspotUpdater>()
     window.onhashchange = (event: HashChangeEvent) => {
         request = router(event.newURL)
