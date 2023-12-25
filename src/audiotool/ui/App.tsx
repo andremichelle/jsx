@@ -37,6 +37,7 @@ export const App = () => {
         page = router(event.newURL)
         trackListUpdater.get().update()
     }
+    const searchPage = <SearchPage playback={playback} /> // keep it here to be persistent
     return (
         <main className={Html.adoptStyleSheet(css, "audiotool")}>
             <Player playback={playback} />
@@ -47,7 +48,7 @@ export const App = () => {
                         if (page.type === "artists") {
                             return <ArtistCards keys={artists} />
                         } else if (page.type === "search") {
-                            return <SearchPage playback={playback} />
+                            return searchPage
                         } else if (page.type === "tracks") {
                             if (page.request.scope === "playlists") {
                                 return <Playlists request={page.request} />
