@@ -54,21 +54,30 @@ export namespace ApiV2 {
         downloadAllowed: boolean
     }
 
-    export const trackToV1 = (track: Track): ApiV1.Track => ({
-        collaborators: [],
-        key: track.id,
-        bpm: track.bpm,
-        name: track.name,
-        coverUrl: track.coverUri,
-        snapshotUrl: track.snapshotUri,
-        created: Date.parse(track.createdTime),
-        duration: parseFloat(track.playDuration) * 1000.0,
-        genreKey: track.genreId,
-        genreName: track.genreId // TODO
-    })
+    export const trackToV1 = async (track: Track): Promise<ApiV1.Track> =>
+        fetch(`${ApiV1.URL}/track/${track.id}.json`)
+            .then(x => x.json())
+            .then(x => x["track"] as ApiV1.Track)
+            .then(x => {
+                return ({
+                    collaborators: x.collaborators,
+                    key: track.id,
+                    bpm: track.bpm,
+                    name: track.name,
+                    coverUrl: track.coverUri,
+                    snapshotUrl: track.snapshotUri,
+                    created: Date.parse(track.createdTime),
+                    duration: parseFloat(track.playDuration) * 1000.0,
+                    genreKey: track.genreId,
+                    genreName: x.genreName
+                })
+            })
 
-    export const searchUsers = async (query: string, limit: int = 10): Promise<ReadonlyArray<ApiV2.User>> => {
+    export const searchUser = async (query: string,
+                                     limit: int = 10,
+                                     abortSignal?: AbortSignal): Promise<ReadonlyArray<ApiV2.User>> => {
         return fetch(`${API_URL}/audiotool.users.v1.UsersService/ListUsers`, {
+            signal: abortSignal,
             headers: HEADERS,
             method: "POST",
             body: JSON.stringify({
@@ -76,11 +85,14 @@ export namespace ApiV2 {
                 pageSize: limit,
                 orderBy: "user.num_followers desc"
             })
-        }).then(x => x.json()).then(x => x["users"] ?? [])
+        }).then(x => x.json(), () => []).then(x => x["users"] ?? [])
     }
 
-    export const searchPlaylists = async (query: string, limit: int = 10): Promise<ReadonlyArray<Playlist>> => {
+    export const searchPlaylists = async (query: string,
+                                          limit: int = 10,
+                                          abortSignal?: AbortSignal): Promise<ReadonlyArray<Playlist>> => {
         return fetch(`${API_URL}/audiotool.albums.v1.AlbumsService/ListAlbums`, {
+            signal: abortSignal,
             headers: HEADERS,
             method: "POST",
             body: JSON.stringify({
@@ -89,11 +101,13 @@ export namespace ApiV2 {
                 orderBy: "album.num_favorites desc"
 
             })
-        }).then(x => x.json()).then(x => x["albums"] ?? [])
+        }).then(x => x.json(), () => []).then(x => x["albums"] ?? [])
     }
 
-    export const searchTracks = async (query: string, limit: int = 10): Promise<ReadonlyArray<Track>> => {
+    export const searchTracks = async (query: string, limit: int = 10,
+                                       abortSignal?: AbortSignal): Promise<ReadonlyArray<Track>> => {
         return fetch(`${API_URL}/audiotool.tracks.v1.TracksService/ListTracks`, {
+            signal: abortSignal,
             headers: HEADERS,
             method: "POST",
             body: JSON.stringify({
@@ -102,6 +116,6 @@ export namespace ApiV2 {
                 orderBy: "track.num_favorites desc"
 
             })
-        }).then(x => x.json()).then(x => x["tracks"] ?? [])
+        }).then(x => x.json(), () => []).then(x => x["tracks"] ?? [])
     }
 }

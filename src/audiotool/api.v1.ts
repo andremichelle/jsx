@@ -51,9 +51,11 @@ export namespace ApiV1 {
         fetch: Provider<Promise<TrackListResponse>>
     } | {
         scope: "playlist"
+        playlistKey: string
         fetch: Provider<Promise<TrackListResponse>>
     } | {
         scope: "genre"
+        genreKey: string
         fetch: Provider<Promise<TrackListResponse>>
     }
 
@@ -83,6 +85,10 @@ export namespace ApiV1 {
             .then((json: ApiV1.TrackListResponse) => {
                 const tracks = json.tracks
                 tracks.forEach((track: ApiV1.Track, index: int) => {
+                    if (track.collaborators.length === 0 && "user" in track) {
+                        // very old track
+                        track.collaborators = [track.user as ApiV1.User]
+                    }
                     track.prev = tracks[index - 1]
                     track.next = tracks[index + 1]
                     track.collaborators
@@ -94,7 +100,7 @@ export namespace ApiV1 {
                 return json
             })
 
-// TODO Replace with JSON Api (if any public exists)
+    // TODO Replace with JSON Api (if any public exists)
     export const fetchUserPlaylists = async (userKey: string): Promise<ApiV1.PlaylistsResponse> =>
         fetch(`${URL}/browse/user/${userKey}/albums/`)
             .then(x => x.text())

@@ -7,9 +7,9 @@ import { Player } from "./Player.tsx"
 import { TrackList } from "./TrackList.tsx"
 import { Playlists } from "./Playlists.tsx"
 import { ArtistCards } from "./ArtistCards.tsx"
-import { ApiV1 } from "../api.v1.ts"
-import { router } from "../router.ts"
+import { Page, router } from "../router.ts"
 import css from "./App.sass?inline"
+import { SearchPage } from "./SearchPage.tsx"
 
 const playback = new Playback()
 
@@ -31,23 +31,29 @@ const artists = [
 document.title = "audiotool music browser"
 
 export const App = () => {
-    let request: Option<ApiV1.Request> = router(location.href)
+    let page: Option<Page> = router(location.href)
     const trackListUpdater = Inject.ref<HotspotUpdater>()
     window.onhashchange = (event: HashChangeEvent) => {
-        request = router(event.newURL)
+        page = router(event.newURL)
         trackListUpdater.get().update()
     }
     return (
         <main className={Html.adoptStyleSheet(css, "audiotool")}>
             <Player playback={playback} />
             <section className="content">
-                <Hotspot ref={trackListUpdater} render={() => request.match({
+                <Hotspot ref={trackListUpdater} render={() => page.match({
                     none: () => <ArtistCards keys={artists} />,
-                    some: request => {
-                        if (request.scope === "playlists") {
-                            return <Playlists request={request} />
-                        } else {
-                            return <TrackList playback={playback} request={request} />
+                    some: page => {
+                        if (page.type === "artists") {
+                            return <ArtistCards keys={artists} />
+                        } else if (page.type === "search") {
+                            return <SearchPage playback={playback} />
+                        } else if (page.type === "tracks") {
+                            if (page.request.scope === "playlists") {
+                                return <Playlists request={page.request} />
+                            } else {
+                                return <TrackList playback={playback} request={page.request} />
+                            }
                         }
                     }
                 })} />
