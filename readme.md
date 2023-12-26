@@ -45,7 +45,7 @@ A Loader accepts a promise and updates to either a loading state or success or f
 
 I am currently developing a music browser for Audiotool to identify and address common everyday issues. Audiotool offers a public API that can be used without the need for an API key.
 
-[Audiotool Music Browser](https://andremichelle.io/audiotool.browser/#tracks/kepz)
+[Audiotool Music Browser](https://andremichelle.io/compact/#tracks/kepz)
 
 ### Example:
 
