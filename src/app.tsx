@@ -4,7 +4,7 @@ import { MagicPills } from "./MagicPills.tsx"
 import { Frag } from "@jsx/utils.ts"
 import { IconLibrary } from "./icons.tsx"
 
-const navigation = (
+const Navigation = (
     <nav style={{ display: "flex", columnGap: "1em" }}>
         <Link href="/">home</Link>
         <Link href="/work">work</Link>
@@ -16,25 +16,17 @@ const navigation = (
         })()}
     </nav>)
 
-const Page = ({ content }: { content: Element }) => {
-    return (
-        <Frag>
-            {navigation}
-            {content}
-        </Frag>
-    )
-}
-
 const magicPills = <MagicPills /> // keeps its state
 
 export const App = () => (
     <Frag>
         <IconLibrary />
+        <Navigation />
         <Router routes={[
-            { path: "/", render: () => <Page content={magicPills} /> },
-            { path: "/work", render: () => <Page content={<p>{`Work ${new Date().getMilliseconds()}`}</p>} /> },
-            { path: "/about", render: () => <Page content={<p>about</p>} /> }
-        ]} fallback={(path) => <Page content={<p>{`404 (no route for '${path}')`}</p>} />}>
+            { path: "/", render: () => magicPills },
+            { path: "/work", render: () => <p>{`Work ${new Date().getMilliseconds()}`}</p> },
+            { path: "/about", render: () => <p>about</p> }
+        ]} fallback={(path) => <p>{`404 (no route for '${path}')`}</p>}>
         </Router>
     </Frag>
 )

@@ -26,9 +26,13 @@ export const Router = ({ lifeTime, routes, fallback }: RouterProps) => {
     const resolveRoute = (path: string): JsxNode =>
         routes.find(route => isRouteMatch(path, route.path))?.render() ?? fallback(path)
 
-    const change = (path: string, pushState: boolean) => {
-        if (pushState) {history.pushState(null, "", path)}
-        // TODO Compare and replace with new instances
+    const change = (path: string, manual: boolean) => {
+        if (manual) {
+            if (location.pathname === path) {
+                return
+            }
+            history.pushState(null, "", path)
+        }
         Html.empty(contents)
         appendChildren(contents, resolveRoute(path))
         requestAnimationFrame(() => {
