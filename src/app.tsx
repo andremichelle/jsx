@@ -17,26 +17,28 @@ const isRouteMatch = (path: string, route: string): boolean => {
 
 type RouterProps = {}
 
-// TODO How to type children
+// TODO How to better type children
+// TODO When to remove listeners
 const Router = ({}: RouterProps, children: ReadonlyArray<RouteProps>) => {
-    const contents: Element = <div style={{ display: "contents" }} />
+    const contents: Element = <main style={{ display: "contents" }} />
     const createContent = (path: string): Option<Element> =>
         Option.wrap(children.find((route: RouteProps) => isRouteMatch(path, route.path))?.render())
 
-    let page: Option<Element> = Option.None
+    let currentPage: Option<Element> = Option.None
     const change = (path: string, pushState: boolean) => {
-        if (pushState) {
-            history.pushState(null, "", path)
-        }
-        const next: Option<Element> = createContent(path)
-        if (next.nonEmpty()) {
-            if (page.mapOr(element => element.isConnected, false)) {
-                page.unwrap().replaceWith(next.unwrap())
-            } else {
-                contents.appendChild(next.unwrap())
+        if (pushState) {history.pushState(null, "", path)}
+        const nextPage = createContent(path)
+        nextPage.match({
+            none: () => contents.firstChild?.remove(),
+            some: content => {
+                if (currentPage.mapOr(element => element.isConnected, false)) {
+                    currentPage.unwrap().replaceWith(content)
+                } else {
+                    contents.appendChild(content)
+                }
             }
-        }
-        page = next
+        })
+        currentPage = nextPage
     }
     change(location.pathname, false)
 
@@ -66,7 +68,8 @@ const Route = (props: RouteProps) => {
 export const App = () => (
     <main>
         <nav>
-            <a href="#" path="/">home</a> | <a href="#" path="/work">work</a> | <a href="#" path="/about">about</a>
+            <a href="#" path="/">home</a> | <a href="#" path="/work">work</a> | <a href="#" path="/about">about</a> | <a
+            href="#" path="/unknown">404</a>
         </nav>
         <Router>
             <Route path="/" render={() => <MagicPills />} />
