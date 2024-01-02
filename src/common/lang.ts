@@ -46,7 +46,7 @@ export const safeExecute = <F extends AnyFunc>(func: Nullish<F>, ...args: Parame
 export const Unhandled = <R>(empty: never): R => {throw new Error(`Unhandled ${empty}`)}
 export const panic = (issue: string = ""): never => {throw new Error(issue)}
 export const assert = (condition: boolean, fail: ValueOrProvider<string>): void => condition ? undefined : panic(getOrProvide(fail))
-export const canWrite = (obj: unknown, key: string): boolean => {
+export const canWrite = <T>(obj: T, key: keyof any): obj is T & Record<typeof key, unknown> => {
     while (isDefined(obj)) {
         const descriptor = Object.getOwnPropertyDescriptor(obj, key)
         if (isDefined(descriptor)) {

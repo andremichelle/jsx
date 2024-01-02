@@ -2,11 +2,11 @@
 
 import { SupportedSvgTags } from "@jsx/supported-svg-tags"
 import { Inject } from "@jsx/inject.ts"
-import { canWrite, safeWrite } from "@common/lang.ts"
+import { canWrite } from "@common/lang.ts"
 import { DomElement } from "@jsx/definitions.ts"
 
-type FactoryProduct = false | null | undefined | string | DomElement | Array<DomElement>
-type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => FactoryProduct
+export type JsxNode = false | null | undefined | string | number | DomElement | Array<JsxNode>
+type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => JsxNode
 type TagOrFactory = string | Factory
 
 const EmptyAttributes = Object.freeze({})
@@ -18,7 +18,7 @@ const EmptyAttributes = Object.freeze({})
  */
 export default function(tagOrFactory: TagOrFactory,
                         attributes: Readonly<Record<string, any>> | null,
-                        ...children: ReadonlyArray<string | DomElement>): FactoryProduct {
+                        ...children: ReadonlyArray<string | DomElement>): JsxNode {
     const isFactory = typeof tagOrFactory === "function"
     let element
     if (isFactory) {
@@ -27,7 +27,10 @@ export default function(tagOrFactory: TagOrFactory,
             || element === null
             || element === undefined
             || typeof element === "string"
-            || Array.isArray(element)) {return element}
+            || typeof element === "number"
+            || Array.isArray(element)) {
+            return element
+        }
         // factories must have consumed all attributes
         attributes = null
     } else {
@@ -35,13 +38,32 @@ export default function(tagOrFactory: TagOrFactory,
             ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactory)
             : document.createElement(tagOrFactory)
     }
+    if (children.length > 0) {
+        appendChildren(element, ...children)
+    }
     if (attributes !== null) {
         transferAttributes(element, attributes)
     }
-    if (children.length > 0) {
-        transferChildren(element, children)
-    }
     return element
+}
+
+export const appendChildren = (element: DomElement, ...children: ReadonlyArray<JsxNode>) => {
+    children.forEach((value: JsxNode | Inject.TextValue) => {
+        if (value === null || value === undefined || value === false) {return}
+        if (Array.isArray(value)) {
+            appendChildren(element, ...value)
+        } else if (value instanceof Inject.TextValue) {
+            const text: Text = document.createTextNode(String(value.value))
+            value.addTarget(text)
+            element.append(text)
+        } else if (typeof value === "string") {
+            element.append(document.createTextNode(value))
+        } else if (typeof value === "number") {
+            element.append(document.createTextNode(String(value)))
+        } else if (value instanceof Node) {
+            element.append(value)
+        }
+    })
 }
 
 const transferAttributes = (element: DomElement, attributes: Readonly<Record<string, any>>) => {
@@ -64,27 +86,9 @@ const transferAttributes = (element: DomElement, attributes: Readonly<Record<str
             value.addTarget(element, key)
         } else {
             if (canWrite(element, key)) {
-                safeWrite(element, key, value)
+                element[key] = value
             } else {
                 element.setAttribute(key, String(value))
-            }
-        }
-    })
-}
-
-const transferChildren = (element: DomElement, children: ReadonlyArray<string | DomElement>) => {
-    children.flat().forEach((value: null | undefined | false | string | number | DomElement | Inject.TextValue) => {
-        if (value instanceof Inject.TextValue) {
-            const text: Text = document.createTextNode(String(value.value))
-            value.addTarget(text)
-            element.append(text)
-        } else if (value !== null && value !== undefined && value !== false) {
-            if (typeof value === "string") {
-                element.append(document.createTextNode(value))
-            } else if (typeof value === "number") {
-                element.append(document.createTextNode(String(value)))
-            } else if (value instanceof Node) {
-                element.append(value)
             }
         }
     })
