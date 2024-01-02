@@ -1,6 +1,6 @@
 import { MagicPills } from "./MagicPills.tsx"
-import { isDefined, Provider } from "@common/lang.ts"
-import { Option } from "@common/option.ts"
+import { isDefined, Nullable } from "@common/lang.ts"
+import { Html } from "@ui/html.ts"
 
 const isRouteMatch = (path: string, route: string): boolean => {
     const normalizedPath = path.replace(/^\/|\/$/g, "")
@@ -15,29 +15,28 @@ const isRouteMatch = (path: string, route: string): boolean => {
     return true
 }
 
-type RouterProps = {}
+type RouterProps = {
+    routes: Array<{ path: string, render: () => Element }>
+    fallback: (path: string) => Element
+}
 
 // TODO How to better type children
 // TODO When to remove listeners
-const Router = ({}: RouterProps, children: ReadonlyArray<RouteProps>) => {
+const Router = ({ routes, fallback }: RouterProps) => {
     const contents: Element = <main style={{ display: "contents" }} />
-    const createContent = (path: string): Option<Element> =>
-        Option.wrap(children.find((route: RouteProps) => isRouteMatch(path, route.path))?.render())
+    const resolveRoute = (path: string): Element =>
+        routes.find(route => isRouteMatch(path, route.path))?.render() ?? fallback(path)
 
-    let currentPage: Option<Element> = Option.None
+    let currentPage: Nullable<Element> = null
     const change = (path: string, pushState: boolean) => {
         if (pushState) {history.pushState(null, "", path)}
-        const nextPage = createContent(path)
-        nextPage.match({
-            none: () => contents.firstChild?.remove(),
-            some: content => {
-                if (currentPage.mapOr(element => element.isConnected, false)) {
-                    currentPage.unwrap().replaceWith(content)
-                } else {
-                    contents.appendChild(content)
-                }
-            }
-        })
+        const nextPage = resolveRoute(path)
+        if (isDefined(currentPage) && currentPage.isConnected) {
+            currentPage.replaceWith(nextPage)
+        } else {
+            Html.empty(contents)
+            contents.appendChild(nextPage)
+        }
         currentPage = nextPage
     }
     change(location.pathname, false)
@@ -56,28 +55,18 @@ const Router = ({}: RouterProps, children: ReadonlyArray<RouteProps>) => {
     return contents
 }
 
-type RouteProps = {
-    path: string
-    render: Provider<Element>
-}
-
-const Route = (props: RouteProps) => {
-    return props
-}
-
 export const App = () => (
     <main>
         <nav>
             <a href="#" path="/">home</a> | <a href="#" path="/work">work</a> | <a href="#" path="/about">about</a> | <a
-            href="#" path="/unknown">404</a>
+            href="#" path="/doesnotexist">404</a>
         </nav>
-        <Router>
-            <Route path="/" render={() => <MagicPills />} />
-            <Route path="/work" render={() => <p>Work</p>} />
-            <Route path="/about" render={() => <p>About</p>} />
-            <Route path="*" render={() => <p>404</p>} />
+        <Router routes={[
+            { path: "", render: () => <MagicPills /> },
+            { path: "work", render: () => <p>Work</p> },
+            { path: "about/", render: () => <p>about</p> }
+        ]} fallback={(path) => <p>{`404 ('${path}')`}</p>}>
         </Router>
-    </main>
-)
+    </main>)
 
 document.title = "JSX Launchpad"
