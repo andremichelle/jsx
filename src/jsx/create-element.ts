@@ -7,7 +7,7 @@ import { DomElement } from "@jsx/definitions.ts"
 
 export type JsxNode = false | null | undefined | string | number | DomElement | Array<JsxNode>
 type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => JsxNode
-type TagOrFactory = string | Factory
+type TagOrFactoryOrElement = string | Factory | DomElement
 
 const EmptyAttributes = Object.freeze({})
 
@@ -16,13 +16,13 @@ const EmptyAttributes = Object.freeze({})
  * to be passively called on each html element defined in jsx files.
  * This is secured by injection defined in vite.config.ts
  */
-export default function(tagOrFactory: TagOrFactory,
+export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
                         attributes: Readonly<Record<string, any>> | null,
                         ...children: ReadonlyArray<string | DomElement>): JsxNode {
-    const isFactory = typeof tagOrFactory === "function"
+    const isFactory = typeof tagOrFactoryOrElement === "function"
     let element
     if (isFactory) {
-        element = tagOrFactory(attributes ?? EmptyAttributes, children)
+        element = tagOrFactoryOrElement(attributes ?? EmptyAttributes, children)
         if (element === false
             || element === null
             || element === undefined
@@ -34,9 +34,12 @@ export default function(tagOrFactory: TagOrFactory,
         // factories must have consumed all attributes
         attributes = null
     } else {
-        element = SupportedSvgTags.has(tagOrFactory)
-            ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactory)
-            : document.createElement(tagOrFactory)
+        if (tagOrFactoryOrElement instanceof HTMLElement || tagOrFactoryOrElement instanceof SVGElement) {
+            return tagOrFactoryOrElement
+        }
+        element = SupportedSvgTags.has(tagOrFactoryOrElement)
+            ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactoryOrElement)
+            : document.createElement(tagOrFactoryOrElement)
     }
     if (children.length > 0) {
         appendChildren(element, ...children)

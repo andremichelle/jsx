@@ -1,8 +1,7 @@
 import "./main.sass"
 import { App } from "./app.tsx"
-import { IconLibrary } from "./icons.tsx"
+import { appendChildren } from "@jsx/create-element.ts"
 
 (async () => {
-    document.body.appendChild(IconLibrary)
-    document.body.appendChild(App())
+    appendChildren(document.body, App())
 })()
