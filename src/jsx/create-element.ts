@@ -5,8 +5,8 @@ import { Inject } from "@jsx/inject.ts"
 import { canWrite, safeWrite } from "@common/lang.ts"
 import { DomElement } from "@jsx/definitions.ts"
 
-type FactoryProduct = false | null | undefined | DomElement | Array<DomElement>
-type Factory = (attributes: Readonly<Record<string, any>>) => FactoryProduct
+type FactoryProduct = false | null | undefined | string | DomElement | Array<DomElement>
+type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => FactoryProduct
 type TagOrFactory = string | Factory
 
 const EmptyAttributes = Object.freeze({})
@@ -22,10 +22,12 @@ export default function(tagOrFactory: TagOrFactory,
     const isFactory = typeof tagOrFactory === "function"
     let element
     if (isFactory) {
-        element = tagOrFactory(attributes ?? EmptyAttributes)
-        if (element === false || element === null || element === undefined || Array.isArray(element)) {
-            return element
-        }
+        element = tagOrFactory(attributes ?? EmptyAttributes, children)
+        if (element === false
+            || element === null
+            || element === undefined
+            || typeof element === "string"
+            || Array.isArray(element)) {return element}
         // factories must have consumed all attributes
         attributes = null
     } else {
@@ -71,13 +73,19 @@ const transferAttributes = (element: DomElement, attributes: Readonly<Record<str
 }
 
 const transferChildren = (element: DomElement, children: ReadonlyArray<string | DomElement>) => {
-    children.flat().forEach((value: null | undefined | false | string | DomElement | Inject.TextValue) => {
+    children.flat().forEach((value: null | undefined | false | string | number | DomElement | Inject.TextValue) => {
         if (value instanceof Inject.TextValue) {
             const text: Text = document.createTextNode(String(value.value))
             value.addTarget(text)
             element.append(text)
         } else if (value !== null && value !== undefined && value !== false) {
-            element.append(value)
+            if (typeof value === "string") {
+                element.append(document.createTextNode(value))
+            } else if (typeof value === "number") {
+                element.append(document.createTextNode(String(value)))
+            } else if (value instanceof Node) {
+                element.append(value)
+            }
         }
     })
 }

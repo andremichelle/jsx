@@ -1,11 +1,11 @@
 import { Inject } from "@jsx/inject.ts"
-import { DomElement } from "@jsx/definitions.ts"
 import { Await, Hotspot, HotspotUpdater } from "@jsx/utils.ts"
+import { Html } from "@ui/html.ts"
+import { int } from "@common/lang.ts"
 import { Wait } from "@common/wait.ts"
 import { TimeSpan } from "@common/time-span.ts"
-import { int } from "@common/lang.ts"
-import { Html } from "@ui/html.ts"
-import css from "./example-app.sass?inline"
+import { DomElement } from "@jsx/definitions.ts"
+import css from "./MagicPills.sass?inline"
 
 // classic function component
 const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
@@ -15,8 +15,7 @@ const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label
 // false, null, undefined will not be rendered
 const Null = () => null
 
-// App entry point
-export const ExampleApp = () => {
+export const MagicPills = () => {
     const componentRef = Inject.ref<HTMLElement>()
     const counterValue = Inject.text(0)
     const classList = Inject.classes("")
@@ -71,5 +70,3 @@ export const ExampleApp = () => {
         </main>
     )
 }
-
-document.title = "JSX Launchpad"
