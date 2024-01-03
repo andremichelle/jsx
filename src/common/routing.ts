@@ -17,7 +17,10 @@ export class Routing<R extends Route> {
     }
 
     resolve(path: string): Option<R> {return Option.wrap(this.#routes.find(route => isRouteMatch(path, route.path)))}
-    contains(path: string, route: string): boolean {return isRouteMatch(new URL(path).pathname, route)}
+    contains(path: string, route: string): boolean {
+        assert(path.startsWith("/") && route.startsWith("/"), "Does not start with a slash.")
+        return isRouteMatch(path, route)
+    }
 }
 
 const isRouteMatch = (path: string, route: string): boolean => {

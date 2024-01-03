@@ -32,7 +32,7 @@ export const Router = ({ lifeTime, routes, fallback }: RouterProps) => {
                 if (a.getAttribute("link") === "active") {
                     a.setAttribute("link", "")
                 }
-                if (routing.contains(a.href, path)) {
+                if (routing.contains(new URL(a.href).pathname, path)) {
                     a.setAttribute("link", "active")
                 }
             })

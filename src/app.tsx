@@ -38,9 +38,9 @@ export const App = () => (
         <Navigation />
         <Router routes={[
             { path: "/", render: () => magicPills },
-            { path: "/work", render: (path: string) => <Page name="Work" path={path} /> },
-            { path: "/work/*", render: (path) => <Page name="Work/*" path={path} /> },
-            { path: "/about", render: (path) => <Page name="About" path={path} /> }
+            { path: "/work", render: (path: string) => <Page name="work" path={path} /> },
+            { path: "/work/*", render: (path) => <Page name={`${path.split("/").slice(1).join("/")}`} path={path} /> },
+            { path: "/about", render: (path) => <Page name="about" path={path} /> }
         ]} fallback={(path) => <Page name="404" path={path} />}>
         </Router>
     </Frag>
