@@ -1,4 +1,4 @@
-export const IconLibrary = (
+export const IconLibrary = () => (
     <svg id="icons-library" width="0" height="0" display="none">
         <defs>
             <symbol id="checkbox-false" viewBox="0 0 20 20"

@@ -4,7 +4,7 @@ import { MagicPills } from "./MagicPills.tsx"
 import { Frag } from "@jsx/utils.ts"
 import { IconLibrary } from "./icons.tsx"
 
-const Navigation = (
+const Navigation = () => (
     <nav style={{ display: "flex", columnGap: "1em" }}>
         <Link href="/">home</Link>
         <Link href="/work">work</Link>
@@ -13,12 +13,13 @@ const Navigation = (
         <Link href="/doesnotexist">404</Link>
         {(() => {
             console.log("render nav")
-            return undefined
+            const remove: Element = <Link href="/oink">This gets removed</Link>
+            setTimeout(() => remove.remove(), 1000)
+            return remove
         })()}
     </nav>)
 
-const magicPills = <MagicPills /> // keeps its state
-
+// keeps its state
 type PageProps = {
     name: string
     path: string
@@ -32,18 +33,32 @@ const Page = ({ name, path }: PageProps) => (
     </div>
 )
 
-export const App = () => (
-    <Frag>
-        <IconLibrary />
-        <Navigation />
-        <Router routes={[
-            { path: "/", render: () => magicPills },
-            { path: "/work", render: (path: string) => <Page name="work" path={path} /> },
-            { path: "/work/*", render: (path) => <Page name={`${path.split("/").slice(1).join("/")}`} path={path} /> },
-            { path: "/about", render: (path) => <Page name="about" path={path} /> }
-        ]} fallback={(path) => <Page name="404" path={path} />}>
-        </Router>
-    </Frag>
-)
+export const App = () => {
+    return (
+        <Frag>
+            <IconLibrary />
+            <Navigation />
+            <Router routes={[
+                {
+                    path: "/",
+                    render: () => <MagicPills />
+                },
+                {
+                    path: "/work",
+                    render: (path: string) => <Page name="work" path={path} />
+                },
+                {
+                    path: "/work/*",
+                    render: (path) => <Page name={`${path.split("/").slice(1).join("/")}`} path={path} />
+                },
+                {
+                    path: "/about",
+                    render: (path) => <Page name="about" path={path} />
+                }
+            ]} fallback={(path) => <Page name="404" path={path} />}>
+            </Router>
+        </Frag>
+    )
+}
 
 document.title = "JSX Launchpad"
