@@ -4,6 +4,7 @@ import { SupportedSvgTags } from "@jsx/supported-svg-tags"
 import { Inject } from "@jsx/inject.ts"
 import { canWrite } from "@common/lang.ts"
 import { DomElement } from "@jsx/definitions.ts"
+import { Html } from "@ui/html.ts"
 
 export type JsxNode = false | null | undefined | string | number | DomElement | Array<JsxNode>
 type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => JsxNode
@@ -19,9 +20,12 @@ const EmptyAttributes = Object.freeze({})
 export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
                         attributes: Readonly<Record<string, any>> | null,
                         ...children: ReadonlyArray<string | DomElement>): JsxNode {
-    const isFactory = typeof tagOrFactoryOrElement === "function"
+    if (tagOrFactoryOrElement instanceof HTMLElement || tagOrFactoryOrElement instanceof SVGElement) {
+        // already an element > early out
+        return tagOrFactoryOrElement
+    }
     let element
-    if (isFactory) {
+    if (typeof tagOrFactoryOrElement === "function") {
         element = tagOrFactoryOrElement(attributes ?? EmptyAttributes, children)
         if (element === false
             || element === null
@@ -34,15 +38,12 @@ export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
         // factories must have consumed all attributes
         attributes = null
     } else {
-        if (tagOrFactoryOrElement instanceof HTMLElement || tagOrFactoryOrElement instanceof SVGElement) {
-            return tagOrFactoryOrElement
-        }
         element = SupportedSvgTags.has(tagOrFactoryOrElement)
             ? document.createElementNS("http://www.w3.org/2000/svg", tagOrFactoryOrElement)
             : document.createElement(tagOrFactoryOrElement)
     }
     if (children.length > 0) {
-        appendChildren(element, ...children)
+        applyChildren(element, ...children)
     }
     if (attributes !== null) {
         transferAttributes(element, attributes)
@@ -50,11 +51,12 @@ export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
     return element
 }
 
-export const appendChildren = (element: DomElement, ...children: ReadonlyArray<JsxNode>) => {
+export const applyChildren = (element: DomElement, ...children: ReadonlyArray<JsxNode>) => {
+    Html.empty(element)
     children.forEach((value: JsxNode | Inject.TextValue) => {
         if (value === null || value === undefined || value === false) {return}
         if (Array.isArray(value)) {
-            appendChildren(element, ...value)
+            applyChildren(element, ...value)
         } else if (value instanceof Inject.TextValue) {
             const text: Text = document.createTextNode(String(value.value))
             value.addTarget(text)

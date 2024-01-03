@@ -1,30 +1,23 @@
 import { TerminableOwner, Terminator } from "@common/terminable.ts"
-import { Html } from "@ui/html.ts"
 import { Events } from "@ui/events.ts"
-import { appendChildren, JsxNode } from "@jsx/create-element.ts"
+import { applyChildren, JsxNode } from "@jsx/create-element.ts"
 import { DomElement } from "@jsx/definitions.ts"
+import { Routing } from "@common/routing.ts"
 
-const isRouteMatch = (path: string, route: string): boolean => {
-    const pathSegments = path.split("/")
-    const routeSegments = route.split("/")
-    for (let i = 0; i < routeSegments.length; i++) {if (routeSegments[i] !== pathSegments[i]) {return false}}
-    return true
-}
-
-export type LinkProps = { href: string }
-
-export const Link = ({ href }: LinkProps) => <a href={href} link></a>
+export const Link = ({ href }: { href: string }) => <a href={href} link></a>
 
 export type RouterProps = {
     lifeTime?: TerminableOwner
-    routes: Array<{ path: string, render: () => JsxNode }>
+    routes: Array<{ path: string, render: (path: string) => JsxNode }>
     fallback: (path: string) => JsxNode
 }
 
 export const Router = ({ lifeTime, routes, fallback }: RouterProps) => {
     const contents: DomElement = <main style={{ display: "contents" }} />
+
+    const routing = Routing.create(routes)
     const resolveRoute = (path: string): JsxNode =>
-        routes.find(route => isRouteMatch(path, route.path))?.render() ?? fallback(path)
+        routing.resolve(path).mapOr(route => route.render(path), fallback(path))
 
     const change = (path: string, manual: boolean) => {
         if (manual) {
@@ -33,11 +26,16 @@ export const Router = ({ lifeTime, routes, fallback }: RouterProps) => {
             }
             history.pushState(null, "", path)
         }
-        Html.empty(contents)
-        appendChildren(contents, resolveRoute(path))
+        applyChildren(contents, resolveRoute(path))
         requestAnimationFrame(() => {
-            document.querySelectorAll("a[link='active']").forEach(a => a.setAttribute("link", ""))
-            document.querySelectorAll(`a[link][href='${path}']`).forEach(a => a.setAttribute("link", "active"))
+            document.querySelectorAll<HTMLAnchorElement>("a[link]").forEach(a => {
+                if (a.getAttribute("link") === "active") {
+                    a.setAttribute("link", "")
+                }
+                if (routing.contains(a.href, path)) {
+                    a.setAttribute("link", "active")
+                }
+            })
         })
     }
     change(location.pathname, false)

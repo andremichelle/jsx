@@ -8,6 +8,7 @@ const Navigation = (
     <nav style={{ display: "flex", columnGap: "1em" }}>
         <Link href="/">home</Link>
         <Link href="/work">work</Link>
+        <Link href="/work/42/">work/42</Link>
         <Link href="/about">about</Link>
         <Link href="/doesnotexist">404</Link>
         {(() => {
@@ -18,15 +19,29 @@ const Navigation = (
 
 const magicPills = <MagicPills /> // keeps its state
 
+type PageProps = {
+    name: string
+    path: string
+}
+
+const Page = ({ name, path }: PageProps) => (
+    <div>
+        <h1>{name}</h1>
+        <div>path: <span style={{ color: "white" }}>{path}</span></div>
+        <div>last created: <span style={{ color: "white" }}>{new Date().toLocaleTimeString()}</span></div>
+    </div>
+)
+
 export const App = () => (
     <Frag>
         <IconLibrary />
         <Navigation />
         <Router routes={[
             { path: "/", render: () => magicPills },
-            { path: "/work", render: () => <p>{`Work ${new Date().getMilliseconds()}`}</p> },
-            { path: "/about", render: () => <p>about</p> }
-        ]} fallback={(path) => <p>{`404 (no route for '${path}')`}</p>}>
+            { path: "/work", render: (path: string) => <Page name="Work" path={path} /> },
+            { path: "/work/*", render: (path) => <Page name="Work/*" path={path} /> },
+            { path: "/about", render: (path) => <Page name="About" path={path} /> }
+        ]} fallback={(path) => <Page name="404" path={path} />}>
         </Router>
     </Frag>
 )
