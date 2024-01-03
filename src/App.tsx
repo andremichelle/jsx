@@ -13,7 +13,6 @@ const Navigation = () => (
         <LocalLink href="/doesnotexist">404</LocalLink>
     </nav>)
 
-// keeps its state
 type PageProps = {
     name: string
     path: string
