@@ -43,7 +43,7 @@ export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
             : document.createElement(tagOrFactoryOrElement)
     }
     if (children.length > 0) {
-        applyChildren(element, ...children)
+        replaceChildren(element, ...children)
     }
     if (attributes !== null) {
         transferAttributes(element, attributes)
@@ -51,12 +51,12 @@ export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
     return element
 }
 
-export const applyChildren = (element: DomElement, ...children: ReadonlyArray<JsxNode>) => {
+export const replaceChildren = (element: DomElement, ...children: ReadonlyArray<JsxNode>) => {
     Html.empty(element)
     children.forEach((value: JsxNode | Inject.TextValue) => {
         if (value === null || value === undefined || value === false) {return}
         if (Array.isArray(value)) {
-            applyChildren(element, ...value)
+            replaceChildren(element, ...value)
         } else if (value instanceof Inject.TextValue) {
             const text: Text = document.createTextNode(String(value.value))
             value.addTarget(text)

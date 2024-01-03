@@ -3,19 +3,11 @@ import { Html } from "@ui/html.ts"
 import { int } from "@common/lang.ts"
 import { Wait } from "@common/wait.ts"
 import { TimeSpan } from "@common/time-span.ts"
-import { DomElement } from "@jsx/definitions.ts"
 import css from "./MagicPills.sass?inline"
 import { Hotspot, HotspotUpdater } from "@jsx/common/Hotspot.tsx"
 import { Frag } from "@jsx/common/Frag.tsx"
 import { Await } from "@jsx/common/Await.tsx"
-
-// classic function component
-const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
-    <button onclick={() => target.get().remove()}>{label}</button>
-)
-
-// false, null, undefined will not be rendered
-const Null = () => null
+import { Promises } from "@common/promises.ts"
 
 export const MagicPills = () => {
     const componentRef = Inject.ref<HTMLElement>()
@@ -40,7 +32,6 @@ export const MagicPills = () => {
                 </svg>
                 <label>Toggle svg use href attribute</label>
             </button>
-            <RemoveButton target={componentRef} label="Remove App" />
             <div>
                 <h4>Mapping to list items:</h4>
                 <ul>
@@ -53,7 +44,6 @@ export const MagicPills = () => {
                     {false}
                     {null}
                     {undefined}
-                    <Null />
                 </ul>
             </div>
             <div>
@@ -68,10 +58,17 @@ export const MagicPills = () => {
             </div>
             <div>
                 <h4>Lovely Numbers</h4>
-                <Await<Array<int>> promise={() => Wait.timeSpan<Array<int>>(TimeSpan.seconds(1), [7, 13, 42, 303])}
-                                   loading={() => <p>loading...</p>}
-                                   success={(result: Array<int>) => <ul>{result.map(number => <li>{number}</li>)}</ul>}
-                                   failure={(reason) => <p>failure due to {reason}</p>}
+                <Await<Array<int>>
+                    factory={Promises.fail(
+                        TimeSpan.seconds(2), () => Wait.timeSpan<Array<int>>(TimeSpan.seconds(1), [7, 13, 42, 303]))}
+                    loading={() => <p>loading...</p>}
+                    success={(result: Array<int>) => <ul>{result.map(number => <li>{number}</li>)}</ul>}
+                    failure={({ reason, retry }) => (
+                        <Frag>
+                            <p>failure due to {reason}</p>
+                            <button onclick={retry}>Retry</button>
+                        </Frag>
+                    )}
                 />
             </div>
         </main>

@@ -1,5 +1,4 @@
-import { applyChildren, JsxNode } from "@jsx/create-element.ts"
-import { DomElement } from "@jsx/definitions.ts"
+import { replaceChildren, JsxNode } from "@jsx/create-element.ts"
 import { BrowserLocation } from "@ui/location.ts"
 import { Terminator } from "@common/terminable.ts"
 import { isDefined } from "@common/lang.ts"
@@ -11,17 +10,14 @@ export type RouterProps = {
 }
 
 export const Router = ({ routes, fallback }: RouterProps) => {
-    const contents: DomElement = <div style={{ display: "contents" }} />
-
     const routing = RouteMatcher.create(routes)
     const resolveRoute = (path: string): JsxNode =>
         routing.resolve(path).mapOr(route => route.render(path), () => fallback(path))
-
-    return Terminator.wrapWeak(contents, (weak) => BrowserLocation.get()
-        .catchupAndSubscribe(location => {
-            const element = weak.deref()
+    return Terminator.wrapWeak(<div style={{ display: "contents" }} />,
+        (weakParent) => BrowserLocation.get().catchupAndSubscribe(location => {
+            const element = weakParent.deref()
             if (isDefined(element)) {
-                applyChildren(element, resolveRoute(location.path))
+                replaceChildren(element, resolveRoute(location.path))
             }
         }))
 }
