@@ -1,7 +1,7 @@
-import { Link, Router } from "@jsx/router.tsx"
-import createElement from "@jsx/create-element.ts"
+import { Router } from "@jsx/common/Router.tsx"
+import { Link } from "@jsx/common/Link.tsx"
 import { MagicPills } from "./MagicPills.tsx"
-import { Frag } from "@jsx/utils.ts"
+import { Frag } from "@jsx/common/Frag.tsx"
 import { IconLibrary } from "./icons.tsx"
 
 const Navigation = () => (
@@ -34,6 +34,7 @@ const Page = ({ name, path }: PageProps) => (
 )
 
 export const App = () => {
+    const magicPills = <MagicPills />
     return (
         <Frag>
             <IconLibrary />
@@ -41,7 +42,7 @@ export const App = () => {
             <Router routes={[
                 {
                     path: "/",
-                    render: () => <MagicPills />
+                    render: () => magicPills
                 },
                 {
                     path: "/work",

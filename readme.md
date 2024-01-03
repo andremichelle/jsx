@@ -52,7 +52,7 @@ I am currently developing a music browser for Audiotool to identify and address 
 ```tsx
 import { Inject } from "@jsx/inject.ts"
 import { DomElement } from "@jsx/definitions.ts"
-import { Await, Hotspot, HotspotUpdater } from "@jsx/utils.ts"
+import { Await, Hotspot, HotspotUpdater } from "@jsx/Await.tsx"
 import { Wait } from "@common/wait.ts"
 import { TimeSpan } from "@common/time-span.ts"
 import { int } from "@common/lang.ts"

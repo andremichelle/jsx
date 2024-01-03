@@ -11,6 +11,7 @@ export class BrowserLocation {
     private constructor() {window.addEventListener("popstate", () => this.#notifier.notify(this))}
 
     navigateTo(path: string): void {
+        console.log("navigateTo", path)
         if (this.path === path) {return}
         history.pushState(null, "", path)
         this.#notifier.notify(this)

@@ -1,11 +1,13 @@
 import { Inject } from "@jsx/inject.ts"
-import { Await, Hotspot, HotspotUpdater } from "@jsx/utils.ts"
 import { Html } from "@ui/html.ts"
 import { int } from "@common/lang.ts"
 import { Wait } from "@common/wait.ts"
 import { TimeSpan } from "@common/time-span.ts"
 import { DomElement } from "@jsx/definitions.ts"
 import css from "./MagicPills.sass?inline"
+import { Hotspot, HotspotUpdater } from "@jsx/common/Hotspot.tsx"
+import { Frag } from "@jsx/common/Frag.tsx"
+import { Await } from "@jsx/common/Await.tsx"
 
 // classic function component
 const RemoveButton = ({ target, label }: { target: Inject.Ref<DomElement>, label: string }) => (
@@ -56,7 +58,12 @@ export const MagicPills = () => {
             </div>
             <div>
                 <Hotspot ref={hotSpot}
-                         render={() => <p>{`Hotspot (Last Update: ${new Date().toLocaleString()})`}</p>} />
+                         render={() => (
+                             <Frag>
+                                 <p>{`Hotspot (Last Update: ${new Date().toLocaleString()})`}</p>
+                                 <p>and another child</p>
+                             </Frag>
+                         )} />
                 <button onclick={() => hotSpot.get().update()}>Update HotSpot</button>
             </div>
             <div>
