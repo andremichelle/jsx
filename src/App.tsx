@@ -2,7 +2,7 @@ import { Router } from "@jsx/common/Router.tsx"
 import { LocalLink } from "@jsx/common/LocalLink.tsx"
 import { MagicPills } from "./MagicPills.tsx"
 import { Frag } from "@jsx/common/Frag.tsx"
-import { IconLibrary } from "./icons.tsx"
+import { IconLibrary } from "./IconLibrary.tsx"
 
 const Navigation = () => (
     <nav style={{ display: "flex", columnGap: "1em" }}>
@@ -11,12 +11,6 @@ const Navigation = () => (
         <LocalLink href="/work/42/">work/42</LocalLink>
         <LocalLink href="/about">about</LocalLink>
         <LocalLink href="/doesnotexist">404</LocalLink>
-        {(() => {
-            console.log("render nav")
-            const remove: Element = <LocalLink href="/oink">This gets removed</LocalLink>
-            setTimeout(() => remove.remove(), 1000)
-            return remove
-        })()}
     </nav>)
 
 // keeps its state
