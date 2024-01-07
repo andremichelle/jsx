@@ -13,12 +13,10 @@ const Navigation = () => (
         <LocalLink href="/doesnotexist">404</LocalLink>
     </nav>)
 
-type PageProps = {
+const Page = ({ name, path }: {
     name: string
     path: string
-}
-
-const Page = ({ name, path }: PageProps) => (
+}) => (
     <div>
         <h1>{name}</h1>
         <div>path: <span style={{ color: "white" }}>{path}</span></div>
@@ -33,22 +31,10 @@ export const App = () => {
             <IconLibrary />
             <Navigation />
             <Router routes={[
-                {
-                    path: "/",
-                    render: () => magicPills
-                },
-                {
-                    path: "/work",
-                    render: (path: string) => <Page name="work" path={path} />
-                },
-                {
-                    path: "/work/*",
-                    render: (path) => <Page name={`${path.split("/").slice(1).join("/")}`} path={path} />
-                },
-                {
-                    path: "/about",
-                    render: (path) => <Page name="about" path={path} />
-                }
+                { path: "/", render: () => magicPills },
+                { path: "/work", render: (path: string) => <Page name="work" path={path} /> },
+                { path: "/work/*", render: (path) => <Page name={`${path.split("/").join("/")}`} path={path} /> },
+                { path: "/about", render: (path) => <Page name="about" path={path} /> }
             ]} fallback={(path) => <Page name="404" path={path} />}>
             </Router>
         </Frag>

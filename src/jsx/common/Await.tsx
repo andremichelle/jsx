@@ -1,12 +1,12 @@
 import { Exec, Func, Provider } from "@common/lang.ts"
-import { JsxNode, replaceChildren } from "@jsx/create-element.ts"
+import { JsxValue, replaceChildren } from "@jsx/create-element.ts"
 import { DomElement } from "@jsx/definitions.ts"
 
 export type AwaitProps<T> = {
     factory: Provider<Promise<T>>,
-    loading: Provider<JsxNode>,
-    success: Func<T, JsxNode>,
-    failure: Func<{ reason: any, retry: Exec }, JsxNode>
+    loading: Provider<JsxValue>,
+    success: Func<T, JsxValue>,
+    failure: Func<{ reason: any, retry: Exec }, JsxValue>
 }
 
 export const Await = <T, >({ factory, loading, success, failure }: AwaitProps<T>) => {

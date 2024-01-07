@@ -6,8 +6,8 @@ import { canWrite } from "@common/lang.ts"
 import { DomElement } from "@jsx/definitions.ts"
 import { Html } from "@ui/html.ts"
 
-export type JsxNode = false | null | undefined | string | number | DomElement | Array<JsxNode>
-type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => JsxNode
+export type JsxValue = null | undefined | boolean | string | number | DomElement | Array<JsxValue>
+type Factory = (attributes: Readonly<Record<string, any>>, children?: ReadonlyArray<string | DomElement>) => JsxValue
 type TagOrFactoryOrElement = string | Factory | DomElement
 
 const EmptyAttributes = Object.freeze({})
@@ -19,7 +19,7 @@ const EmptyAttributes = Object.freeze({})
  */
 export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
                         attributes: Readonly<Record<string, any>> | null,
-                        ...children: ReadonlyArray<string | DomElement>): JsxNode {
+                        ...children: ReadonlyArray<string | DomElement>): JsxValue {
     if (tagOrFactoryOrElement instanceof HTMLElement || tagOrFactoryOrElement instanceof SVGElement) {
         // already an element > early out
         return tagOrFactoryOrElement
@@ -28,6 +28,7 @@ export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
     if (typeof tagOrFactoryOrElement === "function") {
         element = tagOrFactoryOrElement(attributes ?? EmptyAttributes, children)
         if (element === false
+            || element === true
             || element === null
             || element === undefined
             || typeof element === "string"
@@ -51,9 +52,9 @@ export default function(tagOrFactoryOrElement: TagOrFactoryOrElement,
     return element
 }
 
-export const replaceChildren = (element: DomElement, ...children: ReadonlyArray<JsxNode>) => {
+export const replaceChildren = (element: DomElement, ...children: ReadonlyArray<JsxValue>) => {
     Html.empty(element)
-    children.forEach((value: JsxNode | Inject.TextValue) => {
+    children.forEach((value: JsxValue | Inject.TextValue) => {
         if (value === null || value === undefined || value === false) {return}
         if (Array.isArray(value)) {
             replaceChildren(element, ...value)
