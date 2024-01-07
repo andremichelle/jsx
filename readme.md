@@ -39,8 +39,8 @@ Allows getting a reference to a single dom element from any built tsx.
 
 ### Inject.TextValue
 
-Allows to easily update text content in a single or multiple dom elements. This is basically the same as the
-overhyped [signals](https://github.com/preactjs/signals) library.
+Allows to easily update text content in a single or multiple dom elements. This is similar to the
+now popular [signals](https://github.com/preactjs/signals) library.
 
 ### Inject.ClassList
 
