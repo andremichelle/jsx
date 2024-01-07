@@ -7,6 +7,13 @@ workings and timings.
 JSX Launchpad offers essentially the same ability to integrate HTML and TypeScript. Yet, it avoids overly complex 'black
 box' magic and gives you control over when rendering occurs.
 
+## Better than Blown Up UI-Frameworks
+
+* You want to use DOM manipulation, fine!
+* You want to use some magic pills, fine!
+* You want to hold references and introduce branches anywhere, fine!
+* You want your code to be executed once and test it for yourself, fine!
+
 ## Magic Injects
 
 However, there are four "magic pills" in **JSX Launchpad** that simplify
