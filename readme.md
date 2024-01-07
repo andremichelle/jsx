@@ -13,6 +13,7 @@ box' magic and gives you control over when rendering occurs.
 * You want to use some magic pills, fine!
 * You want to hold references and introduce branches anywhere, fine!
 * You want your code to be executed once and test it for yourself, fine!
+* You want to controll the rendering pipeline, fine!
 
 ## Magic Injects
 
