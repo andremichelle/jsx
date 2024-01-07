@@ -7,7 +7,7 @@ workings and timings.
 JSX Launchpad offers essentially the same ability to integrate HTML and TypeScript. Yet, it avoids overly complex 'black
 box' magic and gives you control over when rendering occurs.
 
-## Better than Blown Up UI-Frameworks
+## No More Blown Up UI-Frameworks
 
 * You want to use DOM manipulation, fine!
 * You want to use some magic pills, fine!
@@ -19,8 +19,7 @@ box' magic and gives you control over when rendering occurs.
 
 There are four "magic pills" (Inject) in **JSX Launchpad** that simplify the development process (if you want to). 
 These are **not** confined to the scope of a component. You maintain full control over the DOM
-and
-its state at all times. These magic pills can be injected anywhere in your code, eliminating the need for 'useEffect'
+and its state at all times. These magic pills can be injected anywhere in your code, eliminating the need for 'useEffect'
 or 'useState'.
 
 ### Inject.Ref
@@ -29,7 +28,7 @@ Allows getting a reference to a single dom element from any built tsx.
 
 ### Inject.TextValue
 
-Allows to easily update text content in a single or multiple dom elements.
+Allows to easily update text content in a single or multiple dom elements. This is basically the same as the overly hyped [signals](https://github.com/preactjs/signals) library.
 
 ### Inject.ClassList
 
