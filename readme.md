@@ -10,7 +10,7 @@ box' magic and gives you control over when rendering occurs.
 ## No More Blown-Up UI-Frameworks
 
 * You want to use DOM manipulation, fine!
-* You like to write Vanilla Typescript
+* You like to write Vanilla Typescript, fine!
 * You want to hold references and introduce branches anywhere, fine!
 * You want your code to be executed once and test it for yourself, fine!
 * You want to control the rendering pipeline, fine!
