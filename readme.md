@@ -15,9 +15,9 @@ box' magic and gives you control over when rendering occurs.
 * You want your code to be executed once and test it for yourself, fine!
 * You want to controll the rendering pipeline, fine!
 
-## Magic Injects
+## Magic Pills
 
-There are four "magic pills" in **JSX Launchpad** that simplify the development process (if you want to). 
+There are four "magic pills" (Inject) in **JSX Launchpad** that simplify the development process (if you want to). 
 These are **not** confined to the scope of a component. You maintain full control over the DOM
 and
 its state at all times. These magic pills can be injected anywhere in your code, eliminating the need for 'useEffect'
