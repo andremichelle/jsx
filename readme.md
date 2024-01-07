@@ -48,6 +48,10 @@ A hotspot is a utility component which content can be updated manually.
 
 A Loader accepts a promise and updates to either a loading state or success or failure state.
 
+### Router
+
+A simple Router, that allows showing different content for different URLs in a SPA.
+
 ### Audiotool Music Browser
 
 I am currently developing a music browser for Audiotool to identify and address common everyday issues. Audiotool offers a public API that can be used without the need for an API key.
